@@ -7,9 +7,15 @@
 
 package frc.robot;
 
+import java.io.IOException;
+
+import com.google.gson.JsonObject;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.config.ConfigLoader;
+import frc.robot.controls.Controls;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,6 +30,12 @@ public class Robot extends TimedRobot {
 	private String m_autoSelected;
 	private final SendableChooser<String> m_chooser = new SendableChooser<>();
 	
+	private static final boolean debug = true;
+	
+	public JsonObject configJSON;
+	
+	public Controls controls = new Controls();
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -33,6 +45,20 @@ public class Robot extends TimedRobot {
 		m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
 		m_chooser.addOption("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
+		
+		try{
+			configJSON = ConfigLoader.loadConfigFile();
+		} catch(IOException e){
+			e.printStackTrace();
+		}
+		
+		controls.init(configJSON);
+		
+		if(debug){
+			for(String s : controls.getConfiguredControls()){
+				System.out.println(s);	
+			}
+		}
 	}
 	
 	/**
