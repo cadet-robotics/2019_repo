@@ -9,8 +9,7 @@ package frc.robot;
 
 import java.io.IOException;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
+import com.google.gson.JsonObject;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -31,7 +30,9 @@ public class Robot extends TimedRobot {
 	private String m_autoSelected;
 	private final SendableChooser<String> m_chooser = new SendableChooser<>();
 	
-	public JSONObject configJSON;
+	private static final boolean debug = true;
+	
+	public JsonObject configJSON;
 	
 	public Controls controls = new Controls();
 	
@@ -47,14 +48,16 @@ public class Robot extends TimedRobot {
 		
 		try{
 			configJSON = ConfigLoader.loadConfigFile();
-		} catch(IOException | ParseException e){
+		} catch(IOException e){
 			e.printStackTrace();
 		}
 		
 		controls.init(configJSON);
 		
-		for(String s : controls.getConfiguredControls()){
-			System.out.println(s);	
+		if(debug){
+			for(String s : controls.getConfiguredControls()){
+				System.out.println(s);	
+			}
 		}
 	}
 	

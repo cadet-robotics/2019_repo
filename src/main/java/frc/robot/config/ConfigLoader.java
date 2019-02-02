@@ -6,9 +6,8 @@ import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import edu.wpi.first.wpilibj.Filesystem;
 
@@ -20,23 +19,29 @@ import edu.wpi.first.wpilibj.Filesystem;
 public class ConfigLoader {
 	
 	/**
-	 * Loads the config file
+	 * Loads the JSON config file
 	 * The first .json in this implementation
 	 * 
-	 * @return The JSONObject of the config file
+	 * @return The JsonObject of the config file
 	 * @throws IOException
-	 * @throws ParseException
 	 */
-	public static JSONObject loadConfigFile() throws IOException, ParseException {
+	public static JsonObject loadConfigFile() throws IOException {
 		FileReader fr = new FileReader(getConfigFile());
 		
-		return (JSONObject) new JSONParser().parse(fr);
+		return new JsonParser().parse(fr).getAsJsonObject();
 	}
 	
-	public static JSONObject loadConfigFile(String fileName) throws IOException, ParseException {
+	/**
+	 * Loads the specified JSON config file
+	 * 
+	 * @param fileName The name of the file to load
+	 * @return The JsonObject of the config file
+	 * @throws IOException
+	 */
+	public static JsonObject loadConfigFile(String fileName) throws IOException {
 		FileReader fr = new FileReader(getConfigFile(fileName));
 		
-		return (JSONObject) new JSONParser().parse(fr);
+		return new JsonParser().parse(fr).getAsJsonObject();
 	}
 	
 	/**
@@ -75,7 +80,7 @@ public class ConfigLoader {
 		if(dir.length == 0) throw new FileNotFoundException("No files in deploy directory");
 		
 		for(File f : dir) {
-			System.out.println(f.getName());//debug TODO
+			System.out.println(f.getName());
 			if(f.getName().equals(fileName)) return f;
 		}
 		

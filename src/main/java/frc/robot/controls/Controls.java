@@ -2,10 +2,9 @@ package frc.robot.controls;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.config.ConfigLoader;
@@ -17,7 +16,7 @@ import frc.robot.config.ConfigLoader;
  */
 public class Controls {
     //Config object
-    JSONObject configJSON;
+    JsonObject configJSON;
     
     //Config'd controls record
     ArrayList<String> configuredControls = new ArrayList<>();
@@ -67,12 +66,12 @@ public class Controls {
      * Initializes the controls
      * Loads from config and creates the objects
      */
-    public void init(JSONObject configJSON){
+    public void init(JsonObject configJSON){
         this.configJSON = configJSON;
         
         try{
             loadControls();
-        } catch(IOException | ParseException e){
+        } catch(IOException e){
             System.err.println("Failed to load controls");
             e.printStackTrace();
         }
@@ -84,41 +83,38 @@ public class Controls {
      * Loads the controls from config
      * @throws IOException
      */
-    @SuppressWarnings("unchecked")
-    public void loadControls() throws IOException, ParseException {
-        JSONObject configJSON = ConfigLoader.loadConfigFile();
-        JSONObject controlsJSON = (JSONObject) configJSON.get("controls");
+    public void loadControls() throws IOException {
+        JsonObject configJSON = ConfigLoader.loadConfigFile();
+        JsonObject controlsJSON = (JsonObject) configJSON.get("controls");
         
         //Debug - outputs all the json
         if(debug){
-            for(Iterator<Object> iter = configJSON.keySet().iterator(); iter.hasNext();){
-                String key = (String) iter.next();
-                System.out.println(key + ": " + configJSON.get(key));
+            for(String s : configJSON.keySet()){
+                System.out.println(s + ": " + configJSON.get(s));
             }
         }
         
         configuredControls = new ArrayList<>();
         
-        for(Iterator<Object> iter = controlsJSON.keySet().iterator(); iter.hasNext();){
-            String k = (String) iter.next();
-            Object obj = controlsJSON.get(k);
+        for(String k : controlsJSON.keySet()){
+            JsonElement item = controlsJSON.get(k);
             configuredControls.add(k);
             
             switch(k){
                 case "main joystick":
-                    mainJoystickPort = lti(obj);
+                    mainJoystickPort = item.getAsInt();
                     break;
                 
                 case "main joystick x-axis":
-                    xAxis = lti(obj);
+                    xAxis = item.getAsInt();
                     break;
                 
                 case "main joystick y-axis":
-                    yAxis = lti(obj);
+                    yAxis = item.getAsInt();
                     break;
                 
                 case "main joystick z-axis":
-                    zAxis = lti(obj);
+                    zAxis = item.getAsInt();
                     break;
                 
                 default:
@@ -126,16 +122,5 @@ public class Controls {
                     if(!k.equals("desc")) System.err.println("Unrecognized control: " + k);
             }
         }
-    }
-    
-    /**
-     * Long to int
-     * because JSON integers are longs
-     * 
-     * @param l the Long
-     * @return the int
-     */
-    int lti(Object l){
-        return ((Long) l).intValue();
     }
 }
