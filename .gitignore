@@ -163,3 +163,4 @@ bin/
 *.dll
 
 /src/main/deploy/config_test.json
+.idea

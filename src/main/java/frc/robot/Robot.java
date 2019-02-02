@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.config.ConfigLoader;
-import frc.robot.controls.Controls;
+import frc.robot.io.Controls;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -41,12 +41,6 @@ public class Robot extends TimedRobot {
 	public JsonObject configJSON;
 
 	public Controls controls = new Controls();
-
-	public static Gyro gyro = new ADXRS450_Gyro();
-
-	public static MecanumDrive drive;
-
-	public static SightData seeInstance = new SightData();
 
 	/**
 	 * This function is run when the robot is first started up and should be

@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.io.Drive;
+import frc.robot.io.Sensors;
 
 public class AutoLock extends Command {
 	public static final double DEFAULT_TOLERANCE_POS = 1;
@@ -36,7 +38,7 @@ public class AutoLock extends Command {
 		
 		@Override
 		public double pidGet() {
-			return -Robot.seeInstance.getXOffset();
+			return -Sensors.seeInstance.getXOffset();
 		}
 		
 		@Override
@@ -60,7 +62,7 @@ public class AutoLock extends Command {
 		
 		@Override
 		public double pidGet() {
-			return -Robot.seeInstance.getYOffset();
+			return -Sensors.seeInstance.getYOffset();
 		}
 		
 		@Override
@@ -84,7 +86,7 @@ public class AutoLock extends Command {
 		
 		@Override
 		public double pidGet() {
-			double d = JavaIsCancerChangeMyMind.moduloIsCancer(Robot.gyro.getAngle(), 360);
+			double d = JavaIsCancerChangeMyMind.moduloIsCancer(Sensors.gyro.getAngle(), 360);
 			SmartDashboard.putNumber("rot", d);
 			return d;
 		}
@@ -102,9 +104,6 @@ public class AutoLock extends Command {
 		}
 	});
 	
-	/**
-	 * @param dist The distance to move in inches
-	 */
 	public AutoLock() { // Moves the robot forward/backward
 		//requires(DriveSubsystem.getInstance());
 		//OI.leftEncoder.reset();
@@ -121,14 +120,14 @@ public class AutoLock extends Command {
 		
 		pidRot.setInputRange(0, 360);
 		pidRot.setContinuous();
-		double d = JavaIsCancerChangeMyMind.moduloIsCancer(Robot.gyro.getAngle(), 360);
+		double d = JavaIsCancerChangeMyMind.moduloIsCancer(Sensors.gyro.getAngle(), 360);
 		pidRot.setSetpoint(d);
 		pidRot.setAbsoluteTolerance(TURN_DEFAULT_TOLERANCE);
 		pidRot.enable();
     }
     
     public void setAngleOffset(double off) {
-        double d = JavaIsCancerChangeMyMind.moduloIsCancer(Robot.gyro.getAngle(), 360);
+        double d = JavaIsCancerChangeMyMind.moduloIsCancer(Sensors.gyro.getAngle(), 360);
 		pidRot.setSetpoint(JavaIsCancerChangeMyMind.moduloIsCancer(d + off, 360));
     }
 	
@@ -144,7 +143,7 @@ public class AutoLock extends Command {
 				////System.out.println("right: " + r);
 				//OI.leftMotor.set(l);
                 //OI.rightMotor.set(r);
-                    Robot.drive.driveCartesian(posChangeY, posChangeX, rotChange);
+                    Drive.drive.driveCartesian(posChangeY, posChangeX, rotChange);
 			    }
 		    }
 		}
