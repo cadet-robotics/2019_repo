@@ -1,4 +1,4 @@
-package java.frc.robot.config;
+package frc.robot.config;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,8 +18,23 @@ import edu.wpi.first.wpilibj.Filesystem;
  * @author Alex Pickering
  */
 public class ConfigLoader {
-	public JSONObject loadConfigFile() throws IOException, ParseException {
+	
+	/**
+	 * Loads the config file
+	 * The first .json in this implementation
+	 * 
+	 * @return The JSONObject of the config file
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	public static JSONObject loadConfigFile() throws IOException, ParseException {
 		FileReader fr = new FileReader(getConfigFile());
+		
+		return (JSONObject) new JSONParser().parse(fr);
+	}
+	
+	public static JSONObject loadConfigFile(String fileName) throws IOException, ParseException {
+		FileReader fr = new FileReader(getConfigFile(fileName));
 		
 		return (JSONObject) new JSONParser().parse(fr);
 	}
@@ -31,17 +46,17 @@ public class ConfigLoader {
 	 * @return The first .cfg file in the deploy directory
 	 * @throws FileNotFoundException
 	 */
-	File getConfigFile() throws FileNotFoundException {
+	static File getConfigFile() throws FileNotFoundException {
 		FilenameFilter fnf = new FilenameFilter() {
 			@Override
 			public boolean accept(File d, String n) {
-				return n.endsWith(".cfg");
+				return n.endsWith(".json");
 			}
 		};
 		
 		File[] dir = Filesystem.getDeployDirectory().listFiles(fnf);
 		
-		if(dir.length == 0) throw new FileNotFoundException("No .cfg files found in deploy directory");
+		if(dir.length == 0) throw new FileNotFoundException("No .json files found in deploy directory");
 		
 		return dir[0];
 	}
@@ -54,7 +69,7 @@ public class ConfigLoader {
 	 * @return The config file
 	 * @throws FileNotFoundException
 	 */
-	File getConfigFile(String fileName) throws FileNotFoundException {
+	static File getConfigFile(String fileName) throws FileNotFoundException {
 		File[] dir = Filesystem.getDeployDirectory().listFiles();
 		
 		if(dir.length == 0) throw new FileNotFoundException("No files in deploy directory");

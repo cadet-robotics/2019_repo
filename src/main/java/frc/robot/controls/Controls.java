@@ -1,12 +1,14 @@
 package frc.robot.controls;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.config.ConfigLoader;
-import frc.robot.config.DefaultParser;
 
 /**
  * Contains controls objects and handles loading them from config
@@ -14,6 +16,12 @@ import frc.robot.config.DefaultParser;
  * @author Alex Pickering
  */
 public class Controls {
+    //Config object
+    JSONObject configJSON;
+    
+    //Config'd controls record
+    ArrayList<String> configuredControls = new ArrayList<>();
+    
     //Controls objects
     Joystick mainJoystick;
     
@@ -51,14 +59,20 @@ public class Controls {
         return mainJoystick.getRawAxis(zAxis);
     }
     
+    public ArrayList<String> getConfiguredControls(){
+        return configuredControls;
+    }
+    
     /**
      * Initializes the controls
      * Loads from config and creates the objects
      */
-    public void init(){
+    public void init(JSONObject configJSON){
+        this.configJSON = configJSON;
+        
         try{
             loadControls();
-        } catch(IOException e){
+        } catch(IOException | ParseException e){
             System.err.println("Failed to load controls");
             e.printStackTrace();
         }
@@ -70,35 +84,58 @@ public class Controls {
      * Loads the controls from config
      * @throws IOException
      */
-    public void loadControls() throws IOException {
-        //Why did this take so much effort to figure out and get it to stop yelling at me
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        HashMap<String, Integer> controlsMap = new HashMap<String, Integer>((Map) new ConfigLoader().load("CONTROLS", new DefaultParser()));
+    @SuppressWarnings("unchecked")
+    public void loadControls() throws IOException, ParseException {
+        JSONObject configJSON = ConfigLoader.loadConfigFile();
+        JSONObject controlsJSON = (JSONObject) configJSON.get("controls");
         
-        for(String s : controlsMap.keySet()){
-            if(debug) System.out.println(s);
+        //Debug - outputs all the json
+        if(debug){
+            for(Iterator<Object> iter = configJSON.keySet().iterator(); iter.hasNext();){
+                String key = (String) iter.next();
+                System.out.println(key + ": " + configJSON.get(key));
+            }
+        }
+        
+        configuredControls = new ArrayList<>();
+        
+        for(Iterator<Object> iter = controlsJSON.keySet().iterator(); iter.hasNext();){
+            String k = (String) iter.next();
+            Object obj = controlsJSON.get(k);
+            configuredControls.add(k);
             
-            //Parse which control this is
-            switch(s){
-                case "joystick":
-                    mainJoystickPort = controlsMap.get(s);
+            switch(k){
+                case "main joystick":
+                    mainJoystickPort = lti(obj);
                     break;
                 
-                case "x_axis":
-                    xAxis = controlsMap.get(s);
+                case "main joystick x-axis":
+                    xAxis = lti(obj);
                     break;
                 
-                case "y_axis":
-                    yAxis = controlsMap.get(s);
+                case "main joystick y-axis":
+                    yAxis = lti(obj);
                     break;
                 
-                case "z_axis":
-                    zAxis = controlsMap.get(s);
+                case "main joystick z-axis":
+                    zAxis = lti(obj);
                     break;
                 
                 default:
-                    System.err.println("Unknown control: " + s);
+                    configuredControls.remove(k);
+                    if(!k.equals("desc")) System.err.println("Unrecognized control: " + k);
             }
         }
+    }
+    
+    /**
+     * Long to int
+     * because JSON integers are longs
+     * 
+     * @param l the Long
+     * @return the int
+     */
+    int lti(Object l){
+        return ((Long) l).intValue();
     }
 }
