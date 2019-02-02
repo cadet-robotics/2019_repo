@@ -26,9 +26,7 @@ public class ConfigLoader {
 	 * @throws IOException
 	 */
 	public static JsonObject loadConfigFile() throws IOException {
-		FileReader fr = new FileReader(getConfigFile());
-		
-		return new JsonParser().parse(fr).getAsJsonObject();
+		return new JsonParser().parse(new FileReader(getConfigFile())).getAsJsonObject();
 	}
 	
 	/**
@@ -39,9 +37,7 @@ public class ConfigLoader {
 	 * @throws IOException
 	 */
 	public static JsonObject loadConfigFile(String fileName) throws IOException {
-		FileReader fr = new FileReader(getConfigFile(fileName));
-		
-		return new JsonParser().parse(fr).getAsJsonObject();
+		return new JsonParser().parse(new FileReader(getConfigFile(fileName))).getAsJsonObject();
 	}
 	
 	/**

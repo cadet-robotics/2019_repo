@@ -85,7 +85,7 @@ public class Controls {
      */
     public void loadControls() throws IOException {
         JsonObject configJSON = ConfigLoader.loadConfigFile();
-        JsonObject controlsJSON = (JsonObject) configJSON.get("controls");
+        JsonObject controlsJSON = configJSON.getAsJsonObject("controls");
         
         //Debug - outputs all the json
         if(debug){
