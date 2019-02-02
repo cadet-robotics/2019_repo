@@ -11,7 +11,13 @@ import java.io.IOException;
 
 import com.google.gson.JsonObject;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.config.ConfigLoader;
@@ -29,13 +35,19 @@ public class Robot extends TimedRobot {
 	private static final String kCustomAuto = "My Auto";
 	private String m_autoSelected;
 	private final SendableChooser<String> m_chooser = new SendableChooser<>();
-	
+
 	private static final boolean debug = true;
-	
+
 	public JsonObject configJSON;
-	
+
 	public Controls controls = new Controls();
-	
+
+	public static Gyro gyro = new ADXRS450_Gyro();
+
+	public static MecanumDrive drive;
+
+	public static SightData seeInstance = new SightData();
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -45,22 +57,29 @@ public class Robot extends TimedRobot {
 		m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
 		m_chooser.addOption("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
-		
 		try{
 			configJSON = ConfigLoader.loadConfigFile();
 		} catch(IOException e){
 			e.printStackTrace();
 		}
-		
+
 		controls.init(configJSON);
-		
+
 		if(debug){
 			for(String s : controls.getConfiguredControls()){
-				System.out.println(s);	
+				System.out.println(s);
 			}
 		}
+		/*
+		PWMVictorSPX frontLeft = new PWMVictorSPX(2);
+        	PWMVictorSPX rearLeft = new PWMVictorSPX(3);
+		PWMVictorSPX frontRight = new PWMVictorSPX(1);
+        	PWMVictorSPX rearRight = new PWMVictorSPX(0);
+		drive = new MecanumDrive(frontLeft, rearLeft, frontRight, rearRight);
+		UpdateLineManager m = new UpdateLineManager(NetworkTableInstance.getDefault(), seeInstance);
+		*/
 	}
-	
+
 	/**
 	 * This function is called every robot packet, no matter the mode. Use
 	 * this for items like diagnostics that you want ran during disabled,
@@ -72,7 +91,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 	}
-	
+
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
 	 * between different autonomous modes using the dashboard. The sendable
@@ -84,13 +103,16 @@ public class Robot extends TimedRobot {
 	 * the switch structure below with additional strings. If using the
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
+
+	private Command autoCommand;
 	@Override
 	public void autonomousInit() {
 		m_autoSelected = m_chooser.getSelected();
 		// m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
 		System.out.println("Auto selected: " + m_autoSelected);
+		(autoCommand = new AutoLock()).start();
 	}
-	
+
 	/**
 	 * This function is called periodically during autonomous.
 	 */
@@ -106,7 +128,7 @@ public class Robot extends TimedRobot {
 			break;
 		}
 	}
-	
+
 	/**
 	 * This function is called periodically during operator control.
 	 */
