@@ -12,9 +12,9 @@ import frc.robot.io.Sensors;
 public class AutoLock extends Command {
 	public static final double DEFAULT_TOLERANCE_POS = 1;
     
-    private int rotTarget;
-    private int xTarget;
-    private int yTarget;
+    //private int rotTarget;
+    //private int xTarget;
+    //private int yTarget;
 
     public static final double TURN_P = 0.02;
 	public static final double TURN_I = 0;
@@ -27,11 +27,13 @@ public class AutoLock extends Command {
 	public static final double POS_D = 0;
 
 	public static final double MIN_MOTOR_SPEED = 0.4;
-	public static final double MAX_MOTOR_SPEED = 0.65;
+	//public static final double MAX_MOTOR_SPEED = 0.65;
+
+	public Drive driveSystem;
 
 	private Double posChangeX = (double) 0, posChangeY = (double) 0, rotChange = (double) 0;
 
-	private PIDController pidPosX = new PIDController(0.02, 0, 0, new PIDSource() {
+	private PIDController pidPosX = new PIDController(POS_P, POS_I, POS_D, new PIDSource() {
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource) {
 		}
@@ -55,7 +57,7 @@ public class AutoLock extends Command {
 		}
 	});
 	
-	private PIDController pidPosY = new PIDController(0.02, 0, 0, new PIDSource() {
+	private PIDController pidPosY = new PIDController(POS_P, POS_I, POS_D, new PIDSource() {
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource) {
 		}
@@ -104,12 +106,14 @@ public class AutoLock extends Command {
 		}
 	});
 	
-	public AutoLock() { // Moves the robot forward/backward
+	public AutoLock(Drive driveSystemIn) { // Moves the robot forward/backward
 		//requires(DriveSubsystem.getInstance());
 		//OI.leftEncoder.reset();
 		//OI.rightEncoder.reset();
 		//pidPos.setSetpoint(dist);
 		////pidPos.setInputRange(-Math.abs(dist * 2), Math.abs(dist * 2));
+
+		driveSystem = driveSystemIn;
 
 		pidPosX.setSetpoint(0);
 		pidPosY.setSetpoint(0);
@@ -143,7 +147,7 @@ public class AutoLock extends Command {
 				////System.out.println("right: " + r);
 				//OI.leftMotor.set(l);
                 //OI.rightMotor.set(r);
-                    Drive.drive.driveCartesian(posChangeY, posChangeX, rotChange);
+                    driveSystem.drive.driveCartesian(posChangeY, posChangeX, rotChange);
 			    }
 		    }
 		}

@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.config.ConfigLoader;
 import frc.robot.io.Controls;
+import frc.robot.io.Drive;
+import frc.robot.io.Motors;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -42,6 +44,14 @@ public class Robot extends TimedRobot {
 
 	public Controls controls = new Controls();
 
+	public Motors motors = null;
+
+	public Drive drive = null;
+
+	public SightData sightData = new SightData();
+
+	public UpdateLineManager lineManager = null;
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -58,6 +68,13 @@ public class Robot extends TimedRobot {
 		}
 
 		controls.init(configJSON);
+		try {
+			motors = new Motors(configJSON);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		drive = new Drive(motors);
+		lineManager = new UpdateLineManager(NetworkTableInstance.getDefault(), sightData);
 
 		if(debug){
 			for(String s : controls.getConfiguredControls()){
@@ -65,11 +82,7 @@ public class Robot extends TimedRobot {
 			}
 		}
 		/*
-		PWMVictorSPX frontLeft = new PWMVictorSPX(2);
-        	PWMVictorSPX rearLeft = new PWMVictorSPX(3);
-		PWMVictorSPX frontRight = new PWMVictorSPX(1);
-        	PWMVictorSPX rearRight = new PWMVictorSPX(0);
-		drive = new MecanumDrive(frontLeft, rearLeft, frontRight, rearRight);
+		drive =
 		UpdateLineManager m = new UpdateLineManager(NetworkTableInstance.getDefault(), seeInstance);
 		*/
 	}
@@ -104,7 +117,7 @@ public class Robot extends TimedRobot {
 		m_autoSelected = m_chooser.getSelected();
 		// m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
 		System.out.println("Auto selected: " + m_autoSelected);
-		(autoCommand = new AutoLock()).start();
+		(autoCommand = new AutoLock(drive)).start();
 	}
 
 	/**

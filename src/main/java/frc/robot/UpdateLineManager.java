@@ -5,8 +5,8 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class UpdateLineManager {
-    public static final int LOG_STORE = 200;
-    public static final int LOG_TIME = 5;
+    //public static final int LOG_STORE = 200;
+    //public static final int LOG_TIME = 5;
 
     private NetworkTableInstance nt;
     private NetworkTableEntry dataTable;
@@ -17,12 +17,14 @@ public class UpdateLineManager {
 
     private double[] old = null;
 
+    private int listener;
+
     public UpdateLineManager(NetworkTableInstance ntIn, SightData seeIn) {
         nt = ntIn;
         dataTable = ntIn.getTable("ShuffleBoard").getEntry("line");
         if (seeIn == null) see = new SightData();
         else see = seeIn;
-        dataTable.addListener((e) -> {
+        listener = dataTable.addListener((e) -> {
             double[] n;
             try {
                 n = e.value.getDoubleArray();
