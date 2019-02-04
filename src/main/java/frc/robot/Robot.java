@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.config.ConfigLoader;
 import frc.robot.io.Controls;
+import frc.robot.io.Drive;
+import frc.robot.io.Motors;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -42,6 +44,10 @@ public class Robot extends TimedRobot {
 
 	public Controls controls = new Controls();
 
+	public Motors motors = new Motors();
+
+	public Drive drive = new Drive();
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -58,6 +64,12 @@ public class Robot extends TimedRobot {
 		}
 
 		controls.init(configJSON);
+		try {
+			motors.init(configJSON);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		drive.init(motors);
 
 		if(debug){
 			for(String s : controls.getConfiguredControls()){
@@ -100,7 +112,7 @@ public class Robot extends TimedRobot {
 		m_autoSelected = m_chooser.getSelected();
 		// m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
 		System.out.println("Auto selected: " + m_autoSelected);
-		(autoCommand = new AutoLock()).start();
+		(autoCommand = new AutoLock(drive)).start();
 	}
 
 	/**

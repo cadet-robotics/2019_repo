@@ -3,9 +3,9 @@ package frc.robot.io;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
 public class Drive {
-    public MecanumDrive drive;
+    public MecanumDrive drive = null;
 
-    public Drive(Motors m) {
+    public void init(Motors m) {
         drive = new MecanumDrive(m.frontLeft, m.rearLeft, m.frontRight, m.rearRight);
     }
 }
