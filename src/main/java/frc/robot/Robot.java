@@ -125,6 +125,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		/*
 		switch (m_autoSelected) {
 		case kCustomAuto:
 			// Put custom auto code here
@@ -134,6 +135,7 @@ public class Robot extends TimedRobot {
 			// Put default auto code here
 			break;
 		}
+		*/
 	}
 
 	/**
