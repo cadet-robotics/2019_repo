@@ -44,9 +44,13 @@ public class Robot extends TimedRobot {
 
 	public Controls controls = new Controls();
 
-	public Motors motors = new Motors();
+	public Motors motors = null;
 
-	public Drive drive = new Drive();
+	public Drive drive = null;
+
+	public SightData sightData = new SightData();
+
+	public UpdateLineManager lineManager = null;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -65,11 +69,12 @@ public class Robot extends TimedRobot {
 
 		controls.init(configJSON);
 		try {
-			motors.init(configJSON);
+			motors = new Motors(configJSON);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		drive.init(motors);
+		drive = new Drive(motors);
+		lineManager = new UpdateLineManager(NetworkTableInstance.getDefault(), sightData);
 
 		if(debug){
 			for(String s : controls.getConfiguredControls()){

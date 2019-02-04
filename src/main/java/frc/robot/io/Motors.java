@@ -12,7 +12,7 @@ public class Motors {
     public PWMVictorSPX frontRight = null;
     public PWMVictorSPX rearRight = null;
 
-    public void init(JsonObject configIn) throws IOException {
+    public Motors(JsonObject configIn) throws IOException {
         int fl = 2, rl = 3, fr = 1, rr = 0; //Default values
         try {
             JsonObject con = configIn.getAsJsonObject("motors");
