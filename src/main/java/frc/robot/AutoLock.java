@@ -29,6 +29,8 @@ public class AutoLock extends Command {
 	public static final double MIN_MOTOR_SPEED = 0.4;
 	public static final double MAX_MOTOR_SPEED = 0.65;
 
+	public Drive driveSystem;
+
 	private Double posChangeX = (double) 0, posChangeY = (double) 0, rotChange = (double) 0;
 
 	private PIDController pidPosX = new PIDController(0.02, 0, 0, new PIDSource() {
@@ -104,12 +106,14 @@ public class AutoLock extends Command {
 		}
 	});
 	
-	public AutoLock() { // Moves the robot forward/backward
+	public AutoLock(Drive driveSystemIn) { // Moves the robot forward/backward
 		//requires(DriveSubsystem.getInstance());
 		//OI.leftEncoder.reset();
 		//OI.rightEncoder.reset();
 		//pidPos.setSetpoint(dist);
 		////pidPos.setInputRange(-Math.abs(dist * 2), Math.abs(dist * 2));
+
+		driveSystem = driveSystemIn;
 
 		pidPosX.setSetpoint(0);
 		pidPosY.setSetpoint(0);
@@ -143,7 +147,7 @@ public class AutoLock extends Command {
 				////System.out.println("right: " + r);
 				//OI.leftMotor.set(l);
                 //OI.rightMotor.set(r);
-                    Drive.drive.driveCartesian(posChangeY, posChangeX, rotChange);
+                    driveSystem.drive.driveCartesian(posChangeY, posChangeX, rotChange);
 			    }
 		    }
 		}

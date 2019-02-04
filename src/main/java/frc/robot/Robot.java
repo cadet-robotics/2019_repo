@@ -65,11 +65,7 @@ public class Robot extends TimedRobot {
 			}
 		}
 		/*
-		PWMVictorSPX frontLeft = new PWMVictorSPX(2);
-        	PWMVictorSPX rearLeft = new PWMVictorSPX(3);
-		PWMVictorSPX frontRight = new PWMVictorSPX(1);
-        	PWMVictorSPX rearRight = new PWMVictorSPX(0);
-		drive = new MecanumDrive(frontLeft, rearLeft, frontRight, rearRight);
+		drive =
 		UpdateLineManager m = new UpdateLineManager(NetworkTableInstance.getDefault(), seeInstance);
 		*/
 	}
