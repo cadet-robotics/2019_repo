@@ -117,6 +117,7 @@ public class Robot extends TimedRobot {
 		m_autoSelected = m_chooser.getSelected();
 		// m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
 		System.out.println("Auto selected: " + m_autoSelected);
+		if (autoCommand != null) autoCommand.cancel();
 		(autoCommand = new AutoLock(drive)).start();
 	}
 
@@ -137,6 +138,14 @@ public class Robot extends TimedRobot {
 		}
 		*/
 		drivePeriodic();
+	}
+
+	@Override
+	public void teleopInit() {
+		if (autoCommand != null) {
+			autoCommand.cancel();
+			autoCommand = null;
+		}
 	}
 
 	/**
