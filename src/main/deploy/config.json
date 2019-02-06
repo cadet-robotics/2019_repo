@@ -16,6 +16,10 @@
     "desc": "Analogue IN Ports"
   },
   "pwm": {
-    "desc": "PWM Ports"
+    "desc": "PWM Ports",
+	"front left": 2,
+	"front right": 1,
+	"rear left": 3,
+	"read right": 0
   }
 }
