@@ -6,12 +6,24 @@ import edu.wpi.first.wpilibj.PWMVictorSPX;
 
 import java.io.IOException;
 
+/**
+ * Contains motor objects and loads their config
+ * Javadoc comments lovingly provided by Alex Pickering
+ * 
+ * @author Owen Avery
+ */
 public class Motors {
     public PWMVictorSPX frontLeft = null;
     public PWMVictorSPX rearLeft = null;
     public PWMVictorSPX frontRight = null;
     public PWMVictorSPX rearRight = null;
-
+    
+    /**
+     * Default constructor
+     * 
+     * @param configIn JSON Config reading
+     * @throws IOException
+     */
     public Motors(JsonObject configIn) throws IOException {
         int fl = 2, rl = 3, fr = 1, rr = 0; //Default values
         try {

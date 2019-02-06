@@ -4,6 +4,12 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+/**
+ * Works with networktables to get vision data
+ * Javadoc comments lovingly provided by Alex Pickering
+ * 
+ * @author Owen Avery
+ */
 public class UpdateLineManager {
     //public static final int LOG_STORE = 200;
     //public static final int LOG_TIME = 5;
@@ -13,12 +19,18 @@ public class UpdateLineManager {
 
     public SightData see;
 
-    private static final double LINE_ERROR_MAX = Double.MAX_VALUE;
+   // private static final double LINE_ERROR_MAX = Double.MAX_VALUE;
 
     private double[] old = null;
 
     private int listener;
-
+    
+    /**
+     * Updates the data for line tracking in the vision system
+     * 
+     * @param ntIn Networktables instance
+     * @param seeIn Sightdata instance
+     */
     public UpdateLineManager(NetworkTableInstance ntIn, SightData seeIn) {
         nt = ntIn;
         dataTable = ntIn.getTable("ShuffleBoard").getEntry("line");
@@ -39,7 +51,14 @@ public class UpdateLineManager {
             old = n;
         }, EntryListenerFlags.kUpdate + EntryListenerFlags.kNew);
     }
-
+    
+    /**
+     * Calculates the error of a pair of lines
+     * 
+     * @param l1 The first line
+     * @param l2 The second line
+     * @return The error between the two lines
+     */
     public static double errorCalc(double[] l1, double[] l2) {
         double c1x = (l1[0] + l1[2]) / 2;
         double c1y = (l1[1] + l1[3]) / 2;
