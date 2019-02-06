@@ -47,16 +47,17 @@ public class SightData {
      */
     public void setPoints(double p1x, double p1y, double p2x, double p2y) {
         editLock.writeLock().lock();
-        tieToFirst ^= distSq(p1x, p1y, data[0], data[1]) < distSq(p2x, p2y, data[0], data[1]);
+        int t1 = tieToFirst ? 0 : 2;
+        int t2 = t1 + 1;
+        tieToFirst ^= distSq(tieToFirst ? p1x : p2x, tieToFirst ? p1y : p2y, data[t1], data[t2]) > distSq(tieToFirst ? p2x : p1x, tieToFirst ? p2y : p1y, data[t1], data[t2]);
         data[0] = p1x;
         data[1] = p1y;
         data[2] = p2x;
         data[3] = p2y;
-        int po = tieToFirst ? 0 : 2;
         double cx = (data[2] - data[0]) / 2;
         double cy = (data[3] - data[1]) / 2;
-        double px = data[po];
-        double py = data[po];
+        double px = data[t1];
+        double py = data[t2];
         r = Math.toDegrees(Math.atan2(py - cy, px - cx));
         xOff = (p2x - p1x - X_WIDTH) / 2;
         yOff = (p2y - p1y - Y_WIDTH) / 2;
