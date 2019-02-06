@@ -9,6 +9,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.io.Drive;
 import frc.robot.io.Sensors;
 
+/**
+ * Controls motor PID loop for some auto-y stuff
+ * Javadoc comments lovingly provided by Alex Pickering
+ * 
+ * @author Owen Avery
+ */
 public class AutoLock extends Command {
 	public static final double DEFAULT_TOLERANCE_POS = 1;
     
@@ -36,7 +42,7 @@ public class AutoLock extends Command {
 	public SightData sight;
 
 	private Double posChangeX = (double) 0, posChangeY = (double) 0, rotChange = (double) 0;
-
+	
 	private PIDController pidPosX = new PIDController(POS_P, POS_I, POS_D, new PIDSource() {
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource) {
@@ -110,6 +116,11 @@ public class AutoLock extends Command {
 		}
 	});
 	
+	/**
+	 * Default constructor
+	 * 
+	 * @param driveSystemIn The instance of the drive system to use
+	 */
 	public AutoLock(Drive driveSystemIn) { // Moves the robot forward/backward
 		//requires(DriveSubsystem.getInstance());
 		//OI.leftEncoder.reset();
@@ -134,6 +145,11 @@ public class AutoLock extends Command {
 		pidRot.enable();
     }
     
+	/**
+	 * Sets the offset for angles
+	 * 
+	 * @param off The offset
+	 */
     public void setAngleOffset(double off) {
         double d = JavaIsCancerChangeMyMind.moduloIsCancer(sensors.gyro.getAngle(), 360);
 		pidRot.setSetpoint(JavaIsCancerChangeMyMind.moduloIsCancer(d + off, 360));
@@ -157,6 +173,15 @@ public class AutoLock extends Command {
 		}
 	}
 	
+	/**
+	 * Maps numbers somehow
+	 * owen could explain better if he used javadoc comments
+	 * 
+	 * @param n The number to map
+	 * @param low The low end of the clamping range
+	 * @param high The high end of the clamping range
+	 * @return The 'clamped' number
+	 */
 	public static double clamp(double n, double low, double high) {
 		if (low > high) {
 			double d = low;
@@ -166,6 +191,15 @@ public class AutoLock extends Command {
 		return Math.min(Math.max(n, low), high);
 	}
 	
+	/**
+	 * Version of the clamp thing that respeccs negatives
+	 * owen pls
+	 * 
+	 * @param n The number to 'clamp'
+	 * @param low The low end of the range
+	 * @param high The high end of the range
+	 * @return The 'clamped' number
+	 */
 	public static double clampAbs(double n, double low, double high) {
 		if (n < 0) {
 			return -clamp(-n, high, low);

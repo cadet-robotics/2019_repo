@@ -3,6 +3,12 @@ package frc.robot;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * Contains data from the vision systems
+ * Javadoc comments lovingly provided by Alex Pickering 
+ * 
+ * @author Owen Avery
+ */
 public class SightData {
     private double lastUpdate = Double.MIN_VALUE;
     private static final double timeout = 500;
@@ -18,14 +24,27 @@ public class SightData {
     private boolean tieToFirst = true;
 
     private ReadWriteLock editLock = new ReentrantReadWriteLock();
-
+    
+    /**
+     * Determines whether or not the read thing has timed out
+     * 
+     * @return Whether or not there's been a timeout
+     */
     public boolean isTimeout() {
         editLock.readLock().lock();
         boolean v = (lastUpdate + timeout) < System.currentTimeMillis();
         editLock.readLock().unlock();
         return v;
     }
-
+    
+    /**
+     * Sets vision target position for PID loops
+     * 
+     * @param p1x First point X
+     * @param p1y First point Y
+     * @param p2x Second point X
+     * @param p2y Second point Y
+     */
     public void setPoints(double p1x, double p1y, double p2x, double p2y) {
         editLock.writeLock().lock();
         tieToFirst ^= distSq(p1x, p1y, data[0], data[1]) < distSq(p2x, p2y, data[0], data[1]);
@@ -43,13 +62,21 @@ public class SightData {
         yOff = (p2y - p1y - Y_WIDTH) / 2;
         editLock.writeLock().unlock();
     }
-
+    
+    /**
+     * Complements 'tieToFirst' variable
+     */
     public void flip() {
         editLock.writeLock().lock();
         tieToFirst = !tieToFirst;
         editLock.writeLock().unlock();
     }
-
+    
+    /**
+     * Gets the rotation offset
+     * 
+     * @return The rotation offset
+     */
     public double getRotOffset() {
         editLock.readLock().lock();
         double v;
@@ -58,7 +85,12 @@ public class SightData {
         editLock.readLock().unlock();
         return v;
     }
-
+    
+    /**
+     * Gets the X offset
+     * 
+     * @return The X offset
+     */
     public double getXOffset() {
         editLock.readLock().lock();
         double v;
@@ -67,7 +99,12 @@ public class SightData {
         editLock.readLock().unlock();
         return v;
     }
-
+    
+    /**
+     * Gets the Y offset
+     * 
+     * @return The Y offset
+     */
     public double getYOffset() {
         editLock.readLock().lock();
         double v;
@@ -76,7 +113,16 @@ public class SightData {
         editLock.readLock().unlock();
         return v;
     }
-
+    
+    /**
+     * Gets the length of the provided line squared
+     * 
+     * @param p1x The start point X
+     * @param p1y The start point Y
+     * @param p2x The end point X
+     * @param p2y The end point Y
+     * @return The length of the line squared
+     */
     public static double distSq(double p1x, double p1y, double p2x, double p2y) {
         double x, y;
         x = p2x - p1x;
