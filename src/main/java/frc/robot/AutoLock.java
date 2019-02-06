@@ -151,7 +151,7 @@ public class AutoLock extends Command {
 				////System.out.println("right: " + r);
 				//OI.leftMotor.set(l);
                 //OI.rightMotor.set(r);
-                    driveSystem.drive.driveCartesian(posChangeY, posChangeX, rotChange);
+                    if (!sight.isTimeout()) driveSystem.drive.driveCartesian(posChangeY, posChangeX, rotChange);
 			    }
 		    }
 		}
