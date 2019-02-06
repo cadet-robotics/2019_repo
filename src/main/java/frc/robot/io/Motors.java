@@ -27,7 +27,7 @@ public class Motors {
     public Motors(JsonObject configIn) throws IOException {
         int fl = 2, rl = 3, fr = 1, rr = 0; //Default values
         try {
-            JsonObject con = configIn.getAsJsonObject("motors");
+            JsonObject con = configIn.getAsJsonObject("pwm");
             for (String s : con.keySet()) {
                 JsonElement e = con.get(s);
                 switch (s) {
