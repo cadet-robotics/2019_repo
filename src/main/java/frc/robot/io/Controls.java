@@ -26,12 +26,12 @@ public class Controls {
     
     //Configured control ports and such
     //Axes
-    static int mainJoystickPort = 0,
+    int mainJoystickPort = 0,
                xAxis = 0,
                yAxis = 1,
                zAxis = 2;
     
-    static boolean debug = true;
+    boolean debug = true;
     
     //Getters
     /**
