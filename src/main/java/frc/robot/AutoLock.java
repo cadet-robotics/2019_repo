@@ -37,6 +37,10 @@ public class AutoLock extends Command {
 
 	public Drive driveSystem;
 
+	public Sensors sensors;
+
+	public SightData sight;
+
 	private Double posChangeX = (double) 0, posChangeY = (double) 0, rotChange = (double) 0;
 	
 	private PIDController pidPosX = new PIDController(POS_P, POS_I, POS_D, new PIDSource() {
@@ -46,7 +50,7 @@ public class AutoLock extends Command {
 		
 		@Override
 		public double pidGet() {
-			return -Sensors.seeInstance.getXOffset();
+			return -sight.getXOffset();
 		}
 		
 		@Override
@@ -70,7 +74,7 @@ public class AutoLock extends Command {
 		
 		@Override
 		public double pidGet() {
-			return -Sensors.seeInstance.getYOffset();
+			return -sight.getYOffset();
 		}
 		
 		@Override
@@ -94,7 +98,7 @@ public class AutoLock extends Command {
 		
 		@Override
 		public double pidGet() {
-			double d = JavaIsCancerChangeMyMind.moduloIsCancer(Sensors.gyro.getAngle(), 360);
+			double d = JavaIsCancerChangeMyMind.moduloIsCancer(sensors.gyro.getAngle(), 360);
 			SmartDashboard.putNumber("rot", d);
 			return d;
 		}
@@ -135,7 +139,7 @@ public class AutoLock extends Command {
 		
 		pidRot.setInputRange(0, 360);
 		pidRot.setContinuous();
-		double d = JavaIsCancerChangeMyMind.moduloIsCancer(Sensors.gyro.getAngle(), 360);
+		double d = JavaIsCancerChangeMyMind.moduloIsCancer(sensors.gyro.getAngle(), 360);
 		pidRot.setSetpoint(d);
 		pidRot.setAbsoluteTolerance(TURN_DEFAULT_TOLERANCE);
 		pidRot.enable();
@@ -147,7 +151,7 @@ public class AutoLock extends Command {
 	 * @param off The offset
 	 */
     public void setAngleOffset(double off) {
-        double d = JavaIsCancerChangeMyMind.moduloIsCancer(Sensors.gyro.getAngle(), 360);
+        double d = JavaIsCancerChangeMyMind.moduloIsCancer(sensors.gyro.getAngle(), 360);
 		pidRot.setSetpoint(JavaIsCancerChangeMyMind.moduloIsCancer(d + off, 360));
     }
 	
