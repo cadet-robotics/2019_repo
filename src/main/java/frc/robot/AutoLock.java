@@ -57,13 +57,10 @@ public class AutoLock extends Command {
 		public PIDSourceType getPIDSourceType() {
 			return PIDSourceType.kDisplacement;
 		}
-	}, new PIDOutput() {
-		@Override
-		public void pidWrite(double output) {
-			output = clampAbs(output, MIN_MOTOR_SPEED, Double.POSITIVE_INFINITY);
-			synchronized (posChangeX) {
-				posChangeX = output * 1.5;
-			}
+	}, output -> {
+		output = clampAbs(output, MIN_MOTOR_SPEED, Double.POSITIVE_INFINITY);
+		synchronized (posChangeX) {
+			posChangeX = output * 1.5;
 		}
 	});
 	
@@ -81,15 +78,12 @@ public class AutoLock extends Command {
 		public PIDSourceType getPIDSourceType() {
 			return PIDSourceType.kDisplacement;
 		}
-	}, new PIDOutput() {
-		@Override
-		public void pidWrite(double output) {
-			output = clampAbs(output, MIN_MOTOR_SPEED, Double.POSITIVE_INFINITY);
-			synchronized (posChangeY) {
-				posChangeY = output * 1.5;
-			}
+	}, output -> {
+		output = clampAbs(output, MIN_MOTOR_SPEED, Double.POSITIVE_INFINITY);
+		synchronized (posChangeY) {
+			posChangeY = output * 1.5;
 		}
-    });
+	});
 	
 	private PIDController pidRot = new PIDController(TURN_P, TURN_I, TURN_D, new PIDSource() {
 		@Override
