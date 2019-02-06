@@ -17,9 +17,9 @@
   },
   "pwm": {
     "desc": "PWM Ports",
-	"front left": 0,
+	"front left": 2,
 	"front right": 1,
-	"rear left": 2,
-	"read right": 3
+	"rear left": 3,
+	"read right": 0
   }
 }
