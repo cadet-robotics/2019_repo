@@ -136,6 +136,7 @@ public class Robot extends TimedRobot {
 			break;
 		}
 		*/
+		drivePeriodic();
 	}
 
 	/**
@@ -143,6 +144,11 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		drivePeriodic();
+	}
+
+	public void drivePeriodic() {
+		drive.driveCartesian(controls.getXAxis(), controls.getXAxis(), controls.getXAxis(), false);
 	}
 
 	/**
