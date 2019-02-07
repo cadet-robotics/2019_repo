@@ -115,7 +115,7 @@ public class AutoLock extends Command {
 	 * 
 	 * @param driveSystemIn The instance of the drive system to use
 	 */
-	public AutoLock(Drive driveSystemIn) { // Moves the robot forward/backward
+	public AutoLock(Drive driveSystemIn, Sensors sensorsIn, SightData sightIn) { // Moves the robot forward/backward
 		//requires(DriveSubsystem.getInstance());
 		//OI.leftEncoder.reset();
 		//OI.rightEncoder.reset();
@@ -123,6 +123,8 @@ public class AutoLock extends Command {
 		////pidPos.setInputRange(-Math.abs(dist * 2), Math.abs(dist * 2));
 
 		driveSystem = driveSystemIn;
+		sensors = sensorsIn;
+		sight = sightIn;
 
 		pidPosX.setSetpoint(0);
 		pidPosY.setSetpoint(0);
@@ -161,7 +163,7 @@ public class AutoLock extends Command {
 				////System.out.println("right: " + r);
 				//OI.leftMotor.set(l);
                 //OI.rightMotor.set(r);
-                    if (!sight.isTimeout()) driveSystem.drive.driveCartesian(posChangeY, posChangeX, rotChange);
+                    if (!sight.isTimeout()) driveSystem.driveCartesian(posChangeY, posChangeX, rotChange, true);
 			    }
 		    }
 		}

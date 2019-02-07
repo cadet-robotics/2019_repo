@@ -47,6 +47,7 @@ public class SightData {
      */
     public void setPoints(double p1x, double p1y, double p2x, double p2y) {
         editLock.writeLock().lock();
+        lastUpdate = System.currentTimeMillis();
         int t1 = tieToFirst ? 0 : 2;
         int t2 = t1 + 1;
         tieToFirst ^= distSq(tieToFirst ? p1x : p2x, tieToFirst ? p1y : p2y, data[t1], data[t2]) > distSq(tieToFirst ? p2x : p1x, tieToFirst ? p2y : p1y, data[t1], data[t2]);

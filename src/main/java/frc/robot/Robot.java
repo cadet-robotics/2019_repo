@@ -7,23 +7,19 @@
 
 package frc.robot;
 
-import java.io.IOException;
-
 import com.google.gson.JsonObject;
-
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.drive.MecanumDrive;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.config.ConfigLoader;
 import frc.robot.io.Controls;
 import frc.robot.io.Drive;
 import frc.robot.io.Motors;
+import frc.robot.io.Sensors;
+
+import java.io.IOException;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -47,6 +43,8 @@ public class Robot extends TimedRobot {
 	public Motors motors = null;
 
 	public Drive drive = null;
+
+	public Sensors sensors = new Sensors();
 
 	public SightData sightData = new SightData();
 
@@ -118,7 +116,8 @@ public class Robot extends TimedRobot {
 		// m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
 		System.out.println("Auto selected: " + m_autoSelected);
 		if (autoCommand != null) autoCommand.cancel();
-		(autoCommand = new AutoLock(drive)).start();
+		(autoCommand = new AutoLock(drive, sensors)).start();
+		drive.setIsAuto(true);
 	}
 
 	/**
@@ -146,6 +145,7 @@ public class Robot extends TimedRobot {
 			autoCommand.cancel();
 			autoCommand = null;
 		}
+		drive.setIsAuto(false);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void drivePeriodic() {
-		drive.driveCartesian(controls.getXAxis(), controls.getXAxis(), controls.getXAxis(), false);
+		drive.driveCartesian(controls.getXAxis(), controls.getYAxis(), controls.getZAxis(), false);
 	}
 
 	/**
@@ -165,5 +165,14 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+	}
+
+	@Override
+	public void disabledInit() {
+		if (autoCommand != null) {
+			autoCommand.cancel();
+			autoCommand = null;
+		}
+		drive.setIsAuto(false);
 	}
 }
