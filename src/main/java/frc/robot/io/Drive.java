@@ -41,7 +41,7 @@ public class Drive {
      */
     public void driveCartesian(double y, double x, double r, boolean isAutoCommand) {
         if (isAuto == isAutoCommand) {
-            System.out.println(String.format("X: %d, Y: %d, R: %d", x, y, r) + y);
+            System.out.println(String.format("X: %.02f, Y: %.02f, R: %.02f", x, y, r) + y);
             drive.driveCartesian(y, x, r);
         }
     }
