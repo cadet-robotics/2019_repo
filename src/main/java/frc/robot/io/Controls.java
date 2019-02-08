@@ -7,6 +7,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.config.ConfigLoader;
 
 /**
@@ -23,6 +26,7 @@ public class Controls {
     
     //Controls objects
     Joystick mainJoystick;
+    JoystickButton autoLockButton;
     
     //Configured control ports and such
     //Axes
@@ -30,7 +34,9 @@ public class Controls {
                xAxis = 0,
                yAxis = 1,
                zAxis = 2;
-    
+
+    int autoLockButtonPort = 5;
+
     boolean debug = true;
     
     //Getters
@@ -57,6 +63,14 @@ public class Controls {
     public double getZAxis(){
         return mainJoystick.getRawAxis(zAxis);
     }
+
+    /**
+     * Gets the Auto Lock Button state
+     * @return
+     */
+    public boolean isAutoLock() {
+        return autoLockButton.get();
+    }
     
     public ArrayList<String> getConfiguredControls(){
         return configuredControls;
@@ -77,6 +91,7 @@ public class Controls {
         }
         
         mainJoystick = new Joystick(mainJoystickPort);
+        autoLockButton = new JoystickButton(mainJoystick, autoLockButtonPort);
     }
     
     /**
@@ -116,7 +131,11 @@ public class Controls {
                 case "main joystick z-axis":
                     zAxis = item.getAsInt();
                     break;
-                
+
+                case "main joystick auto-lock":
+                    autoLockButtonPort = item.getAsInt();
+                    break;
+
                 default:
                     configuredControls.remove(k);
                     if(!k.equals("desc")) System.err.println("Unrecognized control: " + k);

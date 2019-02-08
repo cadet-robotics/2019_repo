@@ -1,13 +1,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.io.Controls;
 import frc.robot.io.Drive;
 import frc.robot.io.Sensors;
+import frc.robot.io.SightData;
 
 /**
  * Controls motor PID loop for some auto-y stuff
@@ -40,6 +41,8 @@ public class AutoLock extends Command {
 	public Sensors sensors;
 
 	public SightData sight;
+
+	public Controls controls;
 
 	private Double posChangeX = (double) 0, posChangeY = (double) 0, rotChange = (double) 0;
 	
@@ -101,30 +104,28 @@ public class AutoLock extends Command {
 		public PIDSourceType getPIDSourceType() {
 			return PIDSourceType.kDisplacement;
 		}
-	}, new PIDOutput() {
-		@Override
-		public void pidWrite(double output) {
-			synchronized (rotChange) {
-				rotChange = output;
-			}
+	}, output -> {
+		synchronized (rotChange) {
+			rotChange = output;
 		}
 	});
 	
 	/**
 	 * Default constructor
 	 * 
-	 * @param driveSystemIn The instance of the drive system to use
+	 * @param nexus A Nexus instance
 	 */
-	public AutoLock(Drive driveSystemIn, Sensors sensorsIn, SightData sightIn) { // Moves the robot forward/backward
+	public AutoLock(Nexus nexus) { // Moves the robot forward/backward
 		//requires(DriveSubsystem.getInstance());
 		//OI.leftEncoder.reset();
 		//OI.rightEncoder.reset();
 		//pidPos.setSetpoint(dist);
 		////pidPos.setInputRange(-Math.abs(dist * 2), Math.abs(dist * 2));
 
-		driveSystem = driveSystemIn;
-		sensors = sensorsIn;
-		sight = sightIn;
+		controls = nexus.getControls();
+		driveSystem = nexus.getDriveSystem();
+		sight = nexus.getSightData();
+		sensors = nexus.getSensors();
 
 		pidPosX.setSetpoint(0);
 		pidPosY.setSetpoint(0);
@@ -150,9 +151,14 @@ public class AutoLock extends Command {
         double d = JavaIsCancerChangeMyMind.moduloIsCancer(sensors.gyro.getAngle(), 360);
 		pidRot.setSetpoint(JavaIsCancerChangeMyMind.moduloIsCancer(d + off, 360));
     }
+
+	public boolean isEnabled() {
+    	return controls.isAutoLock();
+	}
 	
 	@Override
 	public void execute() {
+    	super.execute();
 		synchronized (posChangeX) {
 			synchronized (posChangeY) {
 			    synchronized (rotChange) {
@@ -163,7 +169,7 @@ public class AutoLock extends Command {
 				////System.out.println("right: " + r);
 				//OI.leftMotor.set(l);
                 //OI.rightMotor.set(r);
-                    if (!sight.isTimeout()) driveSystem.driveCartesian(posChangeY, posChangeX, rotChange, true);
+                    if (isEnabled() && !sight.isTimeout()) driveSystem.driveCartesian(posChangeY, posChangeX, rotChange);
 			    }
 		    }
 		}
