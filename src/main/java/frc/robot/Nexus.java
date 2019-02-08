@@ -13,5 +13,7 @@ public interface Nexus {
 
     Sensors getSensors();
 
+    Elevator getElevator();
+
     Robot getRobot();
 }
