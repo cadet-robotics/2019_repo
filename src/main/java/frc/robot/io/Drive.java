@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import frc.robot.Nexus;
 
 /**
- * Contains the mecanumdrive for the robot
+ * Contains the MecanumDrive for the robot
  * Javadoc comments lovingly provided by Alex Pickering
  * 
  * @author Owen Avery
@@ -18,7 +18,11 @@ public class Drive {
      * @param m The Motors instance to use
      */
     public Drive(Motors m) {
-        drive = new MecanumDrive(m.frontLeft, m.rearLeft, m.frontRight, m.rearRight);
+        drive = new MecanumDrive(
+                m.getSpeedControllerOrInert("front left"),
+                m.getSpeedControllerOrInert("rear left"),
+                m.getSpeedControllerOrInert("front right"),
+                m.getSpeedControllerOrInert("rear right"));
     }
 
     /**
