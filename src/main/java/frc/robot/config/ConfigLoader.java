@@ -48,12 +48,7 @@ public class ConfigLoader {
 	 * @throws FileNotFoundException
 	 */
 	static File getConfigFile() throws FileNotFoundException {
-		FilenameFilter fnf = new FilenameFilter() {
-			@Override
-			public boolean accept(File d, String n) {
-				return n.endsWith(".json");
-			}
-		};
+		FilenameFilter fnf = (d, n) -> n.endsWith(".json");
 		
 		File[] dir = Filesystem.getDeployDirectory().listFiles(fnf);
 		
@@ -80,6 +75,6 @@ public class ConfigLoader {
 			if(f.getName().equals(fileName)) return f;
 		}
 		
-		throw new FileNotFoundException("Secified config file not found");
+		throw new FileNotFoundException("Specified config file not found");
 	}
 }

@@ -3,14 +3,11 @@ package frc.robot.io;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import edu.wpi.first.wpilibj.*;
-import javafx.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * Contains motor objects and loads their config
@@ -23,34 +20,55 @@ public class Motors {
 
     private static HashMap<String, String> typeMapDefault = new HashMap<>();
     private static HashMap<String, Integer> portMapDefault = new HashMap<>();
+    //private static HashMap<String, String>
 
-    static {
-        portMapDefault.put("front left", 2);
-        typeMapDefault.put("front left", "victor");
-
-        portMapDefault.put("rear left", 3);
-        typeMapDefault.put("rear left", "victor");
-
-        portMapDefault.put("front right", 1);
-        typeMapDefault.put("front right", "victor");
-
-        portMapDefault.put("rear right", 0);
-        typeMapDefault.put("rear right", "victor");
+    private static void addMotorDefault(String n, String t, int p) {
+        portMapDefault.put(n, p);
+        typeMapDefault.put(n, t);
     }
 
+    static {
+        addMotorDefault("front left","victor",2);
+        addMotorDefault("rear left","victor",3);
+        addMotorDefault("front right","victor",1);
+        addMotorDefault("rear right","victor",0);
+        //addMotorDefault("elevator1", "victor", );
+    }
+
+    /**
+     * Gets a motor, returning a fake one if unsuccessful
+     * @param s The motor name
+     * @return
+     */
     public SpeedController getSpeedControllerOrInert(String s) {
         return getSpeedControllerOrFallback(s, new InertSpeedController());
     }
 
+    /**
+     * Gets a motor, returning a fallback one if unsuccessful
+     * @param s The motor name
+     * @param sf The fallback motor
+     * @return
+     */
     public SpeedController getSpeedControllerOrFallback(String s, SpeedController sf) {
         if (!map.containsKey(s)) return sf;
         return map.get(s);
     }
 
+    /**
+     * Gets a motor, returning null if unsuccessful
+     * @param s The motor name
+     * @return
+     */
     public SpeedController getSpeedController(String s) {
         return map.get(s);
     }
 
+    /**
+     * Figures out if we have a motor
+     * @param s The motor name
+     * @return
+     */
     public boolean hasSpeedController(String s) {
         return map.containsKey(s);
     }
@@ -83,7 +101,14 @@ public class Motors {
         }
     }
 
+    /**
+     *
+     * @param e The JsonElement
+     * @param n The name of the motor/key for the JsonObject
+     * @return A SpeedController for a JsonElement motor definition
+     */
     public static SpeedController getSpeedController(JsonElement e, String n) {
+        // Cross compatible - each motor can be an int
         try {
             int j = e.getAsInt();
             String t = "victor";
@@ -94,50 +119,60 @@ public class Motors {
         } catch (UnsupportedOperationException ex2) {}
         JsonObject obj;
         try {
-            obj = e.getAsJsonObject();
-        } catch (UnsupportedOperationException ex) {return null;}
+            obj = e.getAsJsonObject(); // Is it an object?
+        } catch (UnsupportedOperationException ex) {return null;} // Nope
         try {
             int port;
             try {
-                port = obj.get("port").getAsInt();
+                port = obj.get("port").getAsInt(); // Get port value as an int
             } catch (UnsupportedOperationException ex) {
                 try {
+                    // It's probably a list of other motors, so let's build a group speed controller
                     JsonArray motorList = obj.get("port").getAsJsonArray();
                     ArrayList<SpeedController> s = new ArrayList<>();
                     SpeedController t;
                     for (int i = 0; i < motorList.size(); i++) {
                         if ((t = getSpeedController(motorList.get(i), n + "#" + i)) != null) {
-                            s.add(t);
+                            // We turned one of the elements into a speed controller
+                            s.add(t); // So add it to the list
                         }
                     }
-                    if (s.size() == 0) return null;
-                    if (s.size() == 1) return s.get(0);
-                    SpeedController speedFirst = s.remove(0);
-                    SpeedController[] list = s.toArray(new SpeedController[0]);
-                    return new SpeedControllerGroup(speedFirst, list);
+                    if (s.size() == 0) return null; // No speed controllers in list
+                    if (s.size() == 1) return s.get(0); // Only one speed controller
+                    SpeedController speedFirst = s.remove(0); // Take the first controller
+                    SpeedController[] list = s.toArray(new SpeedController[0]); // Turn the rest into an array
+                    return new SpeedControllerGroup(speedFirst, list); // And create the group
                 } catch (UnsupportedOperationException ex2) {
-                    return null;
+                    return null; // It's some other weird thing that we can't handle
                 }
             }
+            // Let's get its type (talon/spark/vector/etc)
             String type;
             try {
                 type = obj.get("type").getAsString();
             } catch (UnsupportedOperationException ex) {
-                type = "victor";
+                type = "victor"; // Victor is default
             }
-            SpeedController s = getMotor(port, type);
-            if (s == null) return null;
+            SpeedController s = getMotor(port, type); // Get the motor
+            if (s == null) return null; // ...aaaand it failed
             try {
                 if (obj.get("reverse").getAsBoolean()) {
-                    s.setInverted(true);
+                    // It has "reverse": true
+                    s.setInverted(true); // So reverse it
                 }
-            } catch (UnsupportedOperationException ex) {}
-            return s;
+            } catch (UnsupportedOperationException ex) {} // Don't reverse it
+            return s; // Return it
         } catch (UnsupportedOperationException ex) {
             return null;
         }
     }
 
+    /**
+     * Gets a Speed Controller from a port and type
+     * @param port The motor port
+     * @param type The motor's type
+     * @return
+     */
     public static SpeedController getMotor(int port, String type) {
         switch (type) {
             case "victor":
@@ -151,6 +186,10 @@ public class Motors {
     }
 }
 
+/**
+ * Does literally nothing but prevent NullPointerExceptions
+ * Use carefully
+ */
 class InertSpeedController implements SpeedController {
     double speed = 0;
     boolean inverted = false;
