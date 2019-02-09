@@ -119,7 +119,7 @@ public class Controls {
                 
                 default:
                     configuredControls.remove(k);
-                    if(!k.equals("desc")) System.err.println("Unrecognized control: " + k);
+                    if(!k.equals("desc") && !k.contains("placeholder")) System.err.println("Unrecognized control: " + k);
             }
         }
     }
