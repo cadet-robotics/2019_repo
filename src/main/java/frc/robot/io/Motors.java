@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class Motors {
     private HashMap<String, SpeedController> map = new HashMap<>();
-
+    
     private static HashMap<String, String> typeMapDefault = new HashMap<>();
     private static HashMap<String, Integer> portMapDefault = new HashMap<>();
     //private static HashMap<String, String>

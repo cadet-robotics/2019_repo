@@ -31,9 +31,9 @@ public class Controls {
     //Configured control ports and such
     //Axes
     int mainJoystickPort = 0,
-               xAxis = 0,
-               yAxis = 1,
-               zAxis = 2;
+        xAxis = 0,
+        yAxis = 1,
+        zAxis = 2;
 
     int autoLockButtonPort = 5;
 
