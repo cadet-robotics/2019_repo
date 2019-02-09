@@ -1,6 +1,7 @@
 package frc.robot.io;
 
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import frc.robot.Nexus;
 
 /**
  * Contains the mecanumdrive for the robot
@@ -14,11 +15,22 @@ public class Drive {
     /**
      * Default constructor
      * 
-     * @param m The motors instance to use
+     * @param m The Motors instance to use
      */
     public Drive(Motors m) {
         drive = new MecanumDrive(m.frontLeft, m.rearLeft, m.frontRight, m.rearRight);
     }
+
+    /**
+     * Extra constructor that supports Nexus objects
+     *
+     * @param n The Nexus instance to use
+     */
+    public Drive(Nexus n) {
+        this(n.getMotors());
+    }
+
+
     
     /**
      * Runs the mecanum drive
