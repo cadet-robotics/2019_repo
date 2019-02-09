@@ -11,6 +11,12 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * Contains values for RIO ports
+ * Javadoc comments lovingly provided by Alex Pickering
+ * 
+ * @author Owen Avery
+ */
 public class Ports {
     private HashMap<String, DigitalInput> diPorts = new HashMap<>();
     private HashMap<String, DigitalOutput> doPorts = new HashMap<>();
@@ -22,7 +28,14 @@ public class Ports {
     static {
         //typeMap.put("")
     }
-
+    
+    /**
+     * Default constructor
+     * Currently empty
+     * 
+     * @param jsonConfig Config instance to read from
+     * @throws IOException
+     */
     public Ports(JsonObject jsonConfig) throws IOException {
         /*
         JsonObject con = null;

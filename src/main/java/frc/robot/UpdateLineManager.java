@@ -20,14 +20,17 @@ public class UpdateLineManager {
      */
     public static int startListener(NetworkTableInstance nt, SightData see) {
         NetworkTableEntry dataTable = nt.getTable("ShuffleBoard").getEntry("line");
+        
         return dataTable.addListener((e) -> {
             double[] n;
+            
             try {
                 n = e.value.getDoubleArray();
             } catch (ClassCastException ex) {
                 ex.printStackTrace();
                 return;
             }
+            
             if (n.length != 4) return;
             see.setPoints(n[0], n[1], n[2], n[3]);
         }, EntryListenerFlags.kUpdate + EntryListenerFlags.kNew);

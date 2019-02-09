@@ -66,15 +66,19 @@ public class SightData {
         lastUpdate = System.currentTimeMillis();
         int t1 = tieToFirst ? 0 : 2;
         int t2 = t1 + 1;
+        
         tieToFirst ^= distSq(tieToFirst ? p1x : p2x, tieToFirst ? p1y : p2y, data[t1], data[t2]) > distSq(tieToFirst ? p2x : p1x, tieToFirst ? p2y : p1y, data[t1], data[t2]);
+        
         data[0] = p1x;
         data[1] = p1y;
         data[2] = p2x;
         data[3] = p2y;
+        
         double cx = (data[2] - data[0]) / 2;
         double cy = (data[3] - data[1]) / 2;
         double px = data[t1];
         double py = data[t2];
+        
         r = Math.toDegrees(Math.atan2(py - cy, px - cx));
         xOff = (p2x - p1x - X_WIDTH) / 2;
         yOff = (p2y - p1y - Y_WIDTH) / 2;
@@ -98,8 +102,10 @@ public class SightData {
     public double getRotOffset() {
         editLock.readLock().lock();
         double v;
+        
         if (isTimeout()) v = 0;
         else v = r;
+        
         editLock.readLock().unlock();
         return v;
     }
@@ -112,8 +118,10 @@ public class SightData {
     public double getXOffset() {
         editLock.readLock().lock();
         double v;
+        
         if (isTimeout()) v = 0;
         else v = xOff;
+        
         editLock.readLock().unlock();
         return v;
     }
@@ -126,8 +134,10 @@ public class SightData {
     public double getYOffset() {
         editLock.readLock().lock();
         double v;
+        
         if (isTimeout()) v = 0;
         else v = yOff;
+        
         editLock.readLock().unlock();
         return v;
     }
@@ -143,8 +153,10 @@ public class SightData {
      */
     public static double distSq(double p1x, double p1y, double p2x, double p2y) {
         double x, y;
+        
         x = p2x - p1x;
         y = p2y - p1y;
+        
         return x * x + y * y;
     }
 
@@ -160,10 +172,13 @@ public class SightData {
         double c1y = (l1[1] + l1[3]) / 2;
         double c2x = (l2[0] + l2[2]) / 2;
         double c2y = (l2[1] + l2[3]) / 2;
+        
         double xd = c2x - c1x;
         double yd = c2y - c1y;
+        
         double cerr = Math.sqrt(xd * xd / yd * yd);
         double serr = Math.atan2(l1[3] - l1[1], l1[2] - l1[0]) - Math.atan2(l2[3] - l2[1], l2[2] - l2[0]);
+        
         return cerr + serr;
     }
 }

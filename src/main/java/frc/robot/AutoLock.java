@@ -62,6 +62,7 @@ public class AutoLock extends Command {
 		}
 	}, output -> {
 		output = clampAbs(output, MIN_MOTOR_SPEED, Double.POSITIVE_INFINITY);
+		
 		synchronized (posChangeX) {
 			posChangeX = output * 1.5;
 		}
@@ -83,6 +84,7 @@ public class AutoLock extends Command {
 		}
 	}, output -> {
 		output = clampAbs(output, MIN_MOTOR_SPEED, Double.POSITIVE_INFINITY);
+		
 		synchronized (posChangeY) {
 			posChangeY = output * 1.5;
 		}

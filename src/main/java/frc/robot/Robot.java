@@ -43,7 +43,8 @@ public class Robot extends TimedRobot implements Nexus {
 
 	public Sensors sensors = new Sensors();
 
-	public SightData sightData = new SightData();
+	//TODO: owen please fix - needs a networktables instance
+	//public SightData sightData = new SightData();
 
 	public UpdateLineManager lineManager = null;
 
@@ -56,6 +57,7 @@ public class Robot extends TimedRobot implements Nexus {
 		m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
 		m_chooser.addOption("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
+		
 		try{
 			configJSON = ConfigLoader.loadConfigFile();
 		} catch(IOException e){
@@ -63,13 +65,16 @@ public class Robot extends TimedRobot implements Nexus {
 		}
 
 		controls.init(configJSON);
+		
 		try {
 			motors = new Motors(configJSON);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		
 		drive = new Drive(motors);
-		lineManager = new UpdateLineManager(NetworkTableInstance.getDefault(), sightData);
+		//TODO: see sightdata's declaration todo
+		//lineManager = new UpdateLineManager(NetworkTableInstance.getDefault(), sightData);
 
 		if(debug){
 			for(String s : controls.getConfiguredControls()){
@@ -180,7 +185,8 @@ public class Robot extends TimedRobot implements Nexus {
 
 	@Override
 	public SightData getSightData() {
-		return sightData;
+		//TODO: see sighdata's declaration todo
+		return null; //sightData;
 	}
 
 	@Override
@@ -196,5 +202,11 @@ public class Robot extends TimedRobot implements Nexus {
 	@Override
 	public Robot getRobot() {
 		return this;
+	}
+
+	@Override
+	public Elevator getElevator() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
