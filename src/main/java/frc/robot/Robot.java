@@ -43,9 +43,11 @@ public class Robot extends TimedRobot implements Nexus {
 
 	public Sensors sensors = new Sensors();
 
-	public SightData sightData = new SightData();
+	public SightData sightData;
 
-	public UpdateLineManager lineManager = null;
+	public Elevator elevator;
+
+	//public UpdateLineManager lineManager = null;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -56,6 +58,7 @@ public class Robot extends TimedRobot implements Nexus {
 		m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
 		m_chooser.addOption("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
+		sightData = new SightData(NetworkTableInstance.getDefault());
 		try{
 			configJSON = ConfigLoader.loadConfigFile();
 		} catch(IOException e){
@@ -68,8 +71,8 @@ public class Robot extends TimedRobot implements Nexus {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		drive = new Drive(motors);
-		lineManager = new UpdateLineManager(NetworkTableInstance.getDefault(), sightData);
+		drive = new Drive(this);
+		elevator = new Elevator(this);
 
 		if(debug){
 			for(String s : controls.getConfiguredControls()){
@@ -191,6 +194,11 @@ public class Robot extends TimedRobot implements Nexus {
 	@Override
 	public Sensors getSensors() {
 		return sensors;
+	}
+
+	@Override
+	public Elevator getElevator() {
+		return elevator;
 	}
 
 	@Override
