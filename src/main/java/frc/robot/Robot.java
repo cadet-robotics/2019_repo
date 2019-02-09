@@ -7,23 +7,16 @@
 
 package frc.robot;
 
-import java.io.IOException;
-
 import com.google.gson.JsonObject;
-
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.drive.MecanumDrive;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.config.ConfigLoader;
-import frc.robot.io.Controls;
-import frc.robot.io.Drive;
-import frc.robot.io.Motors;
+import frc.robot.io.*;
+
+import java.io.IOException;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,7 +25,7 @@ import frc.robot.io.Motors;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot implements Nexus {
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
 	private String m_autoSelected;
@@ -47,6 +40,8 @@ public class Robot extends TimedRobot {
 	public Motors motors = null;
 
 	public Drive drive = null;
+
+	public Sensors sensors = new Sensors();
 
 	public SightData sightData = new SightData();
 
@@ -111,14 +106,14 @@ public class Robot extends TimedRobot {
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 
-	private Command autoCommand;
+	private AutoLock autoCommand;
 	@Override
 	public void autonomousInit() {
 		m_autoSelected = m_chooser.getSelected();
 		// m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
 		System.out.println("Auto selected: " + m_autoSelected);
 		if (autoCommand != null) autoCommand.cancel();
-		(autoCommand = new AutoLock(drive)).start();
+		(autoCommand = new AutoLock(this)).start();
 	}
 
 	/**
@@ -137,15 +132,12 @@ public class Robot extends TimedRobot {
 			break;
 		}
 		*/
+		Scheduler.getInstance().run();
 		drivePeriodic();
 	}
 
 	@Override
 	public void teleopInit() {
-		if (autoCommand != null) {
-			autoCommand.cancel();
-			autoCommand = null;
-		}
 	}
 
 	/**
@@ -153,11 +145,12 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		Scheduler.getInstance().run();
 		drivePeriodic();
 	}
 
 	public void drivePeriodic() {
-		drive.driveCartesian(controls.getXAxis(), controls.getXAxis(), controls.getXAxis(), false);
+		if (!controls.isAutoLock()) drive.driveCartesian(controls.getXAxis(), controls.getYAxis(), controls.getZAxis());
 	}
 
 	/**
@@ -165,5 +158,43 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+	}
+
+	@Override
+	public void disabledInit() {
+		if (autoCommand != null) {
+			autoCommand.cancel();
+			autoCommand = null;
+		}
+	}
+
+	@Override
+	public Controls getControls() {
+		return controls;
+	}
+
+	@Override
+	public Drive getDriveSystem() {
+		return drive;
+	}
+
+	@Override
+	public SightData getSightData() {
+		return sightData;
+	}
+
+	@Override
+	public Motors getMotors() {
+		return motors;
+	}
+
+	@Override
+	public Sensors getSensors() {
+		return sensors;
+	}
+
+	@Override
+	public Robot getRobot() {
+		return this;
 	}
 }

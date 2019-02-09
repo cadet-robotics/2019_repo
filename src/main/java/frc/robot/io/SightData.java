@@ -1,4 +1,7 @@
-package frc.robot;
+package frc.robot.io;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.UpdateLineManager;
 
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -24,7 +27,20 @@ public class SightData {
     private boolean tieToFirst = true;
 
     private ReadWriteLock editLock = new ReentrantReadWriteLock();
-    
+
+    private NetworkTableInstance nt;
+    private int lineListener;
+
+    public SightData(NetworkTableInstance ntIn) {
+        nt = ntIn;
+        lineListener = UpdateLineManager.startListener(ntIn, this);
+    }
+
+    @Override
+    protected void finalize() {
+        nt.removeEntryListener(lineListener);
+    }
+
     /**
      * Determines whether or not the read thing has timed out
      * 
@@ -47,6 +63,7 @@ public class SightData {
      */
     public void setPoints(double p1x, double p1y, double p2x, double p2y) {
         editLock.writeLock().lock();
+        lastUpdate = System.currentTimeMillis();
         int t1 = tieToFirst ? 0 : 2;
         int t2 = t1 + 1;
         tieToFirst ^= distSq(tieToFirst ? p1x : p2x, tieToFirst ? p1y : p2y, data[t1], data[t2]) > distSq(tieToFirst ? p2x : p1x, tieToFirst ? p2y : p1y, data[t1], data[t2]);
@@ -127,7 +144,26 @@ public class SightData {
     public static double distSq(double p1x, double p1y, double p2x, double p2y) {
         double x, y;
         x = p2x - p1x;
-        y = p2y = p1y;
+        y = p2y - p1y;
         return x * x + y * y;
+    }
+
+    /**
+     * Calculates the error of a pair of lines
+     *
+     * @param l1 The first line
+     * @param l2 The second line
+     * @return The error between the two lines
+     */
+    public static double errorCalc(double[] l1, double[] l2) {
+        double c1x = (l1[0] + l1[2]) / 2;
+        double c1y = (l1[1] + l1[3]) / 2;
+        double c2x = (l2[0] + l2[2]) / 2;
+        double c2y = (l2[1] + l2[3]) / 2;
+        double xd = c2x - c1x;
+        double yd = c2y - c1y;
+        double cerr = Math.sqrt(xd * xd / yd * yd);
+        double serr = Math.atan2(l1[3] - l1[1], l1[2] - l1[0]) - Math.atan2(l2[3] - l2[1], l2[2] - l2[0]);
+        return cerr + serr;
     }
 }
