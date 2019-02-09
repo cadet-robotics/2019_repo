@@ -1,4 +1,22 @@
 {
+  "DIO": {
+    "desc": "You thought it was digital IO, but it was ME! DIO!"
+  },
+  "dio": {
+    "desc": "Digital IO Ports",
+    "no items placeholder": 0
+  },
+  "analog in": {
+    "desc": "Analogue IN Ports",
+    "no items placeholder": 0
+  },
+  "pwm": {
+    "desc": "PWM Ports",
+    "front left": 2,
+    "front right": 1,
+    "rear left": 3,
+    "rear right": 0
+  },
   "controls": {
     "desc": "Controls settings",
     "main joystick": 0,
@@ -6,23 +24,5 @@
     "main joystick y-axis": 1,
     "main joystick z-axis": 2,
     "main joystick auto-lock": 5
-  },
-  "DIO": {
-    "desc": "You thought it was digital IO, but it was ME! DIO!"
-  },
-  "dio": {
-    "desc": "Digital IO Ports",
-	"no items placeholder": 0
-  },
-  "analog in": {
-    "desc": "Analogue IN Ports",
-	"no items placeholder": 0
-  },
-  "pwm": {
-    "desc": "PWM Ports",
-	"front left": 2,
-	"front right": 1,
-	"rear left": 3,
-	"read right": 0
   }
 }
