@@ -21,13 +21,21 @@ import java.util.Set;
 public class Motors {
     private HashMap<String, SpeedController> map = new HashMap<>();
 
-    private static HashMap<String, String> typeMap = new HashMap<>();
+    private static HashMap<String, String> typeMapDefault = new HashMap<>();
+    private static HashMap<String, Integer> portMapDefault = new HashMap<>();
 
     static {
-        typeMap.put("front left", "victor");
-        typeMap.put("rear left", "victor");
-        typeMap.put("front right", "victor");
-        typeMap.put("rear right", "victor");
+        portMapDefault.put("front left", 2);
+        typeMapDefault.put("front left", "victor");
+
+        portMapDefault.put("rear left", 3);
+        typeMapDefault.put("rear left", "victor");
+
+        portMapDefault.put("front right", 1);
+        typeMapDefault.put("front right", "victor");
+
+        portMapDefault.put("rear right", 0);
+        typeMapDefault.put("rear right", "victor");
     }
 
     public SpeedController getSpeedControllerOrInert(String s) {
@@ -64,21 +72,11 @@ public class Motors {
                 if (speed != null) map.put(s, speed);
             }
             SpeedController t;
-            if (!map.containsKey("front left")) {
-                t = getMotor(2, typeMap.get("front left"));
-                if (t != null) map.put("front left", t);
-            }
-            if (!map.containsKey("rear left")) {
-                t = getMotor(3, typeMap.get("rear left"));
-                if (t != null) map.put("rear left", t);
-            }
-            if (!map.containsKey("front right")) {
-                t = getMotor(1, typeMap.get("front right"));
-                if (t != null) map.put("front right", t);
-            }
-            if (!map.containsKey("rear right")) {
-                t = getMotor(0, typeMap.get("rear right"));
-                if (t != null) map.put("rear right", t);
+            for (String s : portMapDefault.keySet()) {
+                if (!map.containsKey(s)) {
+                    t = getMotor(portMapDefault.get(s), typeMapDefault.get(s));
+                    if (t != null) map.put(s, t);
+                }
             }
         } catch (UnsupportedOperationException e) {
             throw new IOException(e);
@@ -89,8 +87,8 @@ public class Motors {
         try {
             int j = e.getAsInt();
             String t = "victor";
-            if (typeMap.containsKey(n)) {
-                t = typeMap.get(n);
+            if (typeMapDefault.containsKey(n)) {
+                t = typeMapDefault.get(n);
             }
             return getMotor(j, t);
         } catch (UnsupportedOperationException ex2) {}
