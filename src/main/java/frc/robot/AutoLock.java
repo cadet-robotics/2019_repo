@@ -153,7 +153,7 @@ public class AutoLock extends Command {
     }
 
 	public boolean isEnabled() {
-    	return controls.isAutoLock();
+    	return controls.isAutoLock() && !sight.isTimeout();
 	}
 	
 	@Override
@@ -169,7 +169,7 @@ public class AutoLock extends Command {
 				////System.out.println("right: " + r);
 				//OI.leftMotor.set(l);
                 //OI.rightMotor.set(r);
-                    if (isEnabled() && !sight.isTimeout()) driveSystem.driveCartesian(posChangeY, posChangeX, rotChange);
+                    if (isEnabled()) driveSystem.driveCartesian(posChangeY, posChangeX, rotChange);
 			    }
 		    }
 		}
