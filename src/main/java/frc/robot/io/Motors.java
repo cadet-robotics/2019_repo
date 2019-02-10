@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Talon;
 import frc.robot.config.ConfigLoader;
@@ -66,14 +65,7 @@ public class Motors {
 	 * @throws IOException
 	 */
 	public void loadMotors() throws IOException {
-		JsonObject pwmJSON = ConfigLoader.loadConfigFile().getAsJsonObject("pwm");
-		
-		//Debug - output all json
-		if(debug) {
-			for(String s : configJSON.keySet()) {
-				System.out.println(s + ": " + pwmJSON.get(s));
-			}
-		}
+		JsonObject pwmJSON = configJSON.getAsJsonObject("pwm");
 		
 		configuredMotors = new ArrayList<>();
 		
@@ -109,7 +101,7 @@ public class Motors {
 				
 				default:
 					configuredMotors.remove(k);
-                    if(!k.equals("desc") && !k.contains("placeholder")) System.err.println("Unrecognized control: " + k);
+                    if(!k.equals("desc") && !k.contains("placeholder")) System.err.println("Unrecognized motor: " + k);
 			}
 		}
 	}

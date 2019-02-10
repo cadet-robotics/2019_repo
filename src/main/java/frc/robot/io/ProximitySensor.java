@@ -1,14 +1,16 @@
 package frc.robot.io;
 
-import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  * Contains a proximity sensor
  * 
+ * TODO: everything
  * @author Alex Pickering
  */
 public class ProximitySensor {
-	AnalogInput in;
+	//I think (hope) they're DI
+	DigitalInput in;
 	
 	/**
 	 * Default constructor
@@ -16,9 +18,14 @@ public class ProximitySensor {
 	 * @param The analog input port
 	 */
 	public ProximitySensor(int port) {
-		in = new AnalogInput(port);
+		in = new DigitalInput(port);
 	}
 	
+	/**
+	 * Gets whether or not the sensor is tripped
+	 * 
+	 * @return Whether or not something has been detected
+	 */
 	public boolean detected() {
 		return false;
 	}

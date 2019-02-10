@@ -4,7 +4,12 @@
   },
   "dio": {
     "desc": "Digital IO Ports",
-    "no items placeholder": 0
+    "proximity sensor 1": 0,
+	"proximity sensor 2": 1,
+	"proximity sensor 3": 2,
+	"proximity sensor 4": 3,
+	"proximity sensor 5": 4,
+	"proximity sensor 6": 5
   },
   "analog in": {
     "desc": "Analogue IN Ports",
