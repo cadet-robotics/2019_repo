@@ -15,14 +15,16 @@
     "front left": 2,
     "front right": 1,
     "rear left": 3,
-    "rear right": 0
+    "rear right": 0,
+	"left elevator": 4
+	"right elevator": 5
   },
   "controls": {
     "desc": "Controls settings",
     "main joystick": 0,
-    "main joystick x-axis": 0,
     "main joystick y-axis": 1,
     "main joystick z-axis": 2,
-    "main joystick auto-lock": 5
+    "main joystick auto-lock": 5,
+    "main joystick x-axis": 0
   }
 }
