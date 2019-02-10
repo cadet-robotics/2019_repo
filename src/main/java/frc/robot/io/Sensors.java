@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 public class Sensors {
 	JsonObject configJSON;
 	
-    public Gyro gyro = new ADXRS450_Gyro();
+	//null until we have a gyro on the robot
+    public Gyro gyro = null; //new ADXRS450_Gyro();
     
     public ProximitySensor[] elevatorSensors = new ProximitySensor[6];
     

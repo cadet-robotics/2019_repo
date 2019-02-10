@@ -32,10 +32,12 @@ public class Controls {
         zAxis = 2;
     
     //Buttons
-    int autoLockButtonPort = 5;
+    int autoLockButtonPort = 5,
+    	elevatorUp = 5,
+    	elevatorDown = 3;
     int[] elevatorPos = new int[6];
 
-    boolean debug = true;
+    boolean debug = false;
     
     //Getters
     /**
@@ -62,6 +64,20 @@ public class Controls {
         return mainJoystick.getRawAxis(zAxis);
     }
     
+    public boolean getElevatorUp() {
+    	return mainJoystick.getRawButton(elevatorUp);
+    }
+    
+    public boolean getElevatorDown() {
+    	return mainJoystick.getRawButton(elevatorDown);
+    }
+    
+    /**
+     * Gets an elevator position button
+     * 
+     * @param pos The position to check
+     * @return Whether or not the position's button is pressed
+     */
     public boolean getElevatorButton(int pos) {
     	return mainJoystick.getRawButton(elevatorPos[pos]);
     }
@@ -114,6 +130,7 @@ public class Controls {
         
         for(String k : controlsJSON.keySet()){
             JsonElement item = controlsJSON.get(k);
+            if(k.equals("desc") || k.contains("placeholder")) continue;
             int itemInt = item.getAsInt();
             configuredControls.add(k);
             
@@ -161,10 +178,18 @@ public class Controls {
                 case "elevator pos 6":
                 	elevatorPos[5] = itemInt;
                 	break;
+                
+                case "elevator up":
+                	elevatorUp = itemInt;
+                	break;
+                
+                case "elevator down":
+                	elevatorDown = itemInt;
+                	break;
 
                 default:
                     configuredControls.remove(k);
-                    if(!k.equals("desc") && !k.contains("placeholder")) System.err.println("Unrecognized control: " + k);
+                    System.err.println("Unrecognized control: " + k);
             }
         }
     }

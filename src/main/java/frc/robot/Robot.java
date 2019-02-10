@@ -149,9 +149,18 @@ public class Robot extends TimedRobot implements Nexus {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		System.out.println("X: " + controls.getXAxis() + " Y: " + controls.getYAxis() + " Z: " + controls.getZAxis());
+		
 		Scheduler.getInstance().run();
 		drivePeriodic();
 		runElevator();
+		
+		//temp test thing
+		double thing = 0;
+		if(controls.getElevatorUp()) thing += 0.25;
+		if(controls.getElevatorDown()) thing -= 0.25;
+		motors.leftElevator.set(-thing);
+		motors.rightElevator.set(thing);
 	}
 	
 	/**

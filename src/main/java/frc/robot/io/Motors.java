@@ -49,6 +49,7 @@ public class Motors {
 	 * @param configJSON The isntance of the configuration file
 	 */
 	public void init(JsonObject configJSON) {
+		System.out.println("INIT MOTORS");
 		this.configJSON = configJSON;
 		
 		try {
@@ -71,24 +72,29 @@ public class Motors {
 		
 		for(String k : pwmJSON.keySet()) {
 			JsonElement item = pwmJSON.get(k);
+			if(k.equals("desc") || k.contains("placeholder")) continue;
 			int itemInt = item.getAsInt();
 			configuredMotors.add(k);
 			
 			switch(k) {
 				case "front left":
 					frontLeftDrive = new Spark(itemInt);
+					System.out.println("FLD: " + itemInt);
 					break;
 				
 				case "front right":
 					frontRightDrive = new Spark(itemInt);
+					System.out.println("FRD: " + itemInt);
 					break;
 				
 				case "rear left":
 					backLeftDrive = new Spark(itemInt);
+					System.out.println("BLD: " + itemInt);
 					break;
 				
 				case "rear right":
 					backRightDrive = new Spark(itemInt);
+					System.out.println("BRD: " + itemInt);
 					break;
 				
 				case "left elevator":
@@ -101,7 +107,7 @@ public class Motors {
 				
 				default:
 					configuredMotors.remove(k);
-                    if(!k.equals("desc") && !k.contains("placeholder")) System.err.println("Unrecognized motor: " + k);
+                    System.err.println("Unrecognized motor: " + k);
 			}
 		}
 	}

@@ -45,7 +45,6 @@ public class Drive {
      * @param r Rotation speed to use
      */
     public void driveCartesian(double y, double x, double r) {
-        System.out.println(String.format("X: %.02f, Y: %.02f, R: %.02f", x, y, r) + y);
         drive.driveCartesian(y, x, r);
     }
 }

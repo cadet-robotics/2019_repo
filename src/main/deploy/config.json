@@ -5,11 +5,11 @@
   "dio": {
     "desc": "Digital IO Ports",
     "proximity sensor 1": 0,
-	"proximity sensor 2": 1,
-	"proximity sensor 3": 2,
-	"proximity sensor 4": 3,
-	"proximity sensor 5": 4,
-	"proximity sensor 6": 5
+    "proximity sensor 2": 1,
+    "proximity sensor 3": 2,
+    "proximity sensor 4": 3,
+    "proximity sensor 5": 4,
+    "proximity sensor 6": 5
   },
   "analog in": {
     "desc": "Analogue IN Ports",
@@ -17,25 +17,27 @@
   },
   "pwm": {
     "desc": "PWM Ports",
-    "front left": 2,
-    "front right": 1,
-    "rear left": 3,
-    "rear right": 0,
-	"left elevator": 4
-	"right elevator": 5
+    "rear right": 8,
+    "left elevator": 5,
+    "right elevator": 4,
+    "front right": 7,
+    "front left": 6,
+    "rear left": 9
   },
   "controls": {
     "desc": "Controls settings",
     "main joystick": 0,
-    "main joystick y-axis": 1,
-    "main joystick z-axis": 2,
-    "main joystick auto-lock": 5,
     "main joystick x-axis": 0,
-	"elevator pos 1": 11,
-	"elevator pos 2": 12,
-	"elevator pos 3": 9,
-	"elevator pos 4": 10,
-	"elevator pos 5": 7,
-	"elevator pos 6": 8
+    "elevator pos 2": 12,
+    "elevator pos 3": 9,
+    "elevator pos 4": 10,
+    "elevator pos 5": 7,
+    "elevator pos 6": 8,
+    "main joystick y-axis": 1,
+    "main joystick auto-lock": 4,
+    "elevator up": 5,
+    "elevator down": 3,
+    "main joystick z-axis": 2,
+    "elevator pos 1": 11
   }
 }
