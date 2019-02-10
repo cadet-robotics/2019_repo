@@ -46,6 +46,8 @@ public class Robot extends TimedRobot implements Nexus {
 	public SightData sightData;
 
 	public Elevator elevator;
+	
+	boolean newElevatorPress = true;
 
 	//public UpdateLineManager lineManager = null;
 
@@ -149,8 +151,34 @@ public class Robot extends TimedRobot implements Nexus {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		drivePeriodic();
+		runElevator();
 	}
-
+	
+	/**
+	 * Runs the elevator
+	 */
+	public void runElevator() {
+		boolean elevatorButtonsPressed = false;
+		int elevatorPressIndex = -1;
+		
+		for(int i = 0 ; i < 6; i++) {
+			if(controls.getElevatorButton(i)) {
+				elevatorButtonsPressed = true;
+				elevatorPressIndex = i;
+				break;
+			}
+		}
+		
+		if(elevatorButtonsPressed && newElevatorPress) {
+			elevator.moveTo(elevatorPressIndex);
+		} else if(!elevatorButtonsPressed && !newElevatorPress) {
+			newElevatorPress = true;
+		}
+	}
+	
+	/**
+	 * Runs the mecanum drive
+	 */
 	public void drivePeriodic() {
 		if (!controls.isAutoLock()) drive.driveCartesian(controls.getXAxis(), controls.getYAxis(), controls.getZAxis());
 	}
@@ -203,11 +231,5 @@ public class Robot extends TimedRobot implements Nexus {
 	@Override
 	public Robot getRobot() {
 		return this;
-	}
-
-	@Override
-	public Elevator getElevator() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

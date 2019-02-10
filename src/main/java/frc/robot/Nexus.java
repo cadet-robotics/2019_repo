@@ -4,22 +4,21 @@ import frc.robot.io.*;
 
 /**
  * Interface for things containing all subsystems
- * Javadoc by Alex Pickering
  * 
  * @author Owen Avery
  */
 public interface Nexus {
-    Controls getControls();
+    public Controls getControls();
 
-    Drive getDriveSystem();
+    public Drive getDriveSystem();
 
-    SightData getSightData();
+    public SightData getSightData();
 
-    Motors getMotors();
+    public Motors getMotors();
 
-    Sensors getSensors();
+    public Sensors getSensors();
 
-    Elevator getElevator();
+    public Elevator getElevator();
 
-    Robot getRobot();
+    public Robot getRobot();
 }

@@ -30,6 +30,12 @@
     "main joystick y-axis": 1,
     "main joystick z-axis": 2,
     "main joystick auto-lock": 5,
-    "main joystick x-axis": 0
+    "main joystick x-axis": 0,
+	"elevator pos 1": 11,
+	"elevator pos 2": 12,
+	"elevator pos 3": 9,
+	"elevator pos 4": 10,
+	"elevator pos 5": 7,
+	"elevator pos 6": 8
   }
 }
