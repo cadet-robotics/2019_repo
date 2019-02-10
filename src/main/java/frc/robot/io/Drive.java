@@ -18,11 +18,11 @@ public class Drive {
      * @param m The Motors instance to use
      */
     public Drive(Motors m) {
-        drive = new MecanumDrive(
-                m.getSpeedControllerOrInert("front left"),
-                m.getSpeedControllerOrInert("rear left"),
-                m.getSpeedControllerOrInert("front right"),
-                m.getSpeedControllerOrInert("rear right"));
+    	drive = new MecanumDrive(
+    			m.frontLeftDrive,
+    			m.backLeftDrive,
+    			m.frontRightDrive,
+    			m.backRightDrive);
     }
 
     /**

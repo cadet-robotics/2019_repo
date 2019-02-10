@@ -37,7 +37,7 @@ public class Robot extends TimedRobot implements Nexus {
 
 	public Controls controls = new Controls();
 
-	public Motors motors = null;
+	public Motors motors = new Motors();
 
 	public Drive drive = null;
 
@@ -65,14 +65,10 @@ public class Robot extends TimedRobot implements Nexus {
 		} catch(IOException e){
 			e.printStackTrace();
 		}
-
-		controls.init(configJSON);
 		
-		try {
-			motors = new Motors(configJSON);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		//Initialize configured classes
+		controls.init(configJSON);
+		motors.init(configJSON);
 		
 		drive = new Drive(this);
 		elevator = new Elevator(this);
