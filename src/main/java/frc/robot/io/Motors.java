@@ -38,7 +38,7 @@ public class Motors {
     /**
      * Gets a motor, returning a fake one if unsuccessful
      * @param s The motor name
-     * @return
+     * @return A SpeedController
      */
     public SpeedController getSpeedControllerOrInert(String s) {
         return getSpeedControllerOrFallback(s, new InertSpeedController());
@@ -48,10 +48,22 @@ public class Motors {
      * Gets a motor, returning a fallback one if unsuccessful
      * @param s The motor name
      * @param sf The fallback motor
-     * @return
+     * @return A SpeedController
      */
     public SpeedController getSpeedControllerOrFallback(String s, SpeedController sf) {
         if (!map.containsKey(s)) return sf;
+        return map.get(s);
+    }
+
+    /**
+     * Gets a motor, erroring if unsuccessful (NullPointerException)
+     * @param s The motor name
+     * @param sf The fallback motor
+     * @throws NullPointerException
+     * @return A SpeedController
+     */
+    public SpeedController getSpeedControllerOrError(String s, SpeedController sf) {
+        if (!map.containsKey(s)) throw new NullPointerException();
         return map.get(s);
     }
 
@@ -76,13 +88,14 @@ public class Motors {
     /**
      * Default constructor
      * 
-     * @param configIn JSON Config reading
+     * @param configIn JSON Config we're reading, from ConfigLoader
      * @throws IOException
      */
     public Motors(JsonObject configIn) throws IOException {
         //int fl = 2, rl = 3, fr = 1, rr = 0; //Default values
         try {
             JsonObject con = configIn.getAsJsonObject("pwm");
+            if (con == null) throw
             for (String s : con.keySet()) {
                 if (s.equals("desc")) continue;
                 JsonElement e = con.get(s);
@@ -102,24 +115,24 @@ public class Motors {
     }
 
     /**
-     *
-     * @param e The JsonElement
-     * @param n The name of the motor/key for the JsonObject
-     * @return A SpeedController for a JsonElement motor definition
+     * Gets a Speed Controller from a config json element
+     * @param portMapSubsection The part of the config we're loading as a motor
+     * @param name The name of the motor that we're loading
+     * @return A SpeedController for a JsonElement motor definition, null on failure
      */
-    public static SpeedController getSpeedController(JsonElement e, String n) {
+    private static SpeedController getSpeedController(JsonElement portMapSubsection, String name) {
         // Cross compatible - each motor can be an int
         try {
-            int j = e.getAsInt();
-            String t = "victor";
-            if (typeMapDefault.containsKey(n)) {
-                t = typeMapDefault.get(n);
+            int portNumber = portMapSubsection.getAsInt();
+            String type = "victor";
+            if (typeMapDefault.containsKey(name)) {
+                 type = typeMapDefault.get(name);
             }
-            return getMotor(j, t);
+            return getMotor(portNumber, type);
         } catch (UnsupportedOperationException ex2) {}
         JsonObject obj;
         try {
-            obj = e.getAsJsonObject(); // Is it an object?
+            obj = portMapSubsection.getAsJsonObject(); // Is it an object?
         } catch (UnsupportedOperationException ex) {return null;} // Nope
         try {
             int port;
@@ -132,7 +145,10 @@ public class Motors {
                     ArrayList<SpeedController> s = new ArrayList<>();
                     SpeedController t;
                     for (int i = 0; i < motorList.size(); i++) {
-                        if ((t = getSpeedController(motorList.get(i), n + "#" + i)) != null) {
+                        // Submotor names are [motorname]#[index]
+                        // EX motor1#0
+                        // EX motor2#1#5
+                        if ((t = getSpeedController(motorList.get(i), name + "#" + i)) != null) {
                             // We turned one of the elements into a speed controller
                             s.add(t); // So add it to the list
                         }
@@ -171,9 +187,9 @@ public class Motors {
      * Gets a Speed Controller from a port and type
      * @param port The motor port
      * @param type The motor's type
-     * @return
+     * @return A SpeedController or null if the type doesn't exist
      */
-    public static SpeedController getMotor(int port, String type) {
+    private static SpeedController getMotor(int port, String type) {
         switch (type) {
             case "victor":
                 return new PWMVictorSPX(port);
