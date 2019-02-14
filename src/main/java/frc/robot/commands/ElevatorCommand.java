@@ -52,10 +52,10 @@ public class ElevatorCommand extends Command {
 		if(isFinished()) return;
 		
 		if(!dir /*currentPosition > toPosition*/) {
-			nexus.getMotors().leftElevator.set(-SPEED);
+			nexus.getMotors().leftElevator.set(SPEED);
 			nexus.getMotors().rightElevator.set(-SPEED);
 		} else {
-			nexus.getMotors().leftElevator.set(SPEED);
+			nexus.getMotors().leftElevator.set(-SPEED);
 			nexus.getMotors().rightElevator.set(SPEED);
 		}
 	}

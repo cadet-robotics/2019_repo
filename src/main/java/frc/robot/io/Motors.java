@@ -3,12 +3,10 @@ package frc.robot.io;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import edu.wpi.first.wpilibj.Spark;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Talon;
-import frc.robot.config.ConfigLoader;
 
 /**
  * The legibility-orient rewrite of the motors class
@@ -23,10 +21,10 @@ public class Motors {
 	ArrayList<String> configuredMotors = new ArrayList<>();
 	
 	//Motor Objects
-	public Spark frontLeftDrive,
-				 frontRightDrive,
-				 backLeftDrive,
-				 backRightDrive;
+	public CANSparkMax frontLeftDrive,
+					   frontRightDrive,
+					   backLeftDrive,
+					   backRightDrive;
 	
 	public Talon leftElevator,
 				 rightElevator;
@@ -71,29 +69,30 @@ public class Motors {
 		configuredMotors = new ArrayList<>();
 		
 		for(String k : pwmJSON.keySet()) {
-			JsonElement item = pwmJSON.get(k);
 			if(k.equals("desc") || k.contains("placeholder")) continue;
-			int itemInt = item.getAsInt();
+			
+			JsonObject item = pwmJSON.getAsJsonObject(k);
+			int itemInt = item.get("id").getAsInt();
 			configuredMotors.add(k);
 			
 			switch(k) {
 				case "front left":
-					frontLeftDrive = new Spark(itemInt);
+					frontLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
 					System.out.println("FLD: " + itemInt);
 					break;
 				
 				case "front right":
-					frontRightDrive = new Spark(itemInt);
+					frontRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
 					System.out.println("FRD: " + itemInt);
 					break;
 				
 				case "rear left":
-					backLeftDrive = new Spark(itemInt);
+					backLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
 					System.out.println("BLD: " + itemInt);
 					break;
 				
 				case "rear right":
-					backRightDrive = new Spark(itemInt);
+					backRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
 					System.out.println("BRD: " + itemInt);
 					break;
 				

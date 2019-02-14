@@ -17,18 +17,35 @@
   },
   "pwm": {
     "desc": "PWM Ports",
-    "rear right": 8,
-    "left elevator": 5,
-    "right elevator": 4,
-    "front right": 7,
-    "front left": 6,
-    "rear left": 9
+    "front left": {
+      "type": "can",
+      "id": 0
+    },
+    "front right": {
+      "type": "can",
+      "id": 1
+    },
+    "rear right": {
+      "type": "can",
+      "id": 2
+    },
+    "rear left": {
+      "type": "can",
+      "id": 3
+    },
+    "right elevator": {
+      "type": "pwm",
+      "id": 8
+    },
+    "left elevator": {
+      "type": "pwm",
+      "id": 9
+    }
   },
   "controls": {
     "desc": "Controls settings",
     "main joystick": 0,
     "main joystick x-axis": 0,
-    "elevator pos 2": 12,
     "elevator pos 3": 9,
     "elevator pos 4": 10,
     "elevator pos 5": 7,
@@ -38,6 +55,7 @@
     "elevator up": 5,
     "elevator down": 3,
     "main joystick z-axis": 2,
-    "elevator pos 1": 11
+    "elevator pos 1": 11,
+    "elevator pos 2": 12
   }
 }

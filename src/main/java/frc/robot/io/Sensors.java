@@ -1,11 +1,8 @@
 package frc.robot.io;
 
-import java.io.IOException;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 /**
