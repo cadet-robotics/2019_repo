@@ -1,8 +1,7 @@
 package frc.robot.io;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SpeedController;
-import frc.robot.Nexus;
+import frc.robot.Robot;
 import frc.robot.commands.ElevatorCommand;
 
 /**
@@ -13,7 +12,7 @@ import frc.robot.commands.ElevatorCommand;
  */
 public class Elevator {
     Encoder encoder;
-    Motors motors;
+    Robot nexus;
     
     //The current location or height of the elevator
     int location;
@@ -24,18 +23,8 @@ public class Elevator {
      * @param m Motors instance to use
      * @author Alex Pickering
      */
-    public Elevator(Motors m) {
-        motors = m;
-    }
-    
-    /**
-     * Nexus constructor
-     * 
-     * @param n Nexus instance to use
-     * @author Owen Avery
-     */
-    public Elevator(Nexus n) {
-        this(n.getMotors());
+    public Elevator(Robot nexus) {
+        this.nexus = nexus;
     }
     
     /**
@@ -48,7 +37,7 @@ public class Elevator {
     	//Make sure the position is correct
     	if(toPosition < 0 || toPosition > 5 || location == toPosition) return false;
     	
-    	ElevatorCommand movement = new ElevatorCommand(toPosition, location);
+    	ElevatorCommand movement = new ElevatorCommand(toPosition, location, nexus);
     	movement.start();
     	
     	location = toPosition;

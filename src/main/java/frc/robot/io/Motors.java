@@ -3,13 +3,10 @@ package frc.robot.io;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj.Spark;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Talon;
-import frc.robot.config.ConfigLoader;
 
 /**
  * The legibility-orient rewrite of the motors class
@@ -24,10 +21,10 @@ public class Motors {
 	ArrayList<String> configuredMotors = new ArrayList<>();
 	
 	//Motor Objects
-	public Spark frontLeftDrive,
-				 frontRightDrive,
-				 backLeftDrive,
-				 backRightDrive;
+	public CANSparkMax frontLeftDrive,
+					   frontRightDrive,
+					   backLeftDrive,
+					   backRightDrive;
 	
 	public Talon leftElevator,
 				 rightElevator;
@@ -50,6 +47,7 @@ public class Motors {
 	 * @param configJSON The isntance of the configuration file
 	 */
 	public void init(JsonObject configJSON) {
+		System.out.println("INIT MOTORS");
 		this.configJSON = configJSON;
 		
 		try {
@@ -66,37 +64,36 @@ public class Motors {
 	 * @throws IOException
 	 */
 	public void loadMotors() throws IOException {
-		JsonObject pwmJSON = ConfigLoader.loadConfigFile().getAsJsonObject("pwm");
-		
-		//Debug - output all json
-		if(debug) {
-			for(String s : configJSON.keySet()) {
-				System.out.println(s + ": " + pwmJSON.get(s));
-			}
-		}
+		JsonObject pwmJSON = configJSON.getAsJsonObject("pwm");
 		
 		configuredMotors = new ArrayList<>();
 		
 		for(String k : pwmJSON.keySet()) {
-			JsonElement item = pwmJSON.get(k);
-			int itemInt = item.getAsInt();
+			if(k.equals("desc") || k.contains("placeholder")) continue;
+			
+			JsonObject item = pwmJSON.getAsJsonObject(k);
+			int itemInt = item.get("id").getAsInt();
 			configuredMotors.add(k);
 			
 			switch(k) {
 				case "front left":
-					frontLeftDrive = new Spark(itemInt);
+					frontLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
+					System.out.println("FLD: " + itemInt);
 					break;
 				
 				case "front right":
-					frontRightDrive = new Spark(itemInt);
+					frontRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
+					System.out.println("FRD: " + itemInt);
 					break;
 				
 				case "rear left":
-					backLeftDrive = new Spark(itemInt);
+					backLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
+					System.out.println("BLD: " + itemInt);
 					break;
 				
 				case "rear right":
-					backRightDrive = new Spark(itemInt);
+					backRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
+					System.out.println("BRD: " + itemInt);
 					break;
 				
 				case "left elevator":
@@ -109,7 +106,7 @@ public class Motors {
 				
 				default:
 					configuredMotors.remove(k);
-                    if(!k.equals("desc") && !k.contains("placeholder")) System.err.println("Unrecognized control: " + k);
+                    System.err.println("Unrecognized motor: " + k);
 			}
 		}
 	}

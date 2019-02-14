@@ -7,9 +7,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.buttons.Trigger;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.config.ConfigLoader;
 
 /**
@@ -26,7 +23,6 @@ public class Controls {
     
     //Controls objects
     Joystick mainJoystick;
-    JoystickButton autoLockButton;
     
     //Configured control ports and such
     //Axes
@@ -34,10 +30,14 @@ public class Controls {
         xAxis = 0,
         yAxis = 1,
         zAxis = 2;
+    
+    //Buttons
+    int autoLockButtonPort = 5,
+    	elevatorUp = 5,
+    	elevatorDown = 3;
+    int[] elevatorPos = new int[6];
 
-    int autoLockButtonPort = 5;
-
-    boolean debug = true;
+    boolean debug = false;
     
     //Getters
     /**
@@ -63,13 +63,31 @@ public class Controls {
     public double getZAxis(){
         return mainJoystick.getRawAxis(zAxis);
     }
+    
+    public boolean getElevatorUp() {
+    	return mainJoystick.getRawButton(elevatorUp);
+    }
+    
+    public boolean getElevatorDown() {
+    	return mainJoystick.getRawButton(elevatorDown);
+    }
+    
+    /**
+     * Gets an elevator position button
+     * 
+     * @param pos The position to check
+     * @return Whether or not the position's button is pressed
+     */
+    public boolean getElevatorButton(int pos) {
+    	return mainJoystick.getRawButton(elevatorPos[pos]);
+    }
 
     /**
      * Gets the Auto Lock Button state
      * @return
      */
     public boolean isAutoLock() {
-        return autoLockButton.get();
+        return mainJoystick.getRawButton(autoLockButtonPort);
     }
     
     public ArrayList<String> getConfiguredControls(){
@@ -91,7 +109,6 @@ public class Controls {
         }
         
         mainJoystick = new Joystick(mainJoystickPort);
-        autoLockButton = new JoystickButton(mainJoystick, autoLockButtonPort);
     }
     
     /**
@@ -113,32 +130,66 @@ public class Controls {
         
         for(String k : controlsJSON.keySet()){
             JsonElement item = controlsJSON.get(k);
+            if(k.equals("desc") || k.contains("placeholder")) continue;
+            int itemInt = item.getAsInt();
             configuredControls.add(k);
             
             switch(k){
                 case "main joystick":
-                    mainJoystickPort = item.getAsInt();
+                    mainJoystickPort = itemInt;
                     break;
                 
                 case "main joystick x-axis":
-                    xAxis = item.getAsInt();
+                    xAxis = itemInt;
                     break;
                 
                 case "main joystick y-axis":
-                    yAxis = item.getAsInt();
+                    yAxis = itemInt;
                     break;
                 
                 case "main joystick z-axis":
-                    zAxis = item.getAsInt();
+                    zAxis = itemInt;
                     break;
 
                 case "main joystick auto-lock":
-                    autoLockButtonPort = item.getAsInt();
+                    autoLockButtonPort = itemInt;
                     break;
+                
+                case "elevator pos 1":
+                	elevatorPos[0] = itemInt;
+                	break;
+                
+                case "elevator pos 2":
+                	elevatorPos[1] = itemInt;
+                	break;
+                
+                case "elevator pos 3":
+                	elevatorPos[2] = itemInt;
+                	break;
+                
+                case "elevator pos 4":
+                	elevatorPos[3] = itemInt;
+                	break;
+                
+                case "elevator pos 5":
+                	elevatorPos[4] = itemInt;
+                	break;
+                
+                case "elevator pos 6":
+                	elevatorPos[5] = itemInt;
+                	break;
+                
+                case "elevator up":
+                	elevatorUp = itemInt;
+                	break;
+                
+                case "elevator down":
+                	elevatorDown = itemInt;
+                	break;
 
                 default:
                     configuredControls.remove(k);
-                    if(!k.equals("desc") && !k.contains("placeholder")) System.err.println("Unrecognized control: " + k);
+                    System.err.println("Unrecognized control: " + k);
             }
         }
     }

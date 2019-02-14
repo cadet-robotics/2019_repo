@@ -30,6 +30,10 @@ public class Robot extends TimedRobot implements Nexus {
 	private static final String kCustomAuto = "My Auto";
 	private String m_autoSelected;
 	private final SendableChooser<String> m_chooser = new SendableChooser<>();
+	
+	static final double DRIVE_MODIFIER = 0.8,			//Multiplier for teleop drive motors
+						DRIVE_THRESHOLD = 0.1,			//Threshold for the teleop controls
+						ELEVATOR_MANUAL_SPEED = 0.4;	//Manual control speed for the elevator
 
 	private static final boolean debug = true;
 
@@ -46,6 +50,9 @@ public class Robot extends TimedRobot implements Nexus {
 	public SightData sightData;
 
 	public Elevator elevator;
+	
+	boolean newElevatorPress = true,
+			throttle = true;
 
 	//public UpdateLineManager lineManager = null;
 
@@ -147,12 +154,56 @@ public class Robot extends TimedRobot implements Nexus {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		System.out.println("X: " + controls.getXAxis() + " Y: " + controls.getYAxis() + " Z: " + controls.getZAxis());
+		
 		Scheduler.getInstance().run();
 		drivePeriodic();
+		runElevator();
 	}
-
+	
+	/**
+	 * Runs the elevator
+	 */
+	public void runElevator() {
+		//This section runs the elevator to specific positions
+		boolean elevatorButtonsPressed = false;
+		int elevatorPressIndex = -1;
+		
+		for(int i = 0 ; i < 6; i++) {
+			if(controls.getElevatorButton(i)) {
+				elevatorButtonsPressed = true;
+				elevatorPressIndex = i;
+				break;
+			}
+		}
+		
+		if(elevatorButtonsPressed && newElevatorPress) {
+			elevator.moveTo(elevatorPressIndex);
+		} else if(!elevatorButtonsPressed && !newElevatorPress) {
+			newElevatorPress = true;
+		}
+		
+		//This section runs the elevator manually
+		double elevatorSpeed = 0;
+		if(controls.getElevatorUp()) elevatorSpeed += ELEVATOR_MANUAL_SPEED;
+		if(controls.getElevatorDown()) elevatorSpeed -= ELEVATOR_MANUAL_SPEED;
+		motors.leftElevator.set(-elevatorSpeed);
+		motors.rightElevator.set(elevatorSpeed);
+	}
+	
+	/**
+	 * Runs the mecanum drive
+	 */
 	public void drivePeriodic() {
-		if (!controls.isAutoLock()) drive.driveCartesian(controls.getXAxis(), controls.getYAxis(), controls.getZAxis());
+		double xAxis = controls.getXAxis(),
+			   yAxis = controls.getYAxis(),
+			   zAxis = controls.getZAxis();
+		
+		if(Math.abs(xAxis) < 0.25) xAxis = 0;
+		if(Math.abs(yAxis) < 0.25) yAxis = 0;
+		if(Math.abs(zAxis) < 0.25) zAxis = 0;
+		
+		if (!controls.isAutoLock()) drive.driveCartesian(xAxis, yAxis, zAxis);
 	}
 
 	/**
@@ -203,11 +254,5 @@ public class Robot extends TimedRobot implements Nexus {
 	@Override
 	public Robot getRobot() {
 		return this;
-	}
-
-	@Override
-	public Elevator getElevator() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
