@@ -1,4 +1,4 @@
-package frc.robot.io;
+package frc.robot.sensors;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

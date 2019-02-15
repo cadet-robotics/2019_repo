@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.io.Controls;
 import frc.robot.io.Drive;
-import frc.robot.io.Sensors;
-import frc.robot.io.SightData;
+import frc.robot.sensors.Sensors;
+import frc.robot.sensors.SightData;
 
 /**
  * Controls motor PID loop for some auto-y stuff

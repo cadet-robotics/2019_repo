@@ -12,8 +12,7 @@ public class ElevatorCommand extends Command {
 	static final double SPEED = 0.25;
 	
 	int currentPosition,
-		toPosition,
-		counter = 0;
+		toPosition;
 	
 	boolean dir;
 	
@@ -39,22 +38,19 @@ public class ElevatorCommand extends Command {
 	
 	@Override
 	protected void execute() {
-		//TODO: once sensors exist, uncomment this and remove the other
-		/*for(int i = 0; i < nexus.getSensors().elevatorSensors.length; i++) {
+		//Find current position
+		for(int i = 0; i < nexus.getSensors().elevatorSensors.length; i++) {
 			if(nexus.getSensors().elevatorSensors[i].detected()) {
 				currentPosition = i;
 			}
-		}*/
-		
-		//temporary until sensors exist
-		if(++counter % 20 == 0) currentPosition = (dir ? currentPosition + 1 : currentPosition - 1);
+		}
 		
 		if(isFinished()) return;
 		
-		if(!dir /*currentPosition > toPosition*/) {
+		if(currentPosition > toPosition) { //Move down
 			nexus.getMotors().leftElevator.set(SPEED);
 			nexus.getMotors().rightElevator.set(-SPEED);
-		} else {
+		} else { //Move up
 			nexus.getMotors().leftElevator.set(-SPEED);
 			nexus.getMotors().rightElevator.set(SPEED);
 		}

@@ -1,15 +1,13 @@
-package frc.robot.io;
+package frc.robot.sensors;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  * Contains a proximity sensor
  * 
- * TODO: everything
  * @author Alex Pickering
  */
 public class ProximitySensor {
-	//I think (hope) they're DI
 	DigitalInput in;
 	
 	/**
@@ -27,6 +25,6 @@ public class ProximitySensor {
 	 * @return Whether or not something has been detected
 	 */
 	public boolean detected() {
-		return false;
+		return in.get();
 	}
 }

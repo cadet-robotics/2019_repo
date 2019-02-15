@@ -1,4 +1,4 @@
-package frc.robot.io;
+package frc.robot.sensors;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.UpdateLineManager;

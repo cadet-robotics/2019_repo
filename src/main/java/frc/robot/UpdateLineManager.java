@@ -3,7 +3,7 @@ package frc.robot;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.io.SightData;
+import frc.robot.sensors.SightData;
 
 /**
  * Works with networktables to get vision data

@@ -8,6 +8,9 @@
 package frc.robot;
 
 import com.google.gson.JsonObject;
+
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -15,6 +18,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.config.ConfigLoader;
 import frc.robot.io.*;
+import frc.robot.sensors.Sensors;
+import frc.robot.sensors.SightData;
 
 import java.io.IOException;
 
@@ -39,6 +44,8 @@ public class Robot extends TimedRobot implements Nexus {
 	private static final boolean debug = true;
 
 	public JsonObject configJSON;
+	
+	public UsbCamera driverCamera;
 
 	public Controls controls = new Controls();
 
@@ -53,6 +60,7 @@ public class Robot extends TimedRobot implements Nexus {
 	public Elevator elevator;
 	
 	boolean throttle = true,
+			elevatorThrottle = false,
 			clawOpen = true;
 	
 	//New Press booleans
@@ -84,6 +92,9 @@ public class Robot extends TimedRobot implements Nexus {
 		
 		drive = new Drive(this);
 		elevator = new Elevator(this);
+		
+		driverCamera = CameraServer.getInstance().startAutomaticCapture(0);
+		driverCamera.setFPS(15);
 
 		if(debug){
 			for(String s : controls.getConfiguredControls()){
@@ -223,24 +234,52 @@ public class Robot extends TimedRobot implements Nexus {
 		double elevatorSpeed = 0;
 		if(controls.getElevatorUp()) elevatorSpeed += ELEVATOR_MANUAL_SPEED;
 		if(controls.getElevatorDown()) elevatorSpeed -= ELEVATOR_MANUAL_SPEED;
-		motors.leftElevator.set(-elevatorSpeed);
-		motors.rightElevator.set(elevatorSpeed);
+		
+		double t = mapDouble(controls.getThrottleAxis(), 1, -1, 0, 1);
+		
+		motors.leftElevator.set(-elevatorSpeed * (elevatorThrottle ? t : 1));
+		motors.rightElevator.set(elevatorSpeed * (elevatorThrottle ? t : 1));
 	}
 	
 	/**
 	 * Runs the mecanum drive
 	 */
 	public void drivePeriodic() {
-		double xAxis = controls.getXAxis(),
+		double xAxis = -controls.getXAxis(),
 			   yAxis = controls.getYAxis(),
-			   zAxis = controls.getZAxis();
+			   zAxis = -controls.getZAxis();
 		
-		if(Math.abs(xAxis) < 0.25) xAxis = 0;
-		if(Math.abs(yAxis) < 0.25) yAxis = 0;
-		if(Math.abs(zAxis) < 0.25) zAxis = 0;
+		if(Math.abs(xAxis) < DRIVE_THRESHOLD) xAxis = 0;
+		if(Math.abs(yAxis) < DRIVE_THRESHOLD) yAxis = 0;
+		if(Math.abs(zAxis) < DRIVE_THRESHOLD) zAxis = 0;
+		
+		xAxis *= DRIVE_MODIFIER;
+		yAxis *= DRIVE_MODIFIER;
+		zAxis *= DRIVE_MODIFIER;
+		
+		if(throttle) {
+			double t = mapDouble(controls.getThrottleAxis(), 1, -1, 0, 1);
+			xAxis *= t;
+			yAxis *= t;
+			zAxis *= t;
+		}
 		
 		if (!controls.isAutoLock()) drive.driveCartesian(xAxis, yAxis, zAxis);
 	}
+	
+	/**
+	 * Maps a value from range to range
+	 * 
+	 * @param val The value to map
+	 * @param oldMin The old range's minimum
+	 * @param oldMax The old range's maximum
+	 * @param newMin The new range's minimum
+	 * @param newMax The new range's maximum
+	 * @return The new mapped value
+	 */
+	public double mapDouble(double val, double oldMin, double oldMax, double newMin, double newMax){
+	  	return (((val - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin;
+  	}
 
 	/**
 	 * This function is called periodically during test mode.

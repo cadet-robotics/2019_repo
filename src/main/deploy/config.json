@@ -41,32 +41,33 @@
       "type": "pwm",
       "id": 9
     },
-	"left claw wheel": {
-	  "type": "pwm",
-	  "id": 0
-	},
-	"right claw wheel": {
-	  "type": "pwm",
-	  "id": 1
-	}
+    "left claw wheel": {
+      "type": "pwm",
+      "id": 0
+    },
+    "right claw wheel": {
+      "type": "pwm",
+      "id": 1
+    }
   },
   "controls": {
     "desc": "Controls settings",
     "main joystick": 0,
     "main joystick x-axis": 0,
-    "elevator pos 3": 9,
     "elevator pos 4": 10,
     "elevator pos 5": 7,
     "elevator pos 6": 8,
     "main joystick y-axis": 1,
+	"main joystick throttle axis": 3,
     "main joystick auto-lock": 6,
     "elevator up": 5,
     "elevator down": 3,
     "main joystick z-axis": 2,
     "elevator pos 1": 11,
     "elevator pos 2": 12,
-	"claw in": 1,
-	"claw out": 2,
-	"toggle claw": 4
+    "claw in": 1,
+    "claw out": 2,
+    "toggle claw": 4,
+    "elevator pos 3": 9
   }
 }

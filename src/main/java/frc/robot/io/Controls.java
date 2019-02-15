@@ -29,7 +29,8 @@ public class Controls {
     int mainJoystickPort = 0,
         xAxis = 0,
         yAxis = 1,
-        zAxis = 2;
+        zAxis = 2,
+        throttleAxis = 3;
     
     //Buttons
     int autoLockButtonPort = 0,
@@ -65,6 +66,15 @@ public class Controls {
      */
     public double getZAxis(){
         return mainJoystick.getRawAxis(zAxis);
+    }
+    
+    /**
+     * Gets the throttle axis control
+     * 
+     * @return The throttle axis
+     */
+    public double getThrottleAxis() {
+    	return mainJoystick.getRawAxis(throttleAxis);
     }
     
     /**
@@ -190,6 +200,10 @@ public class Controls {
                 case "main joystick z-axis":
                     zAxis = itemInt;
                     break;
+                
+                case "main joystick throttle axis":
+                	throttleAxis = itemInt;
+                	break;
 
                 case "main joystick auto-lock":
                     autoLockButtonPort = itemInt;
