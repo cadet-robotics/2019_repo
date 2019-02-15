@@ -33,7 +33,8 @@ public class Robot extends TimedRobot implements Nexus {
 	
 	static final double DRIVE_MODIFIER = 0.8,			//Multiplier for teleop drive motors
 						DRIVE_THRESHOLD = 0.1,			//Threshold for the teleop controls
-						ELEVATOR_MANUAL_SPEED = 0.4;	//Manual control speed for the elevator
+						ELEVATOR_MANUAL_SPEED = 0.4,	//Manual control speed for the elevator
+						CLAW_WHEEL_SPEED = 0.7;			//Speed of the claw's wheels
 
 	private static final boolean debug = true;
 
@@ -51,8 +52,12 @@ public class Robot extends TimedRobot implements Nexus {
 
 	public Elevator elevator;
 	
+	boolean throttle = true,
+			clawOpen = true;
+	
+	//New Press booleans
 	boolean newElevatorPress = true,
-			throttle = true;
+			newClawTogglePress = true;
 
 	//public UpdateLineManager lineManager = null;
 
@@ -157,8 +162,38 @@ public class Robot extends TimedRobot implements Nexus {
 		System.out.println("X: " + controls.getXAxis() + " Y: " + controls.getYAxis() + " Z: " + controls.getZAxis());
 		
 		Scheduler.getInstance().run();
+		motors.resetAll();
 		drivePeriodic();
 		runElevator();
+		runClaw();
+	}
+	
+	/**
+	 * Runs the claw (opening, closing, wheels)
+	 */
+	public void runClaw() {
+		//Open and close the claw
+		if(controls.getToggleClaw() && newClawTogglePress) {
+			clawOpen = !clawOpen;
+			
+			//toggle solenoids
+			if(clawOpen) {
+				
+			}
+		} else if(!controls.getToggleClaw() && !newClawTogglePress) {
+			newClawTogglePress = true;
+		}
+		
+		//Manage the ball
+		if(clawOpen) { //Can only run if the claw is open
+			double clawSpeed = 0;
+			
+			if(controls.getClawWheelsIn()) clawSpeed += CLAW_WHEEL_SPEED;
+			if(controls.getClawWheelsOut()) clawSpeed -= CLAW_WHEEL_SPEED;
+			
+			motors.leftClaw.set(clawSpeed);
+			motors.rightClaw.set(clawSpeed);
+		}
 	}
 	
 	/**
@@ -177,6 +212,7 @@ public class Robot extends TimedRobot implements Nexus {
 			}
 		}
 		
+		//New button presses (don't spam every tick)
 		if(elevatorButtonsPressed && newElevatorPress) {
 			elevator.moveTo(elevatorPressIndex);
 		} else if(!elevatorButtonsPressed && !newElevatorPress) {

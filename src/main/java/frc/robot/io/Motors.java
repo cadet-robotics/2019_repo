@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.VictorSP;
 
 /**
  * The legibility-orient rewrite of the motors class
@@ -28,6 +29,9 @@ public class Motors {
 	
 	public Talon leftElevator,
 				 rightElevator;
+	
+	public VictorSP leftClaw,
+					rightClaw;
 			 
 	
 	boolean debug = true;
@@ -104,10 +108,34 @@ public class Motors {
 					rightElevator = new Talon(itemInt);
 					break;
 				
+				case "left claw wheel":
+					leftClaw = new VictorSP(itemInt);
+					break;
+				
+				case "right claw wheel":
+					rightClaw = new VictorSP(itemInt);
+					break;
+				
 				default:
 					configuredMotors.remove(k);
                     System.err.println("Unrecognized motor: " + k);
 			}
 		}
+	}
+	
+	/**
+	 * Sets all motors to 0 for safety
+	 */
+	public void resetAll() {
+		frontLeftDrive.set(0);
+		frontRightDrive.set(0);
+		backLeftDrive.set(0);
+		backRightDrive.set(0);
+		
+		leftElevator.set(0);
+		rightElevator.set(0);
+		
+		leftClaw.set(0);
+		rightClaw.set(0);
 	}
 }

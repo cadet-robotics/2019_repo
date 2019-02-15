@@ -32,9 +32,12 @@ public class Controls {
         zAxis = 2;
     
     //Buttons
-    int autoLockButtonPort = 5,
+    int autoLockButtonPort = 0,
     	elevatorUp = 5,
-    	elevatorDown = 3;
+    	elevatorDown = 3,
+    	clawWheelsIn = 1,
+    	clawWheelsOut = 2,
+    	toggleClaw = 4;
     int[] elevatorPos = new int[6];
 
     boolean debug = false;
@@ -64,12 +67,49 @@ public class Controls {
         return mainJoystick.getRawAxis(zAxis);
     }
     
+    /**
+     * Gets the manual raise elevator button
+     * 
+     * @return Elevator Up button state
+     */
     public boolean getElevatorUp() {
     	return mainJoystick.getRawButton(elevatorUp);
     }
     
+    /**
+     * Gets the manual lower elevator button
+     * 
+     * @return Elevator Down button state
+     */
     public boolean getElevatorDown() {
     	return mainJoystick.getRawButton(elevatorDown);
+    }
+    
+    /**
+     * Gets the run claw wheels in button
+     * 
+     * @return Claw Wheels In button state
+     */
+    public boolean getClawWheelsIn() {
+    	return mainJoystick.getRawButton(clawWheelsIn);
+    }
+    
+    /**
+     * Gets the run claw wheels out button
+     * 
+     * @return Claw Wheels Out button state
+     */
+    public boolean getClawWheelsOut() {
+    	return mainJoystick.getRawButton(clawWheelsOut);
+    }
+    
+    /**
+     * Gets the toggle claw button
+     * 
+     * @return Toggle Claw button state
+     */
+    public boolean getToggleClaw() {
+    	return mainJoystick.getRawButton(toggleClaw);
     }
     
     /**
@@ -185,6 +225,18 @@ public class Controls {
                 
                 case "elevator down":
                 	elevatorDown = itemInt;
+                	break;
+                
+                case "claw in":
+                	clawWheelsIn = itemInt;
+                	break;
+                
+                case "claw out":
+                	clawWheelsOut = itemInt;
+                	break;
+                
+                case "toggle claw":
+                	toggleClaw = itemInt;
                 	break;
 
                 default:
