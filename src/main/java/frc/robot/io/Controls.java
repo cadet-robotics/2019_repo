@@ -15,8 +15,13 @@ import java.util.ArrayList;
  */
 public class Controls extends ConfigHandlerInt {
     //Config'd controls record
-    ArrayList<String> configuredControls = new ArrayList<>();
-    
+    ArrayList<String> configuredControls;
+
+    @Override
+    public void preInit() {
+        configuredControls = new ArrayList<>();
+    }
+
     //Controls objects
     Joystick mainJoystick;
     

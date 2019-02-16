@@ -20,7 +20,12 @@ import java.util.ArrayList;
  */
 public class Motors extends ConfigHandler {
     //Configured motors record
-    ArrayList<String> configuredMotors = new ArrayList<>();
+    ArrayList<String> configuredMotors;
+
+    @Override
+    public void preInit() {
+        configuredMotors = new ArrayList<>();
+    }
 
     //Motor Objects
     public CANSparkMax frontLeftDrive,
