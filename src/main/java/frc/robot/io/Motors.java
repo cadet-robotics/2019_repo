@@ -1,20 +1,22 @@
 package frc.robot.io;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
+import frc.robot.config.ConfigHandler;
+
+import java.util.ArrayList;
 
 /**
  * The legibility-orient rewrite of the motors class
  *
  * @author Alex Pickering
  */
-public class Motors {
+public class Motors extends ConfigHandler {
     //Config object
     JsonObject configJSON;
 
@@ -36,6 +38,11 @@ public class Motors {
 
     boolean debug = true;
 
+    @Override
+    public boolean isDebug() {
+        return debug;
+    }
+
     /**
      * Gets the list of configured motors
      *
@@ -45,82 +52,8 @@ public class Motors {
         return configuredMotors;
     }
 
-    /**
-     * Initalizes the motors
-     *
-     * @param configJSON The isntance of the configuration file
-     */
-    public void init(JsonObject configJSON) {
-        System.out.println("INIT MOTORS");
-        this.configJSON = configJSON;
-
-        try {
-            loadMotors();
-        } catch(IOException e) {
-            System.err.println("Failed to load motors");
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Loads the motors from the config
-     *
-     * @throws IOException
-     */
-    public void loadMotors() throws IOException {
-        JsonObject pwmJSON = configJSON.getAsJsonObject("pwm");
-
-        configuredMotors = new ArrayList<>();
-
-        for(String k : pwmJSON.keySet()) {
-            if(k.equals("desc") || k.contains("placeholder")) continue;
-
-            JsonObject item = pwmJSON.getAsJsonObject(k);
-            int itemInt = item.get("id").getAsInt();
-            configuredMotors.add(k);
-
-            switch(k) {
-                case "front left":
-                    frontLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
-                    System.out.println("FLD: " + itemInt);
-                    break;
-
-                case "front right":
-                    frontRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
-                    System.out.println("FRD: " + itemInt);
-                    break;
-
-                case "rear left":
-                    backLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
-                    System.out.println("BLD: " + itemInt);
-                    break;
-
-                case "rear right":
-                    backRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
-                    System.out.println("BRD: " + itemInt);
-                    break;
-
-                case "left elevator":
-                    leftElevator = new Talon(itemInt);
-                    break;
-
-                case "right elevator":
-                    rightElevator = new Talon(itemInt);
-                    break;
-
-                case "left claw wheel":
-                    leftClaw = new VictorSP(itemInt);
-                    break;
-
-                case "right claw wheel":
-                    rightClaw = new VictorSP(itemInt);
-                    break;
-
-                default:
-                    configuredMotors.remove(k);
-                    System.err.println("Unrecognized motor: " + k);
-            }
-        }
+    public Motors(JsonObject configIn) {
+        super(configIn, "pwm");
     }
 
     /**
@@ -137,5 +70,62 @@ public class Motors {
 
         leftClaw.set(0);
         rightClaw.set(0);
+    }
+
+    @Override
+    public void loadItem(String k, JsonElement v) {
+        if (!v.isJsonPrimitive() || !((JsonPrimitive) v).isNumber()) return;
+        int itemInt = v.getAsInt();
+        switch(k) {
+            case "front left":
+                frontLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
+                System.out.println("FLD: " + itemInt);
+                break;
+
+            case "front right":
+                frontRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
+                System.out.println("FRD: " + itemInt);
+                break;
+
+            case "rear left":
+                backLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
+                System.out.println("BLD: " + itemInt);
+                break;
+
+            case "rear right":
+                backRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
+                System.out.println("BRD: " + itemInt);
+                break;
+
+            case "left elevator":
+                leftElevator = new Talon(itemInt);
+                break;
+
+            case "right elevator":
+                rightElevator = new Talon(itemInt);
+                break;
+
+            case "left claw wheel":
+                leftClaw = new VictorSP(itemInt);
+                break;
+
+            case "right claw wheel":
+                rightClaw = new VictorSP(itemInt);
+                break;
+
+            default:
+                System.err.println("Unrecognized motor: " + k);
+                return;
+        }
+        configuredMotors.add(k);
+    }
+
+    @Override
+    public void finalizeItems() {
+    }
+
+    @Override
+    public void error() {
+        //throw new RuntimeException("Failed to load motors");
     }
 }

@@ -255,7 +255,7 @@ public class Controls {
 
                 default:
                     configuredControls.remove(k);
-                    System.err.println("Unrecognized control: " + k);
+                    System.err.println("[WARN] Unrecognized control: " + k);
             }
         }
     }
