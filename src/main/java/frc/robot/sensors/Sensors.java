@@ -35,6 +35,8 @@ public class Sensors {
     	JsonObject dioJSON = configJSON.getAsJsonObject("dio");
     	
     	for(String k : dioJSON.keySet()) {
+    		if(k.equals("desc") || k.contains("placeholder")) continue;
+    		
     		JsonElement item = dioJSON.get(k);
     		int itemInt = item.getAsInt();
     		
@@ -62,6 +64,9 @@ public class Sensors {
     			case "proximity sensor 6":
     				elevatorSensors[5] = new ProximitySensor(itemInt);
     				break;
+    			
+    			default:
+    				System.err.println("Unrecognized Sensor: " + k);
     		}
     	}
     }
