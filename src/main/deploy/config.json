@@ -4,12 +4,12 @@
   },
   "dio": {
     "desc": "Digital IO Ports",
-    "proximity sensor 1": 9,
     "proximity sensor 2": 8,
     "proximity sensor 3": 7,
     "proximity sensor 4": 6,
     "proximity sensor 5": 5,
-    "proximity sensor 6": 4
+    "proximity sensor 6": 4,
+    "proximity sensor 1": 9
   },
   "analog in": {
     "desc": "Analogue IN Ports",
@@ -33,21 +33,21 @@
       "type": "can",
       "id": 3
     },
-    "left claw wheel": {
-      "type": "pwm",
-      "id": 0
-    },
     "right claw wheel": {
       "type": "pwm",
-      "id": 1
+      "id": 8
     },
-    "left elevator": {
+    "left claw wheel": {
       "type": "pwm",
       "id": 9
     },
     "right elevator": {
       "type": "pwm",
-      "id": 8
+      "id": 6
+    },
+    "left elevator": {
+      "type": "pwm",
+      "id": 7
     }
   },
   "pcm": {
@@ -64,15 +64,15 @@
     "main joystick y-axis": 1,
     "main joystick auto-lock": 6,
     "elevator up": 5,
-    "elevator down": 3,
     "main joystick z-axis": 2,
     "elevator hatch 2": 9,
     "elevator ball 1": 12,
     "elevator hatch 1": 11,
     "elevator ball 2": 10,
-    "claw in": 1,
-    "claw out": 2,
     "toggle claw": 4,
-    "main joystick throttle axis": 3
+    "main joystick throttle axis": 3,
+    "elevator down": 3,
+    "claw out": 2,
+    "claw in": 1
   }
 }

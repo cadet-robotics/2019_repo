@@ -14,8 +14,6 @@ public class ElevatorCommand extends Command {
 	int currentPosition,
 		toPosition;
 	
-	boolean dir;
-	
 	Robot nexus;
 	
 	/**
@@ -32,18 +30,20 @@ public class ElevatorCommand extends Command {
 		this.nexus = nexus;
 		currentPosition = startPosition;
 		toPosition = position;
-		
-		dir = currentPosition < toPosition;
 	}
 	
 	@Override
 	protected void execute() {
+		System.out.println("RUNNING ELEVATOR");
+		
 		//Find current position
 		for(int i = 0; i < nexus.getSensors().elevatorSensors.length; i++) {
 			if(nexus.getSensors().elevatorSensors[i].detected()) {
 				currentPosition = i;
 			}
 		}
+		
+		System.out.println("Curent Position: " + currentPosition);
 		
 		if(isFinished()) return;
 		

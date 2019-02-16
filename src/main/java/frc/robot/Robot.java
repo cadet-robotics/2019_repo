@@ -213,9 +213,9 @@ public class Robot extends TimedRobot implements Nexus {
 			
 			//toggle solenoids
 			if(clawOpen) {
-				pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kForward);
-			} else {
 				pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kReverse);
+			} else {
+				pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kForward);
 			}
 		} else if(!controls.getToggleClaw() && !newClawTogglePress) {
 			newClawTogglePress = true;
@@ -251,7 +251,9 @@ public class Robot extends TimedRobot implements Nexus {
 		
 		//New button presses (don't spam every tick)
 		if(elevatorButtonsPressed && newElevatorPress) {
-			elevator.moveTo(elevatorPressIndex);
+			newElevatorPress = false;
+			
+			System.out.println(elevator.moveTo(elevatorPressIndex));
 		} else if(!elevatorButtonsPressed && !newElevatorPress) {
 			newElevatorPress = true;
 		}

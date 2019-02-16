@@ -34,10 +34,12 @@ public class Elevator {
      * @return Whether or not it moved
      */
     public boolean moveTo(int toPosition) {
+    	System.out.println("Move to " + toPosition + " from " + location);
+    	
     	//Make sure the position is correct
     	if(toPosition < 0 || toPosition > 5 || location == toPosition) return false;
     	
-    	ElevatorCommand movement = new ElevatorCommand(toPosition, location, nexus);
+		ElevatorCommand movement = new ElevatorCommand(toPosition, location, nexus);
     	movement.start();
     	
     	location = toPosition;
