@@ -33,8 +33,6 @@ public class Drive {
     public Drive(Nexus n) {
         this(n.getMotors());
     }
-
-
     
     /**
      * Runs the mecanum drive

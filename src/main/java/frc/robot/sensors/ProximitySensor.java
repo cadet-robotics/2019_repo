@@ -13,7 +13,7 @@ public class ProximitySensor {
 	/**
 	 * Default constructor
 	 * 
-	 * @param The analog input port
+	 * @param port The analog input port
 	 */
 	public ProximitySensor(int port) {
 		in = new DigitalInput(port);
