@@ -5,9 +5,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import edu.wpi.first.wpilibj.PWM;
 
+/**
+ * Handles the camera light on the front of the robot
+ */
 public class Light {
     public PWM light = null;
 
+    /**
+     * Default constructor
+     * Doesn't extend ConfigHandlerInt because we're looking for a single config item
+     * @param o
+     */
     public Light(JsonObject o) {
         JsonObject dio = null;
         JsonElement dioE;
@@ -19,5 +27,16 @@ public class Light {
             }
         }
         if (light == null) light = new PWM(2);
+    }
+
+    /**
+     * Sets the light's intensity
+     *
+     * Don't set out of bounds
+     *
+     * @param d the light's intensity, 0-1 inclusive
+     */
+    public void setIntensity(double d) {
+        light.setRaw((int) (d * 255));
     }
 }

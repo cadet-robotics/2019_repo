@@ -5,14 +5,17 @@ import com.google.gson.JsonObject;
 
 import com.google.gson.JsonPrimitive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import frc.robot.config.ConfigHandlerInt;
 
 /**
  * Contains the sensors
  * Javadoc comment lovingly provided by Alex Pickering
  *
+ * Later modified to extend ConfigHandlerInt
+ *
  * @author Owen Avery, Alex Pickering
  */
-public class Sensors {
+public class Sensors extends ConfigHandlerInt {
     //JsonObject configJSON;
 
     //null until we have a gyro on the robot
@@ -20,49 +23,50 @@ public class Sensors {
 
     public ProximitySensor[] elevatorSensors = new ProximitySensor[6];
 
+    public Sensors(JsonObject configIn) {
+        super(configIn, "dio");
+    }
+
     /**
-     * Initializes any sensors that need to use the config
+     * Copied nearly wholesale from the old init method, initializes this class' objects
      *
-     * @param config The robot config file
-     * @author Alex Pickering
+     * @param k The name of the object
+     * @param itemInt The index of the object in the pcm/pwm ports/digital io ports/etc.
      */
-    public void init(JsonObject config) {
-        //this.configJSON = config;
+    @Override
+    public void loadItem(String k, int itemInt) {
+        switch(k) {
+            case "proximity sensor 1":
+                elevatorSensors[0] = new ProximitySensor(itemInt);
+                break;
 
-        JsonElement dioe = config.get("dio");
-        if ((dioe == null) || !dioe.isJsonObject()) return;
-        JsonObject dioJSON = dioe.getAsJsonObject();
+            case "proximity sensor 2":
+                elevatorSensors[1] = new ProximitySensor(itemInt);
+                break;
 
-        for(String k : dioJSON.keySet()) {
-            JsonElement item = dioJSON.get(k);
-            if ((item == null) || !item.isJsonPrimitive() || !(item instanceof JsonPrimitive)) continue;
-            int itemInt = item.getAsInt();
+            case "proximity sensor 3":
+                elevatorSensors[2] = new ProximitySensor(itemInt);
+                break;
 
-            switch(k) {
-                case "proximity sensor 1":
-                    elevatorSensors[0] = new ProximitySensor(itemInt);
-                    break;
+            case "proximity sensor 4":
+                elevatorSensors[3] = new ProximitySensor(itemInt);
+                break;
 
-                case "proximity sensor 2":
-                    elevatorSensors[1] = new ProximitySensor(itemInt);
-                    break;
+            case "proximity sensor 5":
+                elevatorSensors[4] = new ProximitySensor(itemInt);
+                break;
 
-                case "proximity sensor 3":
-                    elevatorSensors[2] = new ProximitySensor(itemInt);
-                    break;
-
-                case "proximity sensor 4":
-                    elevatorSensors[3] = new ProximitySensor(itemInt);
-                    break;
-
-                case "proximity sensor 5":
-                    elevatorSensors[4] = new ProximitySensor(itemInt);
-                    break;
-
-                case "proximity sensor 6":
-                    elevatorSensors[5] = new ProximitySensor(itemInt);
-                    break;
-            }
+            case "proximity sensor 6":
+                elevatorSensors[5] = new ProximitySensor(itemInt);
+                break;
         }
+    }
+
+    @Override
+    public void finalizeItems() {
+    }
+
+    @Override
+    public void error() {
     }
 }

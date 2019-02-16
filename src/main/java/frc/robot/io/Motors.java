@@ -1,27 +1,22 @@
 package frc.robot.io;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
-import frc.robot.config.ConfigHandler;
+import frc.robot.config.ConfigHandlerInt;
 
 import java.util.ArrayList;
 
 /**
  * The legibility-orient rewrite of the motors class
  *
- * Later modified to extend ConfigHandler
+ * Later modified to extend ConfigHandlerInt
  *
  * @author Alex Pickering + Owen Avery
  */
-public class Motors extends ConfigHandler {
-    //Config object
-    JsonObject configJSON;
-
+public class Motors extends ConfigHandlerInt {
     //Configured motors record
     ArrayList<String> configuredMotors = new ArrayList<>();
 
@@ -74,10 +69,14 @@ public class Motors extends ConfigHandler {
         rightClaw.set(0);
     }
 
+    /**
+     * Copied nearly wholesale from the old init method, initializes this class' objects
+     *
+     * @param k The name of the object
+     * @param itemInt The index of the object in the pcm/pwm ports/digital io ports/etc.
+     */
     @Override
-    public void loadItem(String k, JsonElement v) {
-        if (!v.isJsonPrimitive() || !((JsonPrimitive) v).isNumber()) return;
-        int itemInt = v.getAsInt();
+    public void loadItem(String k, int itemInt) {
         switch(k) {
             case "front left":
                 frontLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
