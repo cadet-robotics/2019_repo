@@ -20,7 +20,7 @@ public class Elevator {
     /**
      * Default constructor
      * 
-     * @param nexus Nexus instance to use
+     * @param m Motors instance to use
      * @author Alex Pickering
      */
     public Elevator(Robot nexus) {

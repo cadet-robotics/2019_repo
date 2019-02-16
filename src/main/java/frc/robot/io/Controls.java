@@ -1,19 +1,23 @@
 package frc.robot.io;
 
-import com.google.gson.JsonObject;
-import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.config.ConfigHandlerInt;
-
+import java.io.IOException;
 import java.util.ArrayList;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.config.ConfigLoader;
 
 /**
  * Contains controls objects and handles loading them from config
- *
- * Later modified to extend ConfigHandlerInt
- *
- * @author Alex Pickering + Owen Avery
+ * 
+ * @author Alex Pickering
  */
-public class Controls extends ConfigHandlerInt {
+public class Controls {
+    //Config object
+    JsonObject configJSON;
+    
     //Config'd controls record
     ArrayList<String> configuredControls = new ArrayList<>();
     
@@ -38,12 +42,7 @@ public class Controls extends ConfigHandlerInt {
     int[] elevatorPos = new int[6];
 
     boolean debug = false;
-
-    @Override
-    public boolean isDebug() {
-        return debug;
-    }
-
+    
     //Getters
     /**
      * Gets the X Axis control
@@ -144,102 +143,120 @@ public class Controls extends ConfigHandlerInt {
     public ArrayList<String> getConfiguredControls(){
         return configuredControls;
     }
-
-    public Controls(JsonObject configIn) {
-        super(configIn, "controls");
-    }
-
+    
     /**
-     * Copied nearly wholesale from the old init method, initializes this class' objects
-     *
-     * @param k The name of the object
-     * @param itemInt The index of the object in the pcm/pwm ports/digital io ports/etc.
+     * Initializes the controls
+     * Loads from config and creates the objects
      */
-    @Override
-    public void loadItem(String k, int itemInt) {
-        switch(k){
-            case "main joystick":
-                mainJoystickPort = itemInt;
-                break;
-
-            case "main joystick x-axis":
-                xAxis = itemInt;
-                break;
-
-            case "main joystick y-axis":
-                yAxis = itemInt;
-                break;
-
-            case "main joystick z-axis":
-                zAxis = itemInt;
-                break;
-
-            case "main joystick throttle axis":
-                throttleAxis = itemInt;
-                break;
-
-            case "main joystick auto-lock":
-                autoLockButtonPort = itemInt;
-                break;
-
-            case "elevator pos 1":
-                elevatorPos[0] = itemInt;
-                break;
-
-            case "elevator pos 2":
-                elevatorPos[1] = itemInt;
-                break;
-
-            case "elevator pos 3":
-                elevatorPos[2] = itemInt;
-                break;
-
-            case "elevator pos 4":
-                elevatorPos[3] = itemInt;
-                break;
-
-            case "elevator pos 5":
-                elevatorPos[4] = itemInt;
-                break;
-
-            case "elevator pos 6":
-                elevatorPos[5] = itemInt;
-                break;
-
-            case "elevator up":
-                elevatorUp = itemInt;
-                break;
-
-            case "elevator down":
-                elevatorDown = itemInt;
-                break;
-
-            case "claw in":
-                clawWheelsIn = itemInt;
-                break;
-
-            case "claw out":
-                clawWheelsOut = itemInt;
-                break;
-
-            case "toggle claw":
-                toggleClaw = itemInt;
-                break;
-
-            default:
-                System.err.println("[WARN] Unrecognized control: " + k);
-                return;
+    public void init(JsonObject configJSON){
+        this.configJSON = configJSON;
+        
+        try{
+            loadControls();
+        } catch(IOException e){
+            System.err.println("Failed to load controls");
+            e.printStackTrace();
         }
-        configuredControls.add(k);
-    }
-
-    @Override
-    public void finalizeItems() {
+        
         mainJoystick = new Joystick(mainJoystickPort);
     }
+    
+    /**
+     * Loads the controls from config
+     * @throws IOException
+     */
+    public void loadControls() throws IOException {
+        JsonObject configJSON = ConfigLoader.loadConfigFile();
+        JsonObject controlsJSON = configJSON.getAsJsonObject("controls");
+        
+        //Debug - outputs all the json
+        if(debug){
+            for(String s : configJSON.keySet()){
+                System.out.println(s + ": " + configJSON.get(s));
+            }
+        }
+        
+        configuredControls = new ArrayList<>();
+        
+        for(String k : controlsJSON.keySet()){
+            JsonElement item = controlsJSON.get(k);
+            if(k.equals("desc") || k.contains("placeholder")) continue;
+            int itemInt = item.getAsInt();
+            configuredControls.add(k);
+            
+            switch(k){
+                case "main joystick":
+                    mainJoystickPort = itemInt;
+                    break;
+                
+                case "main joystick x-axis":
+                    xAxis = itemInt;
+                    break;
+                
+                case "main joystick y-axis":
+                    yAxis = itemInt;
+                    break;
+                
+                case "main joystick z-axis":
+                    zAxis = itemInt;
+                    break;
+                
+                case "main joystick throttle axis":
+                	throttleAxis = itemInt;
+                	break;
 
-    @Override
-    public void error() {
+                case "main joystick auto-lock":
+                    autoLockButtonPort = itemInt;
+                    break;
+                
+                case "elevator pos 1":
+                	elevatorPos[0] = itemInt;
+                	break;
+                
+                case "elevator pos 2":
+                	elevatorPos[1] = itemInt;
+                	break;
+                
+                case "elevator pos 3":
+                	elevatorPos[2] = itemInt;
+                	break;
+                
+                case "elevator pos 4":
+                	elevatorPos[3] = itemInt;
+                	break;
+                
+                case "elevator pos 5":
+                	elevatorPos[4] = itemInt;
+                	break;
+                
+                case "elevator pos 6":
+                	elevatorPos[5] = itemInt;
+                	break;
+                
+                case "elevator up":
+                	elevatorUp = itemInt;
+                	break;
+                
+                case "elevator down":
+                	elevatorDown = itemInt;
+                	break;
+                
+                case "claw in":
+                	clawWheelsIn = itemInt;
+                	break;
+                
+                case "claw out":
+                	clawWheelsOut = itemInt;
+                	break;
+                
+                case "toggle claw":
+                	toggleClaw = itemInt;
+                	break;
 
+                default:
+                    configuredControls.remove(k);
+                    System.err.println("Unrecognized control: " + k);
+            }
+        }
     }
 }

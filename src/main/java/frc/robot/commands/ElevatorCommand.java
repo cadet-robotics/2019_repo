@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.commands.subsystems.ElevatorSubsystem;
 
 /**
  * Command that moves the elevator to a certain position
@@ -22,12 +21,11 @@ public class ElevatorCommand extends Command {
 	 * Moves the elevator to the given position
 	 * 
 	 * @param position The position to move to
-	 * @param startPosition The position the elevator started in
+	 * @param startPos The position the elevator started in
 	 * @param nexus The robot instance
 	 */
 	public ElevatorCommand(int position, int startPosition, Robot nexus) {
 		super("ElevatorCommand");
-		requires(ElevatorSubsystem.getInstance());
 		
 		this.nexus = nexus;
 		currentPosition = startPosition;
