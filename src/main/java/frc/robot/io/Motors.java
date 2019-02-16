@@ -14,7 +14,9 @@ import java.util.ArrayList;
 /**
  * The legibility-orient rewrite of the motors class
  *
- * @author Alex Pickering
+ * Later modified to extend ConfigHandler
+ *
+ * @author Alex Pickering + Owen Avery
  */
 public class Motors extends ConfigHandler {
     //Config object

@@ -12,12 +12,14 @@ import com.google.gson.JsonObject;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.config.ConfigLoader;
 import frc.robot.io.*;
+import frc.robot.sensors.ProximitySensor;
 import frc.robot.sensors.Sensors;
 import frc.robot.sensors.SightData;
 
@@ -39,6 +41,7 @@ public class Robot extends TimedRobot implements Nexus {
 	static final double DRIVE_MODIFIER = 0.8,			//Multiplier for teleop drive motors
 						DRIVE_THRESHOLD = 0.1,			//Threshold for the teleop controls
 						ELEVATOR_MANUAL_SPEED = 0.4,	//Manual control speed for the elevator
+						ELEVATOR_MAINTENANCE_SPEED = 0,	//Speed to keep the elevator in place
 						CLAW_WHEEL_SPEED = 0.7;			//Speed of the claw's wheels
 
 	private static final boolean debug = true;
@@ -54,6 +57,8 @@ public class Robot extends TimedRobot implements Nexus {
 	public Drive drive = null;
 
 	public Sensors sensors = new Sensors();
+	
+	public Pneumatics pneumatics = new Pneumatics();
 	
 	public SightData sightData;
 
@@ -91,6 +96,8 @@ public class Robot extends TimedRobot implements Nexus {
 		//Initialize configured classes
 		controls.init(configJSON);
 		motors.init(configJSON);
+		sensors.init(configJSON);
+		pneumatics.init(configJSON);
 		
 		drive = new Drive(this);
 		elevator = new Elevator(this);
@@ -173,13 +180,29 @@ public class Robot extends TimedRobot implements Nexus {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		System.out.println("X: " + controls.getXAxis() + " Y: " + controls.getYAxis() + " Z: " + controls.getZAxis());
-		
 		Scheduler.getInstance().run();
 		motors.resetAll();
 		drivePeriodic();
 		runElevator();
 		runClaw();
+		
+		if(debug) runDebug();
+	}
+	
+	/**
+	 * Outputs debug
+	 */
+	public void runDebug() {
+		String s = "Proximity ";
+		
+		for(int i = 0; i < sensors.elevatorSensors.length; i++) {
+			s += i + ": " + sensors.elevatorSensors[i].detected() + " ";
+		}
+		
+		//System.out.println(s);
+		//System.out.println("X: " + controls.getXAxis() + " Y: " + controls.getYAxis() + " Z: " + controls.getZAxis());
+		System.out.println(clawOpen);
+		//System.out.println(controls.getThrottleAxis());
 	}
 	
 	/**
@@ -189,10 +212,13 @@ public class Robot extends TimedRobot implements Nexus {
 		//Open and close the claw
 		if(controls.getToggleClaw() && newClawTogglePress) {
 			clawOpen = !clawOpen;
+			newClawTogglePress = false;
 			
 			//toggle solenoids
 			if(clawOpen) {
-				
+				pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kForward);
+			} else {
+				pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kReverse);
 			}
 		} else if(!controls.getToggleClaw() && !newClawTogglePress) {
 			newClawTogglePress = true;
@@ -239,6 +265,9 @@ public class Robot extends TimedRobot implements Nexus {
 		if(controls.getElevatorDown()) elevatorSpeed -= ELEVATOR_MANUAL_SPEED;
 		
 		double t = mapDouble(controls.getThrottleAxis(), 1, -1, 0, 1);
+		//System.out.println(t);
+		
+		elevatorSpeed += t /*ELEVATOR_MAINTENANCE_SPEED*/;
 		
 		motors.leftElevator.set(-elevatorSpeed * (elevatorThrottle ? t : 1));
 		motors.rightElevator.set(elevatorSpeed * (elevatorThrottle ? t : 1));
@@ -324,6 +353,11 @@ public class Robot extends TimedRobot implements Nexus {
 	@Override
 	public Sensors getSensors() {
 		return sensors;
+	}
+	
+	@Override
+	public Pneumatics getPneumatics() {
+		return pneumatics;
 	}
 
 	@Override

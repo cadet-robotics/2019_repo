@@ -19,6 +19,8 @@ public interface Nexus {
     public Motors getMotors();
 
     public Sensors getSensors();
+    
+    public Pneumatics getPneumatics();
 
     public Elevator getElevator();
 

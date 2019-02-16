@@ -33,7 +33,7 @@ public class Controls {
         throttleAxis = 3;
     
     //Buttons
-    int autoLockButtonPort = 0,
+    int autoLockButtonPort = 5,
     	elevatorUp = 5,
     	elevatorDown = 3,
     	clawWheelsIn = 1,
