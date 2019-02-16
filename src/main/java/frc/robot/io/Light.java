@@ -32,11 +32,11 @@ public class Light {
     /**
      * Sets the light's intensity
      *
-     * Don't set out of bounds
-     *
      * @param d the light's intensity, 0-1 inclusive
      */
     public void setIntensity(double d) {
+        if (d < 0) d = 0;
+        if (d > 1) d = 1;
         light.setRaw((int) (d * 255));
     }
 }
