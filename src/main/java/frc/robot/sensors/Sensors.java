@@ -21,7 +21,12 @@ public class Sensors extends ConfigHandlerInt {
     //null until we have a gyro on the robot
     public Gyro gyro = null; //new ADXRS450_Gyro();
 
-    public ProximitySensor[] elevatorSensors = new ProximitySensor[6];
+    public ProximitySensor[] elevatorSensors;
+
+    @Override
+    public void preInit() {
+        elevatorSensors = new ProximitySensor[6];
+    }
 
     public Sensors(JsonObject configIn) {
         super(configIn, "dio");

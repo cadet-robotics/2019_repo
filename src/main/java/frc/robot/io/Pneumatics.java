@@ -14,8 +14,13 @@ import frc.robot.config.ConfigHandlerInt;
 public class Pneumatics extends ConfigHandlerInt {
 	public DoubleSolenoid clawSolenoid;
 	
-	int[] clawSolenoidPorts = new int[2];
-	
+	int[] clawSolenoidPorts;
+
+	@Override
+	public void preInit() {
+		clawSolenoidPorts = new int[2];
+	}
+
 	boolean debug = false;
 
 	@Override

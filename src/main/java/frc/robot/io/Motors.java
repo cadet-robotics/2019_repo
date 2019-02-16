@@ -1,11 +1,13 @@
 package frc.robot.io;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
-import frc.robot.config.ConfigHandlerInt;
+import frc.robot.config.ConfigHandler;
 
 import java.util.ArrayList;
 
@@ -16,9 +18,14 @@ import java.util.ArrayList;
  *
  * @author Alex Pickering + Owen Avery
  */
-public class Motors extends ConfigHandlerInt {
+public class Motors extends ConfigHandler {
     //Configured motors record
-    ArrayList<String> configuredMotors = new ArrayList<>();
+    ArrayList<String> configuredMotors;
+
+    @Override
+    public void preInit() {
+        configuredMotors = new ArrayList<>();
+    }
 
     //Motor Objects
     public CANSparkMax frontLeftDrive,
@@ -72,10 +79,15 @@ public class Motors extends ConfigHandlerInt {
      * Copied nearly wholesale from the old init method, initializes this class' objects
      *
      * @param k The name of the object
-     * @param itemInt The index of the object in the pcm/pwm ports/digital io ports/etc.
+     * @param e The config item we're loading, as a JsonElement
      */
     @Override
-    public void loadItem(String k, int itemInt) {
+    public void loadItem(String k, JsonElement e) {
+        if (!e.isJsonObject()) return;
+        JsonObject o = e.getAsJsonObject();
+        JsonElement e2 = o.get("id");
+        if ((e2 == null) || !e2.isJsonPrimitive() || !((JsonPrimitive) e2).isNumber()) return;
+        int itemInt = e2.getAsInt();
         switch(k) {
             case "front left":
                 frontLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);

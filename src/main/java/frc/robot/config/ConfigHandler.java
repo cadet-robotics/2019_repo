@@ -22,6 +22,7 @@ public abstract class ConfigHandler {
      */
     public ConfigHandler(JsonObject configIn, String subItemName) {
         this.configJSON = configIn;
+        preInit();
         if (isDebug()) System.out.println("[INIT] Loading " + getClass().getSimpleName());
 
         JsonElement sube = configJSON.get(subItemName);
@@ -77,4 +78,10 @@ public abstract class ConfigHandler {
     public boolean isDebug() {
         return DEBUG_DEFAULT;
     }
+
+    /**
+     * Runs before the constructor's main code
+     * Use for object declarations
+     */
+    public abstract void preInit();
 }
