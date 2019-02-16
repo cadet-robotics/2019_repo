@@ -41,19 +41,19 @@
       "type": "pwm",
       "id": 9
     },
-    "right elevator": {
-      "type": "pwm",
-      "id": 6
-    },
     "left elevator": {
       "type": "pwm",
       "id": 7
+    },
+    "right elevator": {
+      "type": "pwm",
+      "id": 0
     }
   },
   "pcm": {
     "desc": "Pneumatics Control Module settings",
-    "right claw solenoid": 6,
-    "left claw solenoid": 7
+    "left claw solenoid": 7,
+    "right claw solenoid": 6
   },
   "controls": {
     "desc": "Controls settings",

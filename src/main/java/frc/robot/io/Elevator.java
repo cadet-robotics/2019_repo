@@ -1,6 +1,7 @@
 package frc.robot.io;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.Robot;
 import frc.robot.commands.ElevatorCommand;
 
@@ -40,7 +41,8 @@ public class Elevator {
     	if(toPosition < 0 || toPosition > 5 || location == toPosition) return false;
     	
 		ElevatorCommand movement = new ElevatorCommand(toPosition, location, nexus);
-    	movement.start();
+    	
+		Scheduler.getInstance().add(movement);
     	
     	location = toPosition;
     	return true;

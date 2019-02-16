@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.config.ConfigLoader;
 import frc.robot.io.*;
-import frc.robot.sensors.ProximitySensor;
 import frc.robot.sensors.Sensors;
 import frc.robot.sensors.SightData;
 
@@ -38,11 +37,11 @@ public class Robot extends TimedRobot implements Nexus {
 	private String m_autoSelected;
 	private final SendableChooser<String> m_chooser = new SendableChooser<>();
 	
-	static final double DRIVE_MODIFIER = 0.8,			//Multiplier for teleop drive motors
-						DRIVE_THRESHOLD = 0.1,			//Threshold for the teleop controls
-						ELEVATOR_MANUAL_SPEED = 0.4,	//Manual control speed for the elevator
-						ELEVATOR_MAINTENANCE_SPEED = 0,	//Speed to keep the elevator in place
-						CLAW_WHEEL_SPEED = 0.7;			//Speed of the claw's wheels
+	public static final double DRIVE_MODIFIER = 0.8,					//Multiplier for teleop drive motors
+							   DRIVE_THRESHOLD = 0.1,					//Threshold for the teleop controls
+							   ELEVATOR_MANUAL_SPEED = 0.5,				//Manual control speed for the elevator
+							   ELEVATOR_MAINTENANCE_SPEED = 0.25984,	//Speed to keep the elevator in place
+							   CLAW_WHEEL_SPEED = 0.7;					//Speed of the claw's wheels
 
 	private static final boolean debug = true;
 
@@ -66,7 +65,8 @@ public class Robot extends TimedRobot implements Nexus {
 	
 	boolean throttle = true,
 			elevatorThrottle = false,
-			clawOpen = true;
+			clawOpen = true,
+			elevatorRunning = false;
 	
 	//New Press booleans
 	boolean newElevatorPress = true,
@@ -95,7 +95,7 @@ public class Robot extends TimedRobot implements Nexus {
 		controls.init(configJSON);
 		motors.init(configJSON);
 		sensors.init(configJSON);
-		pneumatics.init(configJSON);
+		//pneumatics.init(configJSON);
 		
 		drive = new Drive(this);
 		elevator = new Elevator(this);
@@ -177,8 +177,8 @@ public class Robot extends TimedRobot implements Nexus {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		Scheduler.getInstance().run();
 		motors.resetAll();
+		Scheduler.getInstance().run();
 		drivePeriodic();
 		runElevator();
 		runClaw();
@@ -190,16 +190,18 @@ public class Robot extends TimedRobot implements Nexus {
 	 * Outputs debug
 	 */
 	public void runDebug() {
-		String s = "Proximity ";
+		/*String s = "Proximity ";
 		
 		for(int i = 0; i < sensors.elevatorSensors.length; i++) {
 			s += i + ": " + sensors.elevatorSensors[i].detected() + " ";
 		}
 		
-		//System.out.println(s);
+		System.out.println(s);*/
 		//System.out.println("X: " + controls.getXAxis() + " Y: " + controls.getYAxis() + " Z: " + controls.getZAxis());
-		System.out.println(clawOpen);
+		//System.out.println(clawOpen);
 		//System.out.println(controls.getThrottleAxis());
+		
+		System.out.println(motors.leftElevator.get() + " " + motors.rightElevator.get());
 	}
 	
 	/**
@@ -213,9 +215,9 @@ public class Robot extends TimedRobot implements Nexus {
 			
 			//toggle solenoids
 			if(clawOpen) {
-				pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kReverse);
+				//pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kReverse);
 			} else {
-				pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kForward);
+			//	pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kForward);
 			}
 		} else if(!controls.getToggleClaw() && !newClawTogglePress) {
 			newClawTogglePress = true;
@@ -253,7 +255,7 @@ public class Robot extends TimedRobot implements Nexus {
 		if(elevatorButtonsPressed && newElevatorPress) {
 			newElevatorPress = false;
 			
-			System.out.println(elevator.moveTo(elevatorPressIndex));
+			elevator.moveTo(elevatorPressIndex);
 		} else if(!elevatorButtonsPressed && !newElevatorPress) {
 			newElevatorPress = true;
 		}
@@ -263,13 +265,15 @@ public class Robot extends TimedRobot implements Nexus {
 		if(controls.getElevatorUp()) elevatorSpeed += ELEVATOR_MANUAL_SPEED;
 		if(controls.getElevatorDown()) elevatorSpeed -= ELEVATOR_MANUAL_SPEED;
 		
-		double t = mapDouble(controls.getThrottleAxis(), 1, -1, 0, 1);
+		//double t = mapDouble(controls.getThrottleAxis(), 1, -1, 0, 1);
 		//System.out.println(t);
 		
-		elevatorSpeed += t /*ELEVATOR_MAINTENANCE_SPEED*/;
+		elevatorSpeed += ELEVATOR_MAINTENANCE_SPEED;
 		
-		motors.leftElevator.set(-elevatorSpeed * (elevatorThrottle ? t : 1));
-		motors.rightElevator.set(elevatorSpeed * (elevatorThrottle ? t : 1));
+		if(!elevatorRunning) {
+			motors.leftElevator.set(-elevatorSpeed);
+			motors.rightElevator.set(elevatorSpeed);
+		}
 	}
 	
 	/**
@@ -311,6 +315,15 @@ public class Robot extends TimedRobot implements Nexus {
 	public double mapDouble(double val, double oldMin, double oldMax, double newMin, double newMax){
 	  	return (((val - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin;
   	}
+	
+	/**
+	 * Sets whether or not the elevator is running
+	 * 
+	 * @param run The new value
+	 */
+	public void setElevatorRunning(boolean run) {
+		elevatorRunning = run;
+	}
 
 	/**
 	 * This function is called periodically during test mode.

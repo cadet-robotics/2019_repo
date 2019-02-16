@@ -76,22 +76,18 @@ public class Motors {
 			switch(k) {
 				case "front left":
 					frontLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
-					System.out.println("FLD: " + itemInt);
 					break;
 				
 				case "front right":
 					frontRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
-					System.out.println("FRD: " + itemInt);
 					break;
 				
 				case "rear left":
 					backLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
-					System.out.println("BLD: " + itemInt);
 					break;
 				
 				case "rear right":
 					backRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
-					System.out.println("BRD: " + itemInt);
 					break;
 				
 				case "left elevator":

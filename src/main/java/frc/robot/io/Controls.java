@@ -209,27 +209,27 @@ public class Controls {
                     autoLockButtonPort = itemInt;
                     break;
                 
-                case "elevator pos 1":
+                case "elevator hatch 1":
                 	elevatorPos[0] = itemInt;
                 	break;
                 
-                case "elevator pos 2":
+                case "elevator ball 1":
                 	elevatorPos[1] = itemInt;
                 	break;
                 
-                case "elevator pos 3":
+                case "elevator hatch 2":
                 	elevatorPos[2] = itemInt;
                 	break;
                 
-                case "elevator pos 4":
+                case "elevator ball 2":
                 	elevatorPos[3] = itemInt;
                 	break;
                 
-                case "elevator pos 5":
+                case "elevator hatch 3":
                 	elevatorPos[4] = itemInt;
                 	break;
                 
-                case "elevator pos 6":
+                case "elevator ball 3":
                 	elevatorPos[5] = itemInt;
                 	break;
                 

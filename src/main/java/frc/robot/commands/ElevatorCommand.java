@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.commands.subsystems.ElevatorSubsystem;
 
 /**
  * Command that moves the elevator to a certain position
@@ -9,10 +10,11 @@ import frc.robot.Robot;
  * @author Alex Pickering
  */
 public class ElevatorCommand extends Command {
-	static final double SPEED = 0.25;
+	static final double SPEED = 0.6;
 	
 	int currentPosition,
-		toPosition;
+		toPosition,
+		startPosition;
 	
 	Robot nexus;
 	
@@ -26,15 +28,22 @@ public class ElevatorCommand extends Command {
 	 */
 	public ElevatorCommand(int position, int startPosition, Robot nexus) {
 		super("ElevatorCommand");
+		requires(ElevatorSubsystem.getInstance());
 		
 		this.nexus = nexus;
+		this.startPosition = startPosition;
 		currentPosition = startPosition;
 		toPosition = position;
 	}
 	
 	@Override
+	protected void initialize() {
+		nexus.setElevatorRunning(true);
+	}
+	
+	@Override
 	protected void execute() {
-		System.out.println("RUNNING ELEVATOR");
+		System.out.print("ELEVATOR FROM " + startPosition + " TO " + toPosition + " AT " + currentPosition);
 		
 		//Find current position
 		for(int i = 0; i < nexus.getSensors().elevatorSensors.length; i++) {
@@ -43,17 +52,28 @@ public class ElevatorCommand extends Command {
 			}
 		}
 		
-		System.out.println("Curent Position: " + currentPosition);
+		if(isFinished()) {
+			System.out.println();
+			return;
+		}
 		
-		if(isFinished()) return;
+		double speed = Robot.ELEVATOR_MAINTENANCE_SPEED;
 		
 		if(currentPosition > toPosition) { //Move down
-			nexus.getMotors().leftElevator.set(SPEED);
-			nexus.getMotors().rightElevator.set(-SPEED);
+			System.out.print(" GOING DOWN");
+			speed -= SPEED;
 		} else { //Move up
-			nexus.getMotors().leftElevator.set(-SPEED);
-			nexus.getMotors().rightElevator.set(SPEED);
+			System.out.print(" GOING UP");
+			speed += SPEED;
 		}
+		
+		if(Math.abs(toPosition - currentPosition) == 1)
+			speed /= 1.75;
+		
+		nexus.getMotors().leftElevator.set(-speed);
+		nexus.getMotors().rightElevator.set(speed);
+		
+		System.out.println();
 	}
 	
 	@Override
@@ -63,7 +83,9 @@ public class ElevatorCommand extends Command {
 	
 	@Override
 	protected void end() {
+		System.out.println("ELEVATOR FINISHED AT " + currentPosition);
 		nexus.getMotors().leftElevator.set(0);
 		nexus.getMotors().rightElevator.set(0);
+		nexus.setElevatorRunning(false);
 	}
 }

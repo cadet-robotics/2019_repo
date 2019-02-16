@@ -18,11 +18,10 @@ public class Drive {
      * @param m The Motors instance to use
      */
     public Drive(Motors m) {
-    	drive = new MecanumDrive(
-    			m.frontLeftDrive,
-    			m.backLeftDrive,
-    			m.frontRightDrive,
-    			m.backRightDrive);
+    	drive = new MecanumDrive(m.frontLeftDrive,
+    							 m.backLeftDrive,
+    							 m.frontRightDrive,
+    							 m.backRightDrive);
     }
 
     /**
