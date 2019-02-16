@@ -51,23 +51,17 @@ public class Motors {
 	 * @param configJSON The isntance of the configuration file
 	 */
 	public void init(JsonObject configJSON) {
-		System.out.println("INIT MOTORS");
+		if(debug) System.out.println("INIT MOTORS");
+		
 		this.configJSON = configJSON;
 		
-		try {
-			loadMotors();
-		} catch(IOException e) {
-			System.err.println("Failed to load motors");
-			e.printStackTrace();
-		}
+		loadMotors();
 	}
 	
 	/**
 	 * Loads the motors from the config
-	 * 
-	 * @throws IOException
 	 */
-	public void loadMotors() throws IOException {
+	public void loadMotors() {
 		JsonObject pwmJSON = configJSON.getAsJsonObject("pwm");
 		
 		configuredMotors = new ArrayList<>();

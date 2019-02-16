@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -55,6 +56,8 @@ public class Robot extends TimedRobot implements Nexus {
 
 	public Sensors sensors = new Sensors();
 	
+	public Pneumatics pneumatics = new Pneumatics();
+	
 	public SightData sightData;
 
 	public Elevator elevator;
@@ -89,6 +92,7 @@ public class Robot extends TimedRobot implements Nexus {
 		//Initialize configured classes
 		controls.init(configJSON);
 		motors.init(configJSON);
+		pneumatics.init(configJSON);
 		
 		drive = new Drive(this);
 		elevator = new Elevator(this);
@@ -183,13 +187,17 @@ public class Robot extends TimedRobot implements Nexus {
 	 * Runs the claw (opening, closing, wheels)
 	 */
 	public void runClaw() {
+		System.out.println(controls.getToggleClaw());
+		
 		//Open and close the claw
 		if(controls.getToggleClaw() && newClawTogglePress) {
 			clawOpen = !clawOpen;
 			
 			//toggle solenoids
 			if(clawOpen) {
-				
+				pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kForward);
+			} else {
+				pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kReverse);
 			}
 		} else if(!controls.getToggleClaw() && !newClawTogglePress) {
 			newClawTogglePress = true;
@@ -319,6 +327,11 @@ public class Robot extends TimedRobot implements Nexus {
 	@Override
 	public Sensors getSensors() {
 		return sensors;
+	}
+	
+	@Override
+	public Pneumatics getPneumatics() {
+		return pneumatics;
 	}
 
 	@Override
