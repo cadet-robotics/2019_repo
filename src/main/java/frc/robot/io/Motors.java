@@ -32,7 +32,6 @@ public class Motors extends ConfigHandlerInt {
     public VictorSP leftClaw,
             rightClaw;
 
-
     boolean debug = true;
 
     @Override
