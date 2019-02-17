@@ -14,19 +14,11 @@ import frc.robot.config.ConfigHandlerInt;
 public class Pneumatics extends ConfigHandlerInt {
 	public DoubleSolenoid clawSolenoid;
 	
-	int[] clawSolenoidPorts;
-
-	@Override
-	public void preInit() {
-		clawSolenoidPorts = new int[2];
-	}
+	int[] clawSolenoidPorts = new int[2];
 
 	public Pneumatics(JsonObject configIn) {
 		super(configIn, "pcm");
-	}
-
-	@Override
-	public void finalizeItems() {
+		finishInit();
 		clawSolenoid = new DoubleSolenoid(clawSolenoidPorts[0], clawSolenoidPorts[1]);
 	}
 

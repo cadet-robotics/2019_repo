@@ -20,12 +20,7 @@ import java.util.ArrayList;
  */
 public class Motors extends ConfigHandler {
     //Configured motors record
-    ArrayList<String> configuredMotors;
-
-    @Override
-    public void preInit() {
-        configuredMotors = new ArrayList<>();
-    }
+    ArrayList<String> configuredMotors = new ArrayList<>();
 
     //Motor Objects
     public CANSparkMax frontLeftDrive,
@@ -57,6 +52,7 @@ public class Motors extends ConfigHandler {
 
     public Motors(JsonObject configIn) {
         super(configIn, "pwm");
+        finishInit();
     }
 
     /**
@@ -126,10 +122,6 @@ public class Motors extends ConfigHandler {
                 return;
         }
         configuredMotors.add(k);
-    }
-
-    @Override
-    public void finalizeItems() {
     }
 
     @Override

@@ -4,6 +4,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * Provides an alternative to ConfigHandler
+ *
+ * @author Owen Avery
+ */
 public abstract class ConfigHandlerInt extends ConfigHandler {
     public ConfigHandlerInt(JsonObject configIn, String subItemName) {
         super(configIn, subItemName);

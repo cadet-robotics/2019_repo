@@ -13,16 +13,23 @@ public abstract class ConfigHandler {
     private static final boolean DEBUG_DEFAULT = true;
 
     private JsonObject configJSON;
+    private String subItemName;
+    private boolean hasBeenInit = false;
 
     /**
      * The default constructor
      *
      * @param configIn The main robot config as a JsonObject
-     * @param subItemName The name of the object our config is stored in, used to read from configIn
+     * @param subItemNameIn The name of the object our config is stored in, used to read from configIn
      */
-    public ConfigHandler(JsonObject configIn, String subItemName) {
+    public ConfigHandler(JsonObject configIn, String subItemNameIn) {
         this.configJSON = configIn;
-        preInit();
+        this.subItemName = subItemNameIn;
+    }
+
+    public void finishInit() {
+        if (hasBeenInit) return;
+        hasBeenInit = true;
         if (isDebug()) System.out.println("[INIT] Loading " + getClass().getSimpleName());
 
         JsonElement sube = configJSON.get(subItemName);
@@ -43,8 +50,6 @@ public abstract class ConfigHandler {
             if(k.equals("desc") || k.contains("placeholder")) continue;
             loadItem(k, subconfig.get(k));
         }
-
-        finalizeItems();
     }
 
     /**
@@ -54,12 +59,6 @@ public abstract class ConfigHandler {
      * @param v The config element for this item
      */
     public abstract void loadItem(String k, JsonElement v);
-
-    /**
-     * Is run after all items have loaded
-     * Can be used to create joystick objects or other objects that require all items to be loaded
-     */
-    public abstract void finalizeItems();
 
     /**
      * Called on an error with JSON parsing
@@ -78,10 +77,4 @@ public abstract class ConfigHandler {
     public boolean isDebug() {
         return DEBUG_DEFAULT;
     }
-
-    /**
-     * Runs before the constructor's main code
-     * Use for object declarations
-     */
-    public abstract void preInit();
 }

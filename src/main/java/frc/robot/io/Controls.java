@@ -15,19 +15,11 @@ import java.util.ArrayList;
  */
 public class Controls extends ConfigHandlerInt {
     //Config'd controls record
-    ArrayList<String> configuredControls;
-
-    @Override
-    public void preInit() {
-        configuredControls = new ArrayList<>();
-    }
+    ArrayList<String> configuredControls = new ArrayList<>();
 
     public Controls(JsonObject configIn) {
         super(configIn, "controls");
-    }
-
-    @Override
-    public void finalizeItems() {
+        finishInit();
         mainJoystick = new Joystick(mainJoystickPort);
     }
 

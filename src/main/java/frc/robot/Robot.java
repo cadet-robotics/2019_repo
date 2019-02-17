@@ -49,15 +49,15 @@ public class Robot extends TimedRobot implements Nexus {
 	
 	public UsbCamera driverCamera;
 
-	public Controls controls = new Controls();
+	public Controls controls;
 
-	public Motors motors = new Motors();
+	public Motors motors;
 
-	public Drive drive = null;
+	public Drive drive;
 
-	public Sensors sensors = new Sensors();
+	public Sensors sensors;
 	
-	public Pneumatics pneumatics = new Pneumatics();
+	public Pneumatics pneumatics;
 	
 	public SightData sightData;
 
@@ -92,10 +92,10 @@ public class Robot extends TimedRobot implements Nexus {
 		}
 		
 		//Initialize configured classes
-		controls.init(configJSON);
-		motors.init(configJSON);
-		sensors.init(configJSON);
-		pneumatics.init(configJSON);
+		controls = new Controls(configJSON);
+		motors = new Motors(configJSON);
+		sensors = new Sensors(configJSON);
+		pneumatics = new Pneumatics(configJSON);
 		
 		drive = new Drive(this);
 		elevator = new Elevator(this);
