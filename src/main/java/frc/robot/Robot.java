@@ -40,7 +40,7 @@ public class Robot extends TimedRobot implements Nexus {
 	public static final double DRIVE_MODIFIER = 0.8,					//Multiplier for teleop drive motors
 							   DRIVE_THRESHOLD = 0.1,					//Threshold for the teleop controls
 							   ELEVATOR_MANUAL_SPEED = 0.5,				//Manual control speed for the elevator
-							   ELEVATOR_MAINTENANCE_SPEED = 0.28,	//Speed to keep the elevator in place
+							   ELEVATOR_MAINTENANCE_SPEED = 0.3,	//Speed to keep the elevator in place
 							   CLAW_WHEEL_SPEED = 0.7;					//Speed of the claw's wheels
 
 	private static final boolean debug = true;
@@ -202,13 +202,11 @@ public class Robot extends TimedRobot implements Nexus {
 		//System.out.println(controls.getThrottleAxis());
 		//System.out.println(motors.leftElevator.get() + " " + motors.rightElevator.get());
 		
-		/*String flv = Double.toString(motors.frontLeftDrive.get()).substring(0, 3),
+		String flv = Double.toString(motors.frontLeftDrive.get()).substring(0, 3),
 			   frv = Double.toString(motors.frontRightDrive.get()).substring(0, 3),
 			   blv = Double.toString(motors.backLeftDrive.get()).substring(0, 3),
 			   brv = Double.toString(motors.backRightDrive.get()).substring(0, 3);
-		System.out.println(flv + "\t" + frv + "\n" + blv + "\t" + brv + "\n");*/
-		
-		System.out.println(clawOpen);
+		System.out.println(flv + "\t" + frv + "\n" + blv + "\t" + brv + "\n");
 	}
 	
 	/**
