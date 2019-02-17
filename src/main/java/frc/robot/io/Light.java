@@ -3,13 +3,14 @@ package frc.robot.io;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.PWM;
 
 /**
  * Handles the camera light on the front of the robot
  */
 public class Light {
-    public PWM light = null;
+    public DigitalOutput light = null;
 
     /**
      * Default constructor
@@ -23,10 +24,12 @@ public class Light {
             dio = dioE.getAsJsonObject();
             JsonElement lightE;
             if (dio.has("light") && (lightE = dio.get("light")).isJsonPrimitive() && ((JsonPrimitive) lightE).isNumber()) {
-                light = new PWM(lightE.getAsInt());
+                light = new DigitalOutput(lightE.getAsInt());
             }
         }
-        if (light == null) light = new PWM(2);
+        if (light == null) light = new DigitalOutput(2);
+        light.enablePWM(0);
+        light.setPWMRate(2000);
     }
 
     /**
@@ -37,6 +40,6 @@ public class Light {
     public void setIntensity(double d) {
         if (d < 0) d = 0;
         if (d > 1) d = 1;
-        light.setRaw((int) (d * 255));
+        light.updateDutyCycle(d);
     }
 }

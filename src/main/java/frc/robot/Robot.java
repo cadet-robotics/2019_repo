@@ -127,10 +127,6 @@ public class Robot extends TimedRobot implements Nexus {
 	 */
 	@Override
 	public void robotPeriodic() {
-		double mili = System.currentTimeMillis() / 1000.0;
-		mili = mili % 2;
-		if (mili >= 1) mili = 2 - mili;
-		light.setIntensity(Math.pow(2, 1 / mili) / 2);
 	}
 
 	/**
