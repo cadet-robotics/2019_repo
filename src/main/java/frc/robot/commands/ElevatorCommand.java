@@ -20,7 +20,7 @@ public class ElevatorCommand extends Command {
 	
 	/**
 	 * Default constructor
-	 * Moves the elevator to the given position
+	 * <p> Moves the elevator to the given position
 	 * 
 	 * @param position The position to move to
 	 * @param startPos The position the elevator started in
@@ -47,7 +47,7 @@ public class ElevatorCommand extends Command {
 		
 		//Find current position
 		for(int i = 0; i < nexus.getSensors().elevatorSensors.length; i++) {
-			if(nexus.getSensors().elevatorSensors[i].detected()) {
+			if(nexus.getSensors().elevatorSensors[i].get()) {
 				currentPosition = i;
 			}
 		}

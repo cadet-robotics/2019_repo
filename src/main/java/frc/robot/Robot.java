@@ -12,11 +12,12 @@ import com.google.gson.JsonObject;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.GetBallCommand;
 import frc.robot.config.ConfigLoader;
 import frc.robot.io.*;
 import frc.robot.sensors.Sensors;
@@ -40,10 +41,14 @@ public class Robot extends TimedRobot implements Nexus {
 	public static final double DRIVE_MODIFIER = 0.8,					//Multiplier for teleop drive motors
 							   DRIVE_THRESHOLD = 0.1,					//Threshold for the teleop controls
 							   ELEVATOR_MANUAL_SPEED = 0.5,				//Manual control speed for the elevator
-							   ELEVATOR_MAINTENANCE_SPEED = 0.3,	//Speed to keep the elevator in place
+							   ELEVATOR_MAINTENANCE_SPEED = 0.25,		//Speed to keep the elevator in place
 							   CLAW_WHEEL_SPEED = 0.7;					//Speed of the claw's wheels
+	
+	public static final Value CLAW_OPEN = Value.kReverse,
+							  CLAW_CLOSED = Value.kForward;
 
-	private static final boolean debug = true;
+	private static final boolean debug = true,
+								 useCamera = false;
 
 	public JsonObject configJSON;
 	
@@ -63,14 +68,20 @@ public class Robot extends TimedRobot implements Nexus {
 
 	public Elevator elevator;
 	
+	GetBallCommand getBallCommand;
+	
 	boolean throttle = true,
 			elevatorThrottle = false,
 			clawOpen = true,
-			elevatorRunning = false;
+			elevatorRunning = false,
+			clawRunning = false,
+			ejectType = false; //TODO: TEMPORARY
 	
 	//New Press booleans
 	boolean newElevatorPress = true,
-			newClawTogglePress = true;
+			newClawTogglePress = true,
+			newGetBallPress = true,
+			newEjectToggle = true; //TODO: TEMPORARY
 
 	//public UpdateLineManager lineManager = null;
 
@@ -100,9 +111,11 @@ public class Robot extends TimedRobot implements Nexus {
 		drive = new Drive(this);
 		elevator = new Elevator(this);
 		
-		driverCamera = CameraServer.getInstance().startAutomaticCapture(0);
-		driverCamera.setFPS(15);
-
+		if(useCamera) {
+			driverCamera = CameraServer.getInstance().startAutomaticCapture(0);
+			driverCamera.setFPS(15);
+		}
+		
 		if(debug){
 			for(String s : controls.getConfiguredControls()){
 				System.out.println(s);
@@ -202,41 +215,61 @@ public class Robot extends TimedRobot implements Nexus {
 		//System.out.println(controls.getThrottleAxis());
 		//System.out.println(motors.leftElevator.get() + " " + motors.rightElevator.get());
 		
-		String flv = Double.toString(motors.frontLeftDrive.get()).substring(0, 3),
+		/*String flv = Double.toString(motors.frontLeftDrive.get()).substring(0, 3),
 			   frv = Double.toString(motors.frontRightDrive.get()).substring(0, 3),
 			   blv = Double.toString(motors.backLeftDrive.get()).substring(0, 3),
 			   brv = Double.toString(motors.backRightDrive.get()).substring(0, 3);
-		System.out.println(flv + "\t" + frv + "\n" + blv + "\t" + brv + "\n");
+		System.out.println(flv + "\t" + frv + "\n" + blv + "\t" + brv + "\n");*/
 	}
 	
 	/**
 	 * Runs the claw (opening, closing, wheels)
 	 */
-	public void runClaw() {
-		//Open and close the claw
-		if(controls.getToggleClaw() && newClawTogglePress) {
-			clawOpen = !clawOpen;
-			newClawTogglePress = false;
-			
-			//toggle solenoids
-			if(clawOpen) {
-				pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kReverse);
-			} else {
-				pneumatics.clawSolenoid.set(DoubleSolenoid.Value.kForward);
+	public void runClaw() {	
+		//Get the ball
+		if(controls.getGetBall()) {
+			if(newGetBallPress) {
+				System.out.println("STARTING NEW GET BALL COMMAND");
+				newGetBallPress = false;
+				
+				if(getBallCommand != null)
+					getBallCommand.cancel();
+				
+				//New edition of the command
+				getBallCommand = new GetBallCommand(this);
+				Scheduler.getInstance().add(getBallCommand);
 			}
-		} else if(!controls.getToggleClaw() && !newClawTogglePress) {
-			newClawTogglePress = true;
+		} else if(getBallCommand != null) {
+			System.out.println("STOPPING GET BALL COMMAND");
+			getBallCommand.cancel();
+			getBallCommand = null;
 		}
 		
-		//Manage the ball
-		if(clawOpen) { //Can only run if the claw is open
-			double clawSpeed = 0;
-			
-			if(controls.getClawWheelsIn()) clawSpeed += CLAW_WHEEL_SPEED;
-			if(controls.getClawWheelsOut()) clawSpeed -= CLAW_WHEEL_SPEED;
-			
-			motors.leftClaw.set(-clawSpeed);
-			motors.rightClaw.set(clawSpeed);
+		//Allow another press
+		if(!controls.getGetBall() && !newGetBallPress) {
+			newGetBallPress= true;
+		}
+		
+		//Eject the ball, get the hatch panel
+		if(controls.getEjectBall()) {
+			System.out.println("BALL SWITCH: " + sensors.ballLimitSwitch.get());
+			//If it has a ball, eject it
+			if(/*sensors.ballLimitSwitch.get()*/ejectType) { //TODO: TEMPORARY
+				motors.leftClaw.set(CLAW_WHEEL_SPEED);
+				motors.rightClaw.set(-CLAW_WHEEL_SPEED);
+			} else { //Doesn't have a ball, close claw for panels
+				pneumatics.clawSolenoid.set(CLAW_CLOSED);
+			}
+		} else if(!ejectType) {//TODO: TEMPORARY
+			pneumatics.clawSolenoid.set(CLAW_OPEN);
+		}
+		
+		//TODO: TEMPORARY
+		if(controls.getToggleType() && newEjectToggle) {
+			ejectType = !ejectType;
+			newEjectToggle = false;
+		} else if(!controls.getToggleType() && !newEjectToggle) {
+			newEjectToggle = true;
 		}
 	}
 	
@@ -275,7 +308,7 @@ public class Robot extends TimedRobot implements Nexus {
 		
 		elevatorSpeed += ELEVATOR_MAINTENANCE_SPEED;
 		
-		if(!elevatorRunning) {
+		if(!elevatorRunning && (elevatorSpeed < ELEVATOR_MAINTENANCE_SPEED ? (!sensors.bottomLimitSwitch.get()) : true)) {
 			motors.leftElevator.set(-elevatorSpeed);
 			motors.rightElevator.set(elevatorSpeed);
 		}
@@ -304,7 +337,7 @@ public class Robot extends TimedRobot implements Nexus {
 			zAxis *= t;
 		}
 		
-		if (!controls.isAutoLock()) drive.driveCartesian(xAxis, yAxis, zAxis);
+		drive.driveCartesian(xAxis, yAxis, zAxis);
 	}
 	
 	/**
@@ -322,12 +355,21 @@ public class Robot extends TimedRobot implements Nexus {
   	}
 	
 	/**
-	 * Sets whether or not the elevator is running
+	 * Sets whether or not the elevator is in use
 	 * 
 	 * @param run The new value
 	 */
 	public void setElevatorRunning(boolean run) {
 		elevatorRunning = run;
+	}
+	
+	/**
+	 * Sets whether or note the claw is in use
+	 * 
+	 * @param run The new value
+	 */
+	public void setClawRunning(boolean run) {
+		clawRunning = run;
 	}
 
 	/**

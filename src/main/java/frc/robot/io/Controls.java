@@ -36,9 +36,10 @@ public class Controls {
     int autoLockButtonPort = 5,
     	elevatorUp = 5,
     	elevatorDown = 3,
-    	clawWheelsIn = 1,
-    	clawWheelsOut = 2,
-    	toggleClaw = 4;
+    	getBall = 1,
+    	ejectBall = 2,
+    	toggleClaw = 4,
+    	toggleType = 9; //TODO: TEMPORARY
     int[] elevatorPos = new int[6];
 
     boolean debug = false;
@@ -96,21 +97,21 @@ public class Controls {
     }
     
     /**
-     * Gets the run claw wheels in button
+     * Gets the get ball button
      * 
-     * @return Claw Wheels In button state
+     * @return Get Ball button state
      */
-    public boolean getClawWheelsIn() {
-    	return mainJoystick.getRawButton(clawWheelsIn);
+    public boolean getGetBall() {
+    	return mainJoystick.getRawButton(getBall);
     }
     
     /**
-     * Gets the run claw wheels out button
+     * Gets the eject ball/get hatch button
      * 
-     * @return Claw Wheels Out button state
+     * @return Eject Ball button state
      */
-    public boolean getClawWheelsOut() {
-    	return mainJoystick.getRawButton(clawWheelsOut);
+    public boolean getEjectBall() {
+    	return mainJoystick.getRawButton(ejectBall);
     }
     
     /**
@@ -120,6 +121,16 @@ public class Controls {
      */
     public boolean getToggleClaw() {
     	return mainJoystick.getRawButton(toggleClaw);
+    }
+    
+    /**
+     * Gets the type toggle button
+     * TODO: TEMPORARY
+     * 
+     * @return Toggle Type button state
+     */
+    public boolean getToggleType() {
+    	return mainJoystick.getRawButton(toggleType);
     }
     
     /**
@@ -241,16 +252,20 @@ public class Controls {
                 	elevatorDown = itemInt;
                 	break;
                 
-                case "claw in":
-                	clawWheelsIn = itemInt;
-                	break;
-                
-                case "claw out":
-                	clawWheelsOut = itemInt;
-                	break;
-                
                 case "toggle claw":
                 	toggleClaw = itemInt;
+                	break;
+                
+                case "get ball":
+                	getBall = itemInt;
+                	break;
+                
+                case "eject ball, get hatch":
+                	ejectBall = itemInt;
+                	break;
+                
+                case "toggle type": //TODO: TEMPORARY
+                	toggleType = itemInt;
                 	break;
 
                 default:
