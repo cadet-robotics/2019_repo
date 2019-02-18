@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 /**
  * Contains the sensors
- * Javadoc comment lovingly provided by Alex Pickering
+ * <p>Javadoc comment lovingly provided by Alex Pickering
  * 
  * @author Owen Avery, Alex Pickering
  */

@@ -47,6 +47,7 @@ public class Controls {
     //Getters
     /**
      * Gets the X Axis control
+     * 
      * @return The X Axis
      */
     public double getXAxis(){
@@ -55,6 +56,7 @@ public class Controls {
     
     /**
      * Gets the Y Axis control
+     * 
      * @return The Y Axis
      */
     public double getYAxis(){
@@ -63,6 +65,7 @@ public class Controls {
     
     /**
      * Gets the Z Axis control
+     * 
      * @return The Z Axis
      */
     public double getZAxis(){
@@ -157,7 +160,7 @@ public class Controls {
     
     /**
      * Initializes the controls
-     * Loads from config and creates the objects
+     * <p>Loads from config and creates the objects
      */
     public void init(JsonObject configJSON){
         this.configJSON = configJSON;
@@ -174,6 +177,7 @@ public class Controls {
     
     /**
      * Loads the controls from config
+     * 
      * @throws IOException
      */
     public void loadControls() throws IOException {

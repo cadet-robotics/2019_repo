@@ -7,7 +7,7 @@ import frc.robot.sensors.SightData;
 
 /**
  * Works with networktables to get vision data
- * Javadoc comments lovingly provided by Alex Pickering
+ * <p>Javadoc comments lovingly provided by Alex Pickering
  * 
  * @author Owen Avery
  */

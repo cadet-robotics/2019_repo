@@ -20,7 +20,7 @@ public class ConfigLoader {
 	
 	/**
 	 * Loads the JSON config file
-	 * The first .json in this implementation
+	 * <p>The first .json in this implementation
 	 * 
 	 * @return The JsonObject of the config file
 	 * @throws IOException
@@ -42,7 +42,7 @@ public class ConfigLoader {
 	
 	/**
 	 * Gets the config file to read from
-	 * This will be the 'first' .cfg file found in this implementation
+	 * <p>This will be the 'first' .cfg file found in this implementation
 	 * 
 	 * @return The first .cfg file in the deploy directory
 	 * @throws FileNotFoundException
@@ -59,7 +59,7 @@ public class ConfigLoader {
 	
 	/**
 	 * Gets the config file to read from
-	 * The file is specified in this implementation
+	 * <p>The file is specified in this implementation
 	 * 
 	 * @param fileName The config file to read from
 	 * @return The config file

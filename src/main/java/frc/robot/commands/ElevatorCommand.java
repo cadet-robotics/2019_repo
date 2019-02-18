@@ -20,7 +20,7 @@ public class ElevatorCommand extends Command {
 	
 	/**
 	 * Default constructor
-	 * <p> Moves the elevator to the given position
+	 * <p>Moves the elevator to the given position
 	 * 
 	 * @param position The position to move to
 	 * @param startPos The position the elevator started in

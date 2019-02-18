@@ -2,7 +2,7 @@ package frc.robot;
 
 /**
  * Owen doesn't like some parts of java. He 'fixes' them here
- * Javadoc comments lovingly provided by Alex Pickering
+ * <p>Javadoc comments lovingly provided by Alex Pickering
  * 
  * @author Owen Avery
  */

@@ -21,7 +21,7 @@ public class GetBallCommand extends Command {
 	
 	/**
 	 * Default constructor
-	 * <p> Moves the elevator to the ground and gets a ball
+	 * <p>Moves the elevator to the ground and gets a ball
 	 * 
 	 * @param nexus The robot instance
 	 */

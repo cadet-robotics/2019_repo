@@ -12,7 +12,7 @@ import frc.robot.sensors.SightData;
 
 /**
  * Controls motor PID loop for some auto-y stuff
- * Javadoc comments lovingly provided by Alex Pickering
+ * <p>Javadoc comments lovingly provided by Alex Pickering
  * 
  * @author Owen Avery
  */
@@ -153,7 +153,12 @@ public class AutoLock extends Command {
         double d = JavaIsCancerChangeMyMind.moduloIsCancer(sensors.gyro.getAngle(), 360);
 		pidRot.setSetpoint(JavaIsCancerChangeMyMind.moduloIsCancer(d + off, 360));
     }
-
+    
+    /**
+     * Gets whether or not autolock is enabled
+     * 
+     * @return Autolock enabled
+     */
 	public boolean isEnabled() {
     	return controls.isAutoLock() && !sight.isTimeout();
 	}
@@ -179,7 +184,7 @@ public class AutoLock extends Command {
 	
 	/**
 	 * Maps numbers somehow
-	 * owen could explain better if he used javadoc comments
+	 * <p>owen could explain better if he used javadoc comments
 	 * 
 	 * @param n The number to map
 	 * @param low The low end of the clamping range
@@ -197,7 +202,7 @@ public class AutoLock extends Command {
 	
 	/**
 	 * Version of the clamp thing that respeccs negatives
-	 * owen pls
+	 * <p>owen pls
 	 * 
 	 * @param n The number to 'clamp'
 	 * @param low The low end of the range

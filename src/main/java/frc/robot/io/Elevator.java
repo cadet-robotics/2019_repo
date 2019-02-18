@@ -7,7 +7,7 @@ import frc.robot.commands.ElevatorCommand;
 
 /**
  * Contains stuff for the elevator
- * Javadoc comments lovingly provided by Alex Pickering
+ * <p>Javadoc comments lovingly provided by Alex Pickering
  * 
  * @author Owen Avery, Alex Pickering
  */
