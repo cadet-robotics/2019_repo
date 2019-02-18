@@ -3,6 +3,7 @@ package frc.robot.sensors;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
@@ -21,8 +22,9 @@ public class Sensors {
     public DigitalInput[] elevatorSensors = new DigitalInput[6];
     
     public DigitalInput topLimitSwitch,
-    					bottomLimitSwitch,
-    					ballLimitSwitch;
+    					bottomLimitSwitch;
+    
+    public AnalogInput ballDistance;
     
     /**
      * Initializes any sensors that need to use the config
@@ -78,8 +80,8 @@ public class Sensors {
     				topLimitSwitch = new DigitalInput(itemInt);
     				break;
     			
-    			case "ball limit switch":
-    				ballLimitSwitch = new DigitalInput(itemInt);
+    			case "ball distance sensor":
+    				ballDistance = new AnalogInput(itemInt);
     				break;
     			
     			default:

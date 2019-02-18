@@ -42,7 +42,10 @@ public class Robot extends TimedRobot implements Nexus {
 							   DRIVE_THRESHOLD = 0.1,					//Threshold for the teleop controls
 							   ELEVATOR_MANUAL_SPEED = 0.5,				//Manual control speed for the elevator
 							   ELEVATOR_MAINTENANCE_SPEED = 0.25,		//Speed to keep the elevator in place
-							   CLAW_WHEEL_SPEED = 0.7;					//Speed of the claw's wheels
+							   CLAW_WHEEL_SPEED = 0.7,					//Speed of the claw's wheels
+							   BALL_DISTANCE = 5;						//Maximum distance to say there's a ball
+	
+	public static final int BALL_EJECT_TIME = 10;	//Number of ticks to eject balls for
 	
 	public static final Value CLAW_OPEN = Value.kReverse,
 							  CLAW_CLOSED = Value.kForward;
@@ -75,13 +78,15 @@ public class Robot extends TimedRobot implements Nexus {
 			clawOpen = true,
 			elevatorRunning = false,
 			clawRunning = false,
-			ejectType = false; //TODO: TEMPORARY
+			ejectingBall = false;
 	
 	//New Press booleans
 	boolean newElevatorPress = true,
 			newClawTogglePress = true,
 			newGetBallPress = true,
-			newEjectToggle = true; //TODO: TEMPORARY
+			newEjectBallPress = true;
+	
+	int ballEjectTimer = BALL_EJECT_TIME;
 
 	//public UpdateLineManager lineManager = null;
 
@@ -252,24 +257,33 @@ public class Robot extends TimedRobot implements Nexus {
 		
 		//Eject the ball, get the hatch panel
 		if(controls.getEjectBall()) {
-			System.out.println("BALL SWITCH: " + sensors.ballLimitSwitch.get());
+			System.out.println("BALL DISTANCE: " + sensors.ballDistance.getAverageValue());
+			
 			//If it has a ball, eject it
-			if(/*sensors.ballLimitSwitch.get()*/ejectType) { //TODO: TEMPORARY
-				motors.leftClaw.set(CLAW_WHEEL_SPEED);
-				motors.rightClaw.set(-CLAW_WHEEL_SPEED);
+			if(sensors.ballDistance.getAverageValue() < BALL_DISTANCE) {
+				if(newEjectBallPress) {
+					ejectingBall = true;
+					ballEjectTimer = BALL_EJECT_TIME;
+					newEjectBallPress = false;
+				}
 			} else { //Doesn't have a ball, close claw for panels
 				pneumatics.clawSolenoid.set(CLAW_CLOSED);
 			}
-		} else if(!ejectType) {//TODO: TEMPORARY
+		} else {
 			pneumatics.clawSolenoid.set(CLAW_OPEN);
 		}
 		
-		//TODO: TEMPORARY
-		if(controls.getToggleType() && newEjectToggle) {
-			ejectType = !ejectType;
-			newEjectToggle = false;
-		} else if(!controls.getToggleType() && !newEjectToggle) {
-			newEjectToggle = true;
+		//Allow multiple ball ejects
+		if(!controls.getEjectBall() && !newEjectBallPress) {
+			newEjectBallPress = true;
+		}
+		
+		//Eject balls
+		if(ejectingBall) {
+			if(ballEjectTimer-- <= 0) ejectingBall = false;
+			
+			motors.leftClaw.set(-CLAW_WHEEL_SPEED);
+			motors.rightClaw.set(CLAW_WHEEL_SPEED);
 		}
 	}
 	

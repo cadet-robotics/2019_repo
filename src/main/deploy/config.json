@@ -10,9 +10,9 @@
     "proximity sensor 5": 5,
     "proximity sensor 6": 4,
     "proximity sensor 1": 9,
-    "ball limit switch": 2,
     "bottom limit switch": 0,
-    "top limit switch": 1
+    "top limit switch": 1,
+    "ball distance sensor": 2
   },
   "analog in": {
     "desc": "Analogue IN Ports",
@@ -55,8 +55,8 @@
   },
   "pcm": {
     "desc": "Pneumatics Control Module settings",
-    "right claw solenoid": 6,
-    "left claw solenoid": 7
+    "left claw solenoid": 7,
+    "right claw solenoid": 6
   },
   "controls": {
     "desc": "Controls settings",
@@ -73,10 +73,10 @@
     "elevator hatch 1": 11,
     "elevator ball 2": 10,
     "toggle claw": 4,
-    "main joystick throttle axis": 3,
     "elevator down": 3,
-    "eject ball, get hatch": 2,
     "get ball": 1,
-	"toggle type": 6
+    "toggle type": 6,
+    "main joystick throttle axis": 3,
+    "eject ball, get hatch": 2
   }
 }
