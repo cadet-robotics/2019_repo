@@ -5,7 +5,7 @@ import frc.robot.Nexus;
 
 /**
  * Contains the MecanumDrive for the robot
- * Javadoc comments lovingly provided by Alex Pickering
+ * <p>Javadoc comments lovingly provided by Alex Pickering
  * 
  * @author Owen Avery
  */
@@ -37,7 +37,7 @@ public class Drive {
     
     /**
      * Runs the mecanum drive
-     * All values are the standard -1 to 1 range
+     * <p>All values are the standard -1 to 1 range
      * 
      * @param y Y speed to use
      * @param x X speed to use

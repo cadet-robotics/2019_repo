@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Contains data from the vision systems
- * Javadoc comments lovingly provided by Alex Pickering 
+ * <p>Javadoc comments lovingly provided by Alex Pickering 
  * 
  * @author Owen Avery
  */

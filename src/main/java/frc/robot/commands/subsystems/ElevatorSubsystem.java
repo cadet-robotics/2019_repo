@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Subsystem for the elevator
- * <p> Javadocs lovingly provided by Alex Pickering
+ * <p>Javadocs lovingly provided by Alex Pickering
  * 
  * @author Owen Avery
  */
