@@ -39,8 +39,10 @@ public class Sensors {
     }
     
     public void loadDIOSensors() {
-    	JsonObject dioJSON = configJSON.getAsJsonObject("dio");
+    	JsonObject dioJSON = configJSON.getAsJsonObject("dio"),
+    			   ainJSON = configJSON.getAsJsonObject("analog in");
     	
+    	//Load DIO sensors
     	for(String k : dioJSON.keySet()) {
     		if(k.equals("desc") || k.contains("placeholder")) continue;
     		
@@ -80,12 +82,25 @@ public class Sensors {
     				topLimitSwitch = new DigitalInput(itemInt);
     				break;
     			
+    			default:
+    				System.err.println("Unrecognized DIO Sensor: " + k);
+    		}
+    	}
+    	
+    	//Load AIn sensors
+    	for(String k : ainJSON.keySet()) {
+    		if(k.equals("desc") || k.contains("placeholder")) continue;
+    		
+    		JsonElement item = ainJSON.get(k);
+    		int itemInt = item.getAsInt();
+    		
+    		switch(k) {
     			case "ball distance sensor":
     				ballDistance = new AnalogInput(itemInt);
     				break;
     			
     			default:
-    				System.err.println("Unrecognized Sensor: " + k);
+    				System.err.println("Unregocnized AIn Sensor: " + k);
     		}
     	}
     }

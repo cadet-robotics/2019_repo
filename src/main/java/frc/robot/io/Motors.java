@@ -51,8 +51,6 @@ public class Motors {
 	 * @param configJSON The isntance of the configuration file
 	 */
 	public void init(JsonObject configJSON) {
-		if(debug) System.out.println("INIT MOTORS");
-		
 		this.configJSON = configJSON;
 		
 		loadMotors();

@@ -10,13 +10,12 @@
     "proximity sensor 5": 5,
     "proximity sensor 6": 4,
     "proximity sensor 1": 9,
-    "bottom limit switch": 0,
     "top limit switch": 1,
-    "ball distance sensor": 2
+    "bottom limit switch": 0
   },
   "analog in": {
     "desc": "Analogue IN Ports",
-    "no items placeholder": 0
+    "ball distance sensor": 0
   },
   "pwm": {
     "desc": "PWM Ports",
@@ -36,21 +35,21 @@
       "type": "can",
       "id": 3
     },
-    "right claw wheel": {
-      "type": "pwm",
-      "id": 8
-    },
     "left elevator": {
       "type": "pwm",
-      "id": 7
+      "id": 9
     },
     "right elevator": {
       "type": "pwm",
       "id": 0
     },
+    "right claw wheel": {
+      "type": "pwm",
+      "id": 8
+    },
     "left claw wheel": {
       "type": "pwm",
-      "id": 9
+      "id": 7
     }
   },
   "pcm": {

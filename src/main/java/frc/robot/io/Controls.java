@@ -145,6 +145,11 @@ public class Controls {
     public boolean getElevatorButton(int pos) {
     	return mainJoystick.getRawButton(elevatorPos[pos]);
     }
+    
+    //TODO: TEMPORARY
+    public int getPOV() {
+    	return mainJoystick.getPOV(); 
+    }
 
     /**
      * Gets the Auto Lock Button state

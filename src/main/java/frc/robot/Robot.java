@@ -120,12 +120,6 @@ public class Robot extends TimedRobot implements Nexus {
 			driverCamera = CameraServer.getInstance().startAutomaticCapture(0);
 			driverCamera.setFPS(15);
 		}
-		
-		if(debug){
-			for(String s : controls.getConfiguredControls()){
-				System.out.println(s);
-			}
-		}
 		/*
 		drive =
 		UpdateLineManager m = new UpdateLineManager(NetworkTableInstance.getDefault(), seeInstance);
@@ -225,6 +219,8 @@ public class Robot extends TimedRobot implements Nexus {
 			   blv = Double.toString(motors.backLeftDrive.get()).substring(0, 3),
 			   brv = Double.toString(motors.backRightDrive.get()).substring(0, 3);
 		System.out.println(flv + "\t" + frv + "\n" + blv + "\t" + brv + "\n");*/
+		//System.out.println("BALL DISTANCE: " + sensors.ballDistance.getValue());
+		//System.out.println(motors.leftClaw.get() + " " + motors.rightClaw.get());
 	}
 	
 	/**
@@ -257,8 +253,6 @@ public class Robot extends TimedRobot implements Nexus {
 		
 		//Eject the ball, get the hatch panel
 		if(controls.getEjectBall()) {
-			System.out.println("BALL DISTANCE: " + sensors.ballDistance.getAverageValue());
-			
 			//If it has a ball, eject it
 			if(sensors.ballDistance.getAverageValue() < BALL_DISTANCE) {
 				if(newEjectBallPress) {
@@ -282,6 +276,15 @@ public class Robot extends TimedRobot implements Nexus {
 		if(ejectingBall) {
 			if(ballEjectTimer-- <= 0) ejectingBall = false;
 			
+			motors.leftClaw.set(-CLAW_WHEEL_SPEED);
+			motors.rightClaw.set(CLAW_WHEEL_SPEED);
+		}
+		
+		
+		if(controls.getPOV() == 0) {
+			motors.leftClaw.set(CLAW_WHEEL_SPEED);
+			motors.rightClaw.set(-CLAW_WHEEL_SPEED);
+		} else if(controls.getPOV() == 180) {
 			motors.leftClaw.set(-CLAW_WHEEL_SPEED);
 			motors.rightClaw.set(CLAW_WHEEL_SPEED);
 		}
@@ -322,9 +325,16 @@ public class Robot extends TimedRobot implements Nexus {
 		
 		elevatorSpeed += ELEVATOR_MAINTENANCE_SPEED;
 		
-		if(!elevatorRunning && (elevatorSpeed < ELEVATOR_MAINTENANCE_SPEED ? (!sensors.bottomLimitSwitch.get()) : true)) {
-			motors.leftElevator.set(-elevatorSpeed);
-			motors.rightElevator.set(elevatorSpeed);
+		if(!elevatorRunning) {
+			//Only move up when at bottom; only move down or maintain when at the top
+			if((sensors.bottomLimitSwitch.get() && elevatorSpeed < ELEVATOR_MANUAL_SPEED + ELEVATOR_MAINTENANCE_SPEED) ||
+				(sensors.elevatorSensors[5].get() && elevatorSpeed > ELEVATOR_MAINTENANCE_SPEED)) {
+				motors.leftElevator.set(0);
+				motors.rightElevator.set(0);
+			} else {
+				motors.leftElevator.set(-elevatorSpeed);
+				motors.rightElevator.set(elevatorSpeed);
+			}
 		}
 	}
 	
