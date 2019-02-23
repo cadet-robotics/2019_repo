@@ -53,7 +53,7 @@ public class AutoLock extends Command {
 		
 		@Override
 		public double pidGet() {
-			return -sight.getXOffset();
+			return /*-sight.getXOffset()*/0;
 		}
 		
 		@Override
@@ -75,7 +75,7 @@ public class AutoLock extends Command {
 		
 		@Override
 		public double pidGet() {
-			return -sight.getYOffset();
+			return /*-sight.getYOffset()*/0;
 		}
 		
 		@Override
@@ -155,7 +155,7 @@ public class AutoLock extends Command {
     }
 
 	public boolean isEnabled() {
-    	return controls.isAutoLock() && !sight.isTimeout();
+    	return controls.isAutoLock();// && !sight.isTimeout();
 	}
 	
 	@Override

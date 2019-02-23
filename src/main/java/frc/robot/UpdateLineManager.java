@@ -6,7 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.sensors.SightData;
 
 /**
- * Works with networktables to get vision data
+ * Works with NetworkTables to get vision data
  * Javadoc comments lovingly provided by Alex Pickering
  * 
  * @author Owen Avery
@@ -19,20 +19,8 @@ public class UpdateLineManager {
      * @param see SightData instance
      */
     public static int startListener(NetworkTableInstance nt, SightData see) {
-        NetworkTableEntry dataTable = nt.getTable("ShuffleBoard").getEntry("line");
+        NetworkTableEntry dataTable = nt.getTable("ShuffleBoard").getEntry("targets");
         
-        return dataTable.addListener((e) -> {
-            double[] n;
-            
-            try {
-                n = e.value.getDoubleArray();
-            } catch (ClassCastException ex) {
-                ex.printStackTrace();
-                return;
-            }
-            
-            if (n.length != 4) return;
-            see.setPoints(n[0], n[1], n[2], n[3]);
-        }, EntryListenerFlags.kUpdate + EntryListenerFlags.kNew);
+        return dataTable.addListener((e) -> see.setData(e.getEntry()), EntryListenerFlags.kUpdate + EntryListenerFlags.kNew);
     }
 }
