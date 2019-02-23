@@ -124,6 +124,8 @@ public class Robot extends TimedRobot implements Nexus {
 		drive =
 		UpdateLineManager m = new UpdateLineManager(NetworkTableInstance.getDefault(), seeInstance);
 		*/
+		
+		IHaveNothingToDo.yeet();
 	}
 
 	/**

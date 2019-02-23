@@ -4,14 +4,14 @@
   },
   "dio": {
     "desc": "Digital IO Ports",
-    "proximity sensor 2": 8,
-    "proximity sensor 3": 7,
-    "proximity sensor 4": 6,
-    "proximity sensor 5": 5,
-    "proximity sensor 6": 4,
-    "proximity sensor 1": 9,
     "top limit switch": 1,
-    "bottom limit switch": 0
+    "bottom limit switch": 0,
+    "proximity sensor 1": 4,
+    "proximity sensor 2": 9,
+    "proximity sensor 3": 8,
+    "proximity sensor 4": 7,
+    "proximity sensor 5": 5,
+    "proximity sensor 6": 6
   },
   "analog in": {
     "desc": "Analogue IN Ports",
@@ -37,25 +37,25 @@
     },
     "left elevator": {
       "type": "pwm",
+      "id": 7
+    },
+    "right claw wheel": {
+      "type": "pwm",
       "id": 9
     },
     "right elevator": {
       "type": "pwm",
       "id": 0
     },
-    "right claw wheel": {
-      "type": "pwm",
-      "id": 8
-    },
     "left claw wheel": {
       "type": "pwm",
-      "id": 7
+      "id": 8
     }
   },
   "pcm": {
     "desc": "Pneumatics Control Module settings",
-    "left claw solenoid": 7,
-    "right claw solenoid": 6
+    "right claw solenoid": 6,
+    "left claw solenoid": 7
   },
   "controls": {
     "desc": "Controls settings",
