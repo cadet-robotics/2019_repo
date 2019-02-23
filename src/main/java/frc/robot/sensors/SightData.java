@@ -1,15 +1,39 @@
 package frc.robot.sensors;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.SightTarget;
-
-import java.util.ArrayList;
+import frc.robot.UpdateLineManager;
 
 public class SightData {
-    public ArrayList<ArrayList<SightTarget>> targets;
+    private SightTarget[] targets = null;
+    private NetworkTableInstance nt;
+    private int listener;
 
-    public SightData() {
+    public SightData(NetworkTableInstance ntIn) {
+        nt = ntIn;
+        listener = UpdateLineManager.startListener(ntIn, this);
     }
 
-    public void addTargetInfo(ArrayList<>) {
+    public void setData(NetworkTableEntry entry) {
+        double[] data = entry.getDoubleArray((double[]) null);
+        if ((data == null) || ((data.length % SightTarget.ARGCNT) != 0)) {
+            targets = null;
+            return;
+        }
+        targets = new SightTarget[data.length / SightTarget.ARGCNT];
+        int index = 0;
+        for (int i = 0; i < targets.length; i++, index += SightTarget.ARGCNT) {
+            targets[i] = new SightTarget(data, index);
+        }
+    }
+
+    public void clear() {
+        targets = null;
+    }
+
+    @Override
+    protected void finalize() {
+        nt.removeEntryListener(listener);
     }
 }
