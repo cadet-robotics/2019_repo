@@ -10,7 +10,7 @@ import frc.robot.commands.subsystems.ElevatorSubsystem;
  * @author Alex Pickering
  */
 public class ElevatorCommand extends Command {
-	static final double SPEED = 0.6;
+	static final double SPEED = 0.45;
 	
 	int currentPosition,
 		toPosition,
@@ -61,7 +61,7 @@ public class ElevatorCommand extends Command {
 		
 		if(currentPosition > toPosition) { //Move down
 			System.out.print(" GOING DOWN");
-			speed -= SPEED;
+			speed -= (SPEED / 1.2);
 		} else { //Move up
 			System.out.print(" GOING UP");
 			speed += SPEED;
