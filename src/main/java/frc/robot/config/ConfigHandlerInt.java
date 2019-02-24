@@ -7,8 +7,11 @@ import com.google.gson.JsonPrimitive;
 /**
  * Provides an alternative to ConfigHandler
  *
+ * Deprecated in favor of ConfigUtil.loadAllInts()
+ *
  * @author Owen Avery
  */
+@Deprecated
 public abstract class ConfigHandlerInt extends ConfigHandler {
     public ConfigHandlerInt(JsonObject configIn, String subItemName) {
         super(configIn, subItemName);

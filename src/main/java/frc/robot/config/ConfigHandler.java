@@ -7,8 +7,11 @@ import com.google.gson.JsonObject;
  * Provides a base for config loading classes
  * Technically based off of the Controls class, but drastically modified
  *
+ * Deprecated in favor of ConfigUtil.loadAll()
+ *
  * @author Owen Avery
  */
+@Deprecated
 public abstract class ConfigHandler {
     private static final boolean DEBUG_DEFAULT = true;
 

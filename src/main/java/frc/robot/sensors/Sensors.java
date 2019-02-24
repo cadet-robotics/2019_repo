@@ -1,22 +1,20 @@
 package frc.robot.sensors;
 
 import com.google.gson.JsonObject;
-
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import frc.robot.config.ConfigHandlerInt;
+import frc.robot.config.ConfigUtil;
 
 /**
  * Contains the sensors
  * <p>Javadoc comment lovingly provided by Alex Pickering
  *
- * Javadoc comment lovingly provided by Alex Pickering
- *
- * Later modified to extend ConfigHandlerInt
+ * Later modified to use ConfigUtil
  *
  * @author Owen Avery, Alex Pickering
  */
-public class Sensors extends ConfigHandlerInt {
+public class Sensors {
 	//null until we have a gyro on the robot
     public Gyro gyro = null; //new ADXRS450_Gyro();
     
@@ -26,21 +24,17 @@ public class Sensors extends ConfigHandlerInt {
     					bottomLimitSwitch,
     					ballLimitSwitch;
 
-	@Override
-	public void error() {
-	}
+	public AnalogInput ballDistance;
 
     public Sensors(JsonObject configIn) {
-        super(configIn, "dio");
-        finishInit();
-    }
+		ConfigUtil.loadAll(configIn, "dio", (k, v) -> {
+			Integer itemInt = ConfigUtil.getInt(v);
+			if (itemInt == null) return;
+			switch(k) {
+				case "proximity sensor 1":
+					elevatorSensors[0] = new DigitalInput(itemInt);
+					break;
 
-	@Override
-	public void loadItem(String k, int itemInt) {
-		switch(k) {
-			case "proximity sensor 1":
-				elevatorSensors[0] = new DigitalInput(itemInt);
-				break;
 				case "proximity sensor 2":
 					elevatorSensors[1] = new DigitalInput(itemInt);
 					break;
@@ -69,12 +63,21 @@ public class Sensors extends ConfigHandlerInt {
 					topLimitSwitch = new DigitalInput(itemInt);
 					break;
 
-				case "ball limit switch":
-					ballLimitSwitch = new DigitalInput(itemInt);
+				default:
+					System.err.println("Unrecognized DIO Sensor: " + k);
+			}
+		});
+		ConfigUtil.loadAll(configIn, "analog in", (k, v) -> {
+			Integer itemInt = ConfigUtil.getInt(v);
+			if (itemInt == null) return;
+			switch(k) {
+				case "ball distance sensor":
+					ballDistance = new AnalogInput(itemInt);
 					break;
 
 				default:
-					System.err.println("Unrecognized Sensor: " + k);
+					System.err.println("Unrecognized AIn Sensor: " + k);
 			}
+		});
 	}
 }

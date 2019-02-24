@@ -2,29 +2,103 @@ package frc.robot.io;
 
 import com.google.gson.JsonObject;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.config.ConfigHandlerInt;
+import frc.robot.config.ConfigUtil;
 
 import java.util.ArrayList;
 
 /**
  * Contains controls objects and handles loading them from config
- * <p>
- * Later modified to make it extend ConfigHandlerInt
+ *
+ * <p>Later modified to use ConfigUtil
  *
  * @author Alex Pickering, Owen Avery
  */
-public class Controls extends ConfigHandlerInt {
+public class Controls {
     //Config'd controls record
     ArrayList<String> configuredControls = new ArrayList<>();
 
     public Controls(JsonObject configIn) {
-        super(configIn, "controls");
-        finishInit();
-        mainJoystick = new Joystick(mainJoystickPort);
-    }
+        ConfigUtil.loadAllInts(configIn, "controls", (k, itemInt) -> {
+            switch (k) {
+                case "main joystick":
+                    mainJoystickPort = itemInt;
+                    break;
 
-    @Override
-    public void error() {
+                case "main joystick x-axis":
+                    xAxis = itemInt;
+                    break;
+
+                case "main joystick y-axis":
+                    yAxis = itemInt;
+                    break;
+
+                case "main joystick z-axis":
+                    zAxis = itemInt;
+                    break;
+
+                case "main joystick throttle axis":
+                    throttleAxis = itemInt;
+                    break;
+
+                case "main joystick auto-lock":
+                    autoLockButtonPort = itemInt;
+                    break;
+
+                case "elevator hatch 1":
+                    elevatorPos[0] = itemInt;
+                    break;
+
+                case "elevator ball 1":
+                    elevatorPos[1] = itemInt;
+                    break;
+
+                case "elevator hatch 2":
+                    elevatorPos[2] = itemInt;
+                    break;
+
+                case "elevator ball 2":
+                    elevatorPos[3] = itemInt;
+                    break;
+
+                case "elevator hatch 3":
+                    elevatorPos[4] = itemInt;
+                    break;
+
+                case "elevator ball 3":
+                    elevatorPos[5] = itemInt;
+                    break;
+
+                case "elevator up":
+                    elevatorUp = itemInt;
+                    break;
+
+                case "elevator down":
+                    elevatorDown = itemInt;
+                    break;
+
+                case "toggle claw":
+                    toggleClaw = itemInt;
+                    break;
+
+                case "get ball":
+                    getBall = itemInt;
+                    break;
+
+                case "eject ball, get hatch":
+                    ejectBall = itemInt;
+                    break;
+
+                case "toggle type": //TODO: TEMPORARY
+                    toggleType = itemInt;
+                    break;
+
+                default:
+                    System.err.println("Unrecognized control: " + k);
+                    return;
+            }
+            configuredControls.add(k);
+        });
+        mainJoystick = new Joystick(mainJoystickPort);
     }
 
     //Controls objects
@@ -49,11 +123,6 @@ public class Controls extends ConfigHandlerInt {
     int[] elevatorPos = new int[6];
 
     boolean debug = false;
-
-    @Override
-    public boolean isDebug() {
-        return debug;
-    }
 
     //Getters
 
@@ -157,6 +226,11 @@ public class Controls extends ConfigHandlerInt {
     public boolean getElevatorButton(int pos) {
         return mainJoystick.getRawButton(elevatorPos[pos]);
     }
+    
+    //TODO: TEMPORARY
+    public int getPOV() {
+    	return mainJoystick.getPOV(); 
+    }
 
     /**
      * Gets the Auto Lock Button state
@@ -169,87 +243,5 @@ public class Controls extends ConfigHandlerInt {
 
     public ArrayList<String> getConfiguredControls() {
         return configuredControls;
-    }
-
-    @Override
-    public void loadItem(String k, int itemInt) {
-        switch (k) {
-            case "main joystick":
-                mainJoystickPort = itemInt;
-                break;
-
-            case "main joystick x-axis":
-                xAxis = itemInt;
-                break;
-
-            case "main joystick y-axis":
-                yAxis = itemInt;
-                break;
-
-            case "main joystick z-axis":
-                zAxis = itemInt;
-                break;
-
-            case "main joystick throttle axis":
-                throttleAxis = itemInt;
-                break;
-
-            case "main joystick auto-lock":
-                autoLockButtonPort = itemInt;
-                break;
-
-            case "elevator hatch 1":
-                elevatorPos[0] = itemInt;
-                break;
-
-            case "elevator ball 1":
-                elevatorPos[1] = itemInt;
-                break;
-
-            case "elevator hatch 2":
-                elevatorPos[2] = itemInt;
-                break;
-
-            case "elevator ball 2":
-                elevatorPos[3] = itemInt;
-                break;
-
-            case "elevator hatch 3":
-                elevatorPos[4] = itemInt;
-                break;
-
-            case "elevator ball 3":
-                elevatorPos[5] = itemInt;
-                break;
-
-            case "elevator up":
-                elevatorUp = itemInt;
-                break;
-
-            case "elevator down":
-                elevatorDown = itemInt;
-                break;
-
-            case "toggle claw":
-                toggleClaw = itemInt;
-                break;
-
-            case "get ball":
-                getBall = itemInt;
-                break;
-
-            case "eject ball, get hatch":
-                ejectBall = itemInt;
-                break;
-
-            case "toggle type": //TODO: TEMPORARY
-                toggleType = itemInt;
-                break;
-
-            default:
-                System.err.println("Unrecognized control: " + k);
-                return;
-        }
-        configuredControls.add(k);
     }
 }
