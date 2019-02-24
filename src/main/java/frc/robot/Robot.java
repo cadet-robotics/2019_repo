@@ -47,10 +47,11 @@ public class Robot extends TimedRobot implements Nexus {
 	
 	public static final int BALL_EJECT_TIME = 10;	//Number of ticks to eject balls for
 	
-	public static final Value CLAW_OPEN = Value.kReverse,
-							  CLAW_CLOSED = Value.kForward;
+	public static final Value CLAW_OPEN = Value.kForward,
+							  CLAW_CLOSED = Value.kReverse;
 
-	private static final boolean debug = true,
+	private static final boolean GET_BALL_DIRECTION = true,
+								 debug = true,
 								 useCamera = false;
 
 	public JsonObject configJSON;
@@ -278,8 +279,8 @@ public class Robot extends TimedRobot implements Nexus {
 		if(ejectingBall) {
 			if(ballEjectTimer-- <= 0) ejectingBall = false;
 			
-			motors.leftClaw.set(-CLAW_WHEEL_SPEED);
-			motors.rightClaw.set(CLAW_WHEEL_SPEED);
+			motors.leftClaw.set(GET_BALL_DIRECTION ? CLAW_WHEEL_SPEED : -CLAW_WHEEL_SPEED);
+			motors.rightClaw.set(GET_BALL_DIRECTION ? -CLAW_WHEEL_SPEED : CLAW_WHEEL_SPEED);
 		}
 		
 		
