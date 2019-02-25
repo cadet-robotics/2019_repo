@@ -74,7 +74,7 @@ public class Robot extends TimedRobot implements Nexus {
 	
 	GetBallCommand getBallCommand;
 	
-	boolean throttle = true,
+	boolean throttle = false,
 			elevatorThrottle = false,
 			clawOpen = true,
 			elevatorRunning = false,
