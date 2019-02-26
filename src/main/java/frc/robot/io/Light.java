@@ -1,13 +1,13 @@
 package frc.robot.io;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import edu.wpi.first.wpilibj.DigitalOutput;
-import edu.wpi.first.wpilibj.PWM;
+import frc.robot.config.ConfigUtil;
 
 /**
  * Handles the camera light on the front of the robot
+ *
+ * @author Owen Avery
  */
 public class Light {
     public DigitalOutput light = null;
@@ -15,18 +15,14 @@ public class Light {
     /**
      * Default constructor
      * Doesn't extend ConfigHandlerInt because we're looking for a single config item
-     * @param o
+     * @param configIn
      */
-    public Light(JsonObject o) {
-        JsonObject dio = null;
-        JsonElement dioE;
-        if (o.has("dio") && (dioE = o.get("dio")).isJsonObject()) {
-            dio = dioE.getAsJsonObject();
-            JsonElement lightE;
-            if (dio.has("light") && (lightE = dio.get("light")).isJsonPrimitive() && ((JsonPrimitive) lightE).isNumber()) {
-                light = new DigitalOutput(lightE.getAsInt());
+    public Light(JsonObject configIn) {
+        ConfigUtil.loadAllInts(configIn, "dio", (k, v) -> {
+            if (k.equals("light")) {
+                light = new DigitalOutput(v);
             }
-        }
+        });
         if (light == null) light = new DigitalOutput(2);
         light.enablePWM(0);
         light.setPWMRate(2000);
