@@ -50,9 +50,9 @@ public class Robot extends TimedRobot implements Nexus {
 	public static final Value CLAW_OPEN = Value.kForward,
 							  CLAW_CLOSED = Value.kReverse;
 
-	private static final boolean GET_BALL_DIRECTION = true,
-								 debug = true,
-								 useCamera = false;
+	public static final boolean GET_BALL_DIRECTION = true,
+								debug = true,
+								useCamera = false;
 
 	public JsonObject configJSON;
 	

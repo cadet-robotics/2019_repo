@@ -44,10 +44,7 @@ public class Motors {
 
     public Motors(JsonObject configIn) {
         config = configIn;
-		ConfigUtil.loadAll(configIn, "pwm", (k, v) -> {
-			JsonObject obj = ConfigUtil.getObject(v);
-			if (obj == null) return;
-			Integer itemInt = ConfigUtil.getInt(obj.get("id"));
+		ConfigUtil.loadAllInts(configIn, "pwm", (k, itemInt) -> {
 			if (itemInt == null) return;
 			switch(k) {
 				case "front left":
