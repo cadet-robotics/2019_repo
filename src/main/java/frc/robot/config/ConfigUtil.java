@@ -12,20 +12,6 @@ import java.util.function.BiConsumer;
  */
 public class ConfigUtil {
     /**
-     * A method that turns a JsonElement into a JsonObject
-     * Doesn't throw errors, instead returns null
-     *
-     * ConfigUtil.loadAll() or derivatives of it should probably be used instead
-     *
-     * @param e The JsonElement to convert
-     * @return The JsonElement as a JsonObject or null
-     */
-    public static JsonObject getObject(JsonElement e) {
-        if (e instanceof JsonObject) return (JsonObject) e;
-        else return null;
-    }
-
-    /**
      * A method that turns a JsonElement into an Integer
      * Doesn't throw errors, instead returns null
      *
@@ -34,30 +20,11 @@ public class ConfigUtil {
      * @param e The JsonElement to convert
      * @return The JsonElement as an Integer or null
      */
-    public static Integer getInt(JsonElement e) {
+    private static Integer getInt(JsonElement e) {
         if (e instanceof JsonPrimitive) {
             try {
                 return e.getAsInt();
             } catch (ClassCastException | NumberFormatException ex) {
-                return null;
-            }
-        } else return null;
-    }
-
-    /**
-     * A method that turns a JsonElement into a String
-     * Doesn't throw errors, instead returns null
-     *
-     * ConfigUtil.loadAll() or derivatives of it should probably be used instead
-     *
-     * @param e The JsonElement to convert
-     * @return The JsonElement as a String or null
-     */
-    public static String getString(JsonElement e) {
-        if (e instanceof JsonPrimitive) {
-            try {
-                return e.getAsString();
-            } catch (ClassCastException ex) {
                 return null;
             }
         } else return null;
