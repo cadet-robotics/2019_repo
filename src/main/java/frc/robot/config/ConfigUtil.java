@@ -38,8 +38,8 @@ public class ConfigUtil {
     static {
         try {
             // Get the value field and make it accessible
-            Field f = JsonPrimitive.class.getDeclaredField("value");
-            f.setAccessible(true);
+            valueField = JsonPrimitive.class.getDeclaredField("value");
+            valueField.setAccessible(true);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
