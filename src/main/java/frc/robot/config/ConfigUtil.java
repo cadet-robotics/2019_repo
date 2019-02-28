@@ -20,7 +20,7 @@ public class ConfigUtil {
      * @param e The JsonElement to convert
      * @return The JsonElement as an Integer or null
      */
-    private static Integer getInt(JsonElement e) {
+    public static Integer getInt(JsonElement e) {
         if (e instanceof JsonPrimitive) {
             try {
                 return e.getAsInt();
@@ -91,6 +91,7 @@ public class ConfigUtil {
         if (subconfigElement instanceof JsonObject) {
             JsonObject subconfigObject = (JsonObject) subconfigElement;
             for (String s : subconfigObject.keySet()) {
+                if (s.equals("desc") || s.contains("placeholder")) continue;
                 con.accept(s, subconfigObject.get(s));
             }
         } else {
