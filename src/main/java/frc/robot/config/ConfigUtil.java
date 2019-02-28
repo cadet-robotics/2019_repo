@@ -21,10 +21,10 @@ public class ConfigUtil {
 		switch(element.toLowerCase()) {
 			case "desc": //Element describes the section
 			case "placeholder": //Element is a placeholder for a lack of elements
-				return false;
+				return true;
 			
 			default:
-				return true;
+				return false;
 		}
 	}
 	
@@ -43,6 +43,8 @@ public class ConfigUtil {
 			return element.getAsInt();
 		} catch(ClassCastException | IllegalStateException e) {
 			throw new ConfigException(section, name, ConfigException.ConfigExceptionType.TYPEERROR);
+		} catch(NumberFormatException e) {
+			throw new ConfigException(section, name, ConfigException.ConfigExceptionType.NUMFORMAT);
 		}
 	}
 }

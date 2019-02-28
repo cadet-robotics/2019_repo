@@ -1,5 +1,7 @@
 package frc.robot.io;
 
+import java.util.ArrayList;
+
 import com.google.gson.JsonObject;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -120,7 +122,7 @@ public class Motors {
 					return;
 			}
 			configuredMotors.add(k);
-		});
+		}
     }
 
 	/**

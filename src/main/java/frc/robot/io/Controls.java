@@ -1,5 +1,9 @@
 package frc.robot.io;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -9,9 +13,7 @@ import frc.robot.config.ConfigUtil;
 /**
  * Contains controls objects and handles loading them from config
  *
- * <p>Later modified to use ConfigUtil
- *
- * @author Alex Pickering, Owen Avery
+ * @author Alex Pickering,
  */
 public class Controls {
     //Config'd controls record
@@ -39,6 +41,8 @@ public class Controls {
     int[] elevatorPos = new int[6];
 
     boolean debug = false;
+    
+    JsonObject configJSON;
   
     /**
      * Creates the controls object
@@ -290,9 +294,5 @@ public class Controls {
                   System.out.println("Unrecognized Control: " + k);
             }
         }
-    }
-
-    public ArrayList<String> getConfiguredControls() {
-        return configuredControls;
     }
 }

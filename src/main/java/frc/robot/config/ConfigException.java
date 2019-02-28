@@ -22,7 +22,8 @@ public class ConfigException extends RuntimeException {
 	 */
 	public enum ConfigExceptionType {
 		NULL,
-		TYPEERROR
+		TYPEERROR,
+		NUMFORMAT
 	}
 	
 	/**
@@ -52,6 +53,9 @@ public class ConfigException extends RuntimeException {
 			
 			case TYPEERROR:
 				return "An incorrect type was read and attempted to be cast. This may be caused by a usually integer value being a malformed string or similar.";
+			
+			case NUMFORMAT:
+				return "A NumberFormatException occurred while parsing the element.";
 			
 			default:
 				return "Something went wrong. We don't know what went wrong, because the provided type lacks a description.";

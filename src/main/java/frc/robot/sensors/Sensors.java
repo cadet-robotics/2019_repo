@@ -1,5 +1,6 @@
 package frc.robot.sensors;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -24,6 +25,8 @@ public class Sensors {
     					bottomLimitSwitch;
     
     public AnalogInput ballDistance;
+    
+    JsonObject configJSON;
     
     /**
      * Creates the sensors object
