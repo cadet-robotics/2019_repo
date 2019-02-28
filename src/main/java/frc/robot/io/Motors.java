@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
 import frc.robot.config.ConfigUtil;
 
-import java.util.ArrayList;
-
 /**
  * The legibility-orient rewrite of the motors class
  *
@@ -17,38 +15,73 @@ import java.util.ArrayList;
  * @author Alex Pickering, Owen Avery
  */
 public class Motors {
-	JsonObject config;
-    //Configured motors record
-    ArrayList<String> configuredMotors = new ArrayList<>();
-
-    //Motor Objects
-    public CANSparkMax frontLeftDrive,
-            frontRightDrive,
-            backLeftDrive,
-            backRightDrive;
-
-    public Talon leftElevator,
-            rightElevator;
-
-    public VictorSP leftClaw,
-            rightClaw;
-
-    /**
-     * Gets the list of configured motors
-     *
-     * @return A list of configured motors
-     */
-    public ArrayList<String> getConfiguredMotors() {
-        return configuredMotors;
-    }
-
-    public Motors(JsonObject configIn) {
-        config = configIn;
-		ConfigUtil.loadAll(configIn, "pwm", (k, v) -> {
-			JsonObject obj = ConfigUtil.getObject(v);
-			if (obj == null) return;
-			Integer itemInt = ConfigUtil.getInt(obj.get("id"));
-			if (itemInt == null) return;
+	//Config object
+	JsonObject configJSON;
+	
+	//Configured motors record
+	ArrayList<String> configuredMotors;
+	
+	//Motor Objects
+	public CANSparkMax frontLeftDrive,
+					   frontRightDrive,
+					   backLeftDrive,
+					   backRightDrive;
+	
+	public Talon leftElevator,
+				 rightElevator;
+	
+	public VictorSP leftClaw,
+					rightClaw;
+			 
+	
+	boolean debug = true;
+	
+	/**
+	 * Creates the motors object
+	 * 
+	 * @param conf The config to parse
+	 */
+	public Motors(JsonObject conf) {
+		configuredMotors = new ArrayList<>();
+		
+		init(conf);
+	}
+	
+	/**
+	 * Gets the list of configured motors
+	 * 
+	 * @return A list of configured motors
+	 */
+	public ArrayList<String> getConfiguredMotors() {
+		return configuredMotors;
+	}
+	
+	/**
+	 * Initalizes the motors
+	 * 
+	 * @param configJSON The isntance of the configuration file
+	 */
+	public void init(JsonObject configJSON) {
+		this.configJSON = configJSON;
+		
+		loadMotors();
+	}
+	
+	/**
+	 * Loads the motors from the config
+	 */
+	public void loadMotors() {
+		JsonObject pwmJSON = configJSON.getAsJsonObject("pwm");
+		
+		configuredMotors = new ArrayList<>();
+		
+		for(String k : pwmJSON.keySet()) {
+			if(ConfigUtil.isFiltered(k)) continue;
+			
+			JsonObject item = pwmJSON.getAsJsonObject(k);
+			int itemInt = ConfigUtil.getAsInt(item.get("id"), "PWM", k);
+			configuredMotors.add(k);
+			
 			switch(k) {
 				case "front left":
 					frontLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);

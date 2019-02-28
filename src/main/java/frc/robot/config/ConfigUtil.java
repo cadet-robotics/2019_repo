@@ -1,64 +1,48 @@
 package frc.robot.config;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-
+/**
+ * Contains some helper methods to reduce repetition
+ * 
+ * @author Alex Pickering
+ */
 public class ConfigUtil {
-    public static JsonObject getObject(JsonElement e) {
-        if (e == null) return null;
-        if (e.isJsonObject()) return (JsonObject) e;
-        else return null;
-    }
-
-    public static Integer getInt(JsonElement e) {
-        if (e instanceof JsonPrimitive) {
-            try {
-                return e.getAsInt();
-            } catch (ClassCastException|NumberFormatException ex) {
-                return null;
-            }
-        } else return null;
-    }
-
-    public static String getString(JsonElement e) {
-        if (e instanceof JsonPrimitive) {
-            try {
-                return e.getAsString();
-            } catch (ClassCastException ex) {
-                return null;
-            }
-        } else return null;
-    }
-
-    public static boolean loadAll(JsonObject config, String key, BiConsumer<String, JsonElement> con) {
-        JsonObject obj = getObject(config.get(key));
-        if (obj == null) return false;
-        for (String s : obj.keySet()) {
-            con.accept(s, obj.get(s));
-        }
-        return true;
-    }
-
-    public static boolean loadAllInts(JsonObject config, String key, BiConsumer<String, Integer> con) {
-        return loadAll(config, key, (k, v) -> {
-            Integer i = getInt(v);
-            if (i != null) con.accept(k, i);
-        });
-    }
-
-    public static boolean loadAllInts(JsonObject config, String key, BiConsumer<String, Integer> con, Consumer<String> error) {
-        if (error == null) return loadAllInts(config, key, con);
-        return loadAll(config, key, (k, v) -> {
-            Integer i = getInt(v);
-            if (i == null) {
-                error.accept(k);
-            } else {
-                con.accept(k, i);
-            }
-        });
-    }
+	
+	/**
+	 * Determines if a config element is filtered out
+	 * <p>A filtered element should not be parsed.
+	 * <p>This exists to reduce work when adding filtered elements
+	 * 
+	 * @param element The element name to check
+	 * @return Whether or not the element is filtered
+	 */
+	public static boolean isFiltered(String element) {
+		switch(element.toLowerCase()) {
+			case "desc": //Element describes the section
+			case "placeholder": //Element is a placeholder for a lack of elements
+				return false;
+			
+			default:
+				return true;
+		}
+	}
+	
+	/**
+	 * Gets the given element as an int, where if any exception occurrs it is made into a more verbose ConfigException
+	 * <p>This exists to remove the repetition of the try/catch block
+	 * <p>This doesn't include the 'throws' clause such that try/catch isn't needed
+	 * 
+	 * @param element The element to convert
+	 * @param section The section in which the element was read
+	 * @param name The name of the element
+	 * @return The element as an int
+	 */
+	public static int getAsInt(JsonElement element, String section, String name) {
+		try {
+			return element.getAsInt();
+		} catch(ClassCastException | IllegalStateException e) {
+			throw new ConfigException(section, name, ConfigException.ConfigExceptionType.TYPEERROR);
+		}
+	}
 }
