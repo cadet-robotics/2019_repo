@@ -1,50 +1,45 @@
 package frc.robot.io;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import edu.wpi.first.wpilibj.Joystick;
+
 import frc.robot.config.ConfigLoader;
 import frc.robot.config.ConfigUtil;
 
 /**
  * Contains controls objects and handles loading them from config
- * 
- * @author Alex Pickering
+ *
+ * <p>Later modified to use ConfigUtil
+ *
+ * @author Alex Pickering, Owen Avery
  */
 public class Controls {
-    //Config object
-    JsonObject configJSON;
-    
     //Config'd controls record
     ArrayList<String> configuredControls;
     
     //Controls objects
     Joystick mainJoystick;
-    
+
     //Configured control ports and such
     //Axes
     int mainJoystickPort = 0,
-        xAxis = 0,
-        yAxis = 1,
-        zAxis = 2,
-        throttleAxis = 3;
-    
+            xAxis = 0,
+            yAxis = 1,
+            zAxis = 2,
+            throttleAxis = 3;
+
     //Buttons
     int autoLockButtonPort = 5,
-    	elevatorUp = 5,
-    	elevatorDown = 3,
-    	getBall = 1,
-    	ejectBall = 2,
-    	toggleClaw = 4,
-    	toggleType = 9; //TODO: TEMPORARY
+            elevatorUp = 5,
+            elevatorDown = 3,
+            getBall = 1,
+            ejectBall = 2,
+            toggleClaw = 4,
+            toggleType = 9; //TODO: TEMPORARY
     int[] elevatorPos = new int[6];
 
     boolean debug = false;
-    
+  
     /**
      * Creates the controls object
      * 
@@ -54,107 +49,108 @@ public class Controls {
     	 configuredControls = new ArrayList<>();
     	 init(conf);
     }
-    
+  
     //Getters
+
     /**
      * Gets the X Axis control
-     * 
+     *
      * @return The X Axis
      */
-    public double getXAxis(){
+    public double getXAxis() {
         return mainJoystick.getRawAxis(xAxis);
     }
-    
+
     /**
      * Gets the Y Axis control
-     * 
+     *
      * @return The Y Axis
      */
-    public double getYAxis(){
+    public double getYAxis() {
         return mainJoystick.getRawAxis(yAxis);
     }
-    
+
     /**
      * Gets the Z Axis control
-     * 
+     *
      * @return The Z Axis
      */
-    public double getZAxis(){
+    public double getZAxis() {
         return mainJoystick.getRawAxis(zAxis);
     }
-    
+
     /**
      * Gets the throttle axis control
-     * 
+     *
      * @return The throttle axis
      */
     public double getThrottleAxis() {
-    	return mainJoystick.getRawAxis(throttleAxis);
+        return mainJoystick.getRawAxis(throttleAxis);
     }
-    
+
     /**
      * Gets the manual raise elevator button
-     * 
+     *
      * @return Elevator Up button state
      */
     public boolean getElevatorUp() {
-    	return mainJoystick.getRawButton(elevatorUp);
+        return mainJoystick.getRawButton(elevatorUp);
     }
-    
+
     /**
      * Gets the manual lower elevator button
-     * 
+     *
      * @return Elevator Down button state
      */
     public boolean getElevatorDown() {
-    	return mainJoystick.getRawButton(elevatorDown);
+        return mainJoystick.getRawButton(elevatorDown);
     }
-    
+
     /**
      * Gets the get ball button
-     * 
+     *
      * @return Get Ball button state
      */
     public boolean getGetBall() {
-    	return mainJoystick.getRawButton(getBall);
+        return mainJoystick.getRawButton(getBall);
     }
-    
+
     /**
      * Gets the eject ball/get hatch button
-     * 
+     *
      * @return Eject Ball button state
      */
     public boolean getEjectBall() {
-    	return mainJoystick.getRawButton(ejectBall);
+        return mainJoystick.getRawButton(ejectBall);
     }
-    
+
     /**
      * Gets the toggle claw button
-     * 
+     *
      * @return Toggle Claw button state
      */
     public boolean getToggleClaw() {
-    	return mainJoystick.getRawButton(toggleClaw);
+        return mainJoystick.getRawButton(toggleClaw);
     }
-    
+
     /**
      * Gets the type toggle button
      * TODO: TEMPORARY
-     * 
+     *
      * @return Toggle Type button state
      */
     public boolean getToggleType() {
-    	return mainJoystick.getRawButton(toggleType);
+        return mainJoystick.getRawButton(toggleType);
     }
-    
+
     /**
      * Gets an elevator position button
-     * 
+     *
      * @param pos The position to check
      * @return Whether or not the position's button is pressed
      */
     public boolean getElevatorButton(int pos) {
-    	return mainJoystick.getRawButton(elevatorPos[pos]);
+        return mainJoystick.getRawButton(elevatorPos[pos]);
     }
     
     //TODO: TEMPORARY
@@ -164,6 +160,7 @@ public class Controls {
 
     /**
      * Gets the Auto Lock Button state
+     *
      * @return
      */
     public boolean isAutoLock() {
@@ -288,11 +285,14 @@ public class Controls {
                 case "toggle type": //TODO: TEMPORARY
                 	toggleType = itemInt;
                 	break;
-
+                
                 default:
-                    configuredControls.remove(k);
-                    System.err.println("Unrecognized control: " + k);
+                  System.out.println("Unrecognized Control: " + k);
             }
         }
+    }
+
+    public ArrayList<String> getConfiguredControls() {
+        return configuredControls;
     }
 }

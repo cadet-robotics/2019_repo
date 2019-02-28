@@ -1,8 +1,6 @@
 package frc.robot.sensors;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -11,12 +9,12 @@ import frc.robot.config.ConfigUtil;
 /**
  * Contains the sensors
  * <p>Javadoc comment lovingly provided by Alex Pickering
- * 
+ *
+ * Later modified to use ConfigUtil
+ *
  * @author Owen Avery, Alex Pickering
  */
 public class Sensors {
-	JsonObject configJSON;
-	
 	//null until we have a gyro on the robot
     public Gyro gyro = null; //new ADXRS450_Gyro();
     

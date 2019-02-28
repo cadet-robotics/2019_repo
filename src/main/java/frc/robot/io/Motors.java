@@ -1,8 +1,5 @@
 package frc.robot.io;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 import com.google.gson.JsonObject;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -12,8 +9,10 @@ import frc.robot.config.ConfigUtil;
 
 /**
  * The legibility-orient rewrite of the motors class
- * 
- * @author Alex Pickering
+ *
+ * <p>Later modified to use ConfigUtil
+ *
+ * @author Alex Pickering, Owen Avery
  */
 public class Motors {
 	//Config object
@@ -87,42 +86,43 @@ public class Motors {
 				case "front left":
 					frontLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
 					break;
-				
+
 				case "front right":
 					frontRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
 					break;
-				
+
 				case "rear left":
 					backLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
 					break;
-				
+
 				case "rear right":
 					backRightDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
 					break;
-				
+
 				case "left elevator":
 					leftElevator = new Talon(itemInt);
 					break;
-				
+
 				case "right elevator":
 					rightElevator = new Talon(itemInt);
 					break;
-				
+
 				case "left claw wheel":
 					leftClaw = new VictorSP(itemInt);
 					break;
-				
+
 				case "right claw wheel":
 					rightClaw = new VictorSP(itemInt);
 					break;
-				
+
 				default:
-					configuredMotors.remove(k);
-                    System.err.println("Unrecognized motor: " + k);
+					System.err.println("Unrecognized motor: " + k);
+					return;
 			}
-		}
-	}
-	
+			configuredMotors.add(k);
+		});
+    }
+
 	/**
 	 * Sets all motors to 0 for safety
 	 */
@@ -131,10 +131,10 @@ public class Motors {
 		frontRightDrive.set(0);
 		backLeftDrive.set(0);
 		backRightDrive.set(0);
-		
+
 		leftElevator.set(0);
 		rightElevator.set(0);
-		
+
 		leftClaw.set(0);
 		rightClaw.set(0);
 	}

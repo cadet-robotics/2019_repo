@@ -62,7 +62,7 @@ public class Robot extends TimedRobot implements Nexus {
 
 	public Motors motors;
 
-	public Drive drive = null;
+	public Drive drive;
 
 	public Sensors sensors;
 	
@@ -74,7 +74,7 @@ public class Robot extends TimedRobot implements Nexus {
 	
 	GetBallCommand getBallCommand;
 	
-	boolean throttle = true,
+	boolean throttle = false,
 			elevatorThrottle = false,
 			clawOpen = true,
 			elevatorRunning = false,

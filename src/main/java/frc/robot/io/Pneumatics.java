@@ -1,19 +1,17 @@
 package frc.robot.io;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.robot.config.ConfigUtil;
 
 /**
  * Contains pneumatics objects and handles loading their config
- * 
- * @author Alex Pickering
+ *
+ * Later modified to extend ConfigHandlerInt
+ *
+ * @author Alex Pickering, Owen Avery
  */
-public class Pneumatics {
-	JsonObject configJSON;
-	
+public class Pneumatics extends ConfigHandlerInt {
 	public DoubleSolenoid clawSolenoid;
 	
 	int[] clawSolenoidPorts;
