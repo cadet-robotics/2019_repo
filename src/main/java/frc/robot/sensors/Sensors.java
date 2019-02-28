@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import frc.robot.config.ConfigUtil;
 
 /**
  * Contains the sensors
@@ -19,12 +20,23 @@ public class Sensors {
 	//null until we have a gyro on the robot
     public Gyro gyro = null; //new ADXRS450_Gyro();
     
-    public DigitalInput[] elevatorSensors = new DigitalInput[6];
+    public DigitalInput[] elevatorSensors;
     
     public DigitalInput topLimitSwitch,
     					bottomLimitSwitch;
     
     public AnalogInput ballDistance;
+    
+    /**
+     * Creates the sensors object
+     * 
+     * @param conf The config to parse
+     */
+    public Sensors(JsonObject conf) {
+    	elevatorSensors = new DigitalInput[6];
+    	
+    	init(conf);
+    }
     
     /**
      * Initializes any sensors that need to use the config
@@ -44,10 +56,10 @@ public class Sensors {
     	
     	//Load DIO sensors
     	for(String k : dioJSON.keySet()) {
-    		if(k.equals("desc") || k.contains("placeholder")) continue;
+    		if(ConfigUtil.isFiltered(k)) continue;
     		
     		JsonElement item = dioJSON.get(k);
-    		int itemInt = item.getAsInt();
+    		int itemInt = ConfigUtil.getAsInt(item, "DIO", k);
     		
     		switch(k) {
     			case "proximity sensor 1":
@@ -89,10 +101,10 @@ public class Sensors {
     	
     	//Load AIn sensors
     	for(String k : ainJSON.keySet()) {
-    		if(k.equals("desc") || k.contains("placeholder")) continue;
+    		if(ConfigUtil.isFiltered(k)) continue;
     		
     		JsonElement item = ainJSON.get(k);
-    		int itemInt = item.getAsInt();
+    		int itemInt = ConfigUtil.getAsInt(item, "AIN", k);
     		
     		switch(k) {
     			case "ball distance sensor":

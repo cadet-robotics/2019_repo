@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.config.ConfigLoader;
+import frc.robot.config.ConfigUtil;
 
 /**
  * Contains controls objects and handles loading them from config
@@ -19,7 +20,7 @@ public class Controls {
     JsonObject configJSON;
     
     //Config'd controls record
-    ArrayList<String> configuredControls = new ArrayList<>();
+    ArrayList<String> configuredControls;
     
     //Controls objects
     Joystick mainJoystick;
@@ -43,6 +44,16 @@ public class Controls {
     int[] elevatorPos = new int[6];
 
     boolean debug = false;
+    
+    /**
+     * Creates the controls object
+     * 
+     * @param conf The config to parse
+     */
+    public Controls(JsonObject conf) {
+    	 configuredControls = new ArrayList<>();
+    	 init(conf);
+    }
     
     //Getters
     /**
@@ -199,9 +210,10 @@ public class Controls {
         configuredControls = new ArrayList<>();
         
         for(String k : controlsJSON.keySet()){
+        	if(ConfigUtil.isFiltered(k)) continue;
+        	
             JsonElement item = controlsJSON.get(k);
-            if(k.equals("desc") || k.contains("placeholder")) continue;
-            int itemInt = item.getAsInt();
+            int itemInt = ConfigUtil.getAsInt(item, "Controls", k);
             configuredControls.add(k);
             
             switch(k){

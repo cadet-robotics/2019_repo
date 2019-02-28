@@ -74,8 +74,8 @@ public class GetBallCommand extends Command {
 			//Run claw in
 			double speed = Robot.CLAW_WHEEL_SPEED;
 			
-			nexus.getMotors().leftClaw.set(-speed);
-			nexus.getMotors().rightClaw.set(speed);
+			nexus.getMotors().leftClaw.set(Robot.GET_BALL_DIRECTION ? -speed : speed);
+			nexus.getMotors().rightClaw.set(Robot.GET_BALL_DIRECTION ? speed : -speed);
 		}
 	}
 	

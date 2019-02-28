@@ -50,23 +50,23 @@ public class Robot extends TimedRobot implements Nexus {
 	public static final Value CLAW_OPEN = Value.kForward,
 							  CLAW_CLOSED = Value.kReverse;
 
-	private static final boolean GET_BALL_DIRECTION = true,
-								 debug = true,
-								 useCamera = false;
+	public static final boolean GET_BALL_DIRECTION = false,
+								debug = true,
+								useCamera = false;
 
 	public JsonObject configJSON;
 	
 	public UsbCamera driverCamera;
 
-	public Controls controls = new Controls();
+	public Controls controls;
 
-	public Motors motors = new Motors();
+	public Motors motors;
 
 	public Drive drive = null;
 
-	public Sensors sensors = new Sensors();
+	public Sensors sensors;
 	
-	public Pneumatics pneumatics = new Pneumatics();
+	public Pneumatics pneumatics;
 	
 	public SightData sightData;
 
@@ -109,10 +109,10 @@ public class Robot extends TimedRobot implements Nexus {
 		}
 		
 		//Initialize configured classes
-		controls.init(configJSON);
-		motors.init(configJSON);
-		sensors.init(configJSON);
-		pneumatics.init(configJSON);
+		controls = new Controls(configJSON);
+		motors = new Motors(configJSON);
+		sensors = new Sensors(configJSON);
+		pneumatics = new Pneumatics(configJSON);
 		
 		drive = new Drive(this);
 		elevator = new Elevator(this);

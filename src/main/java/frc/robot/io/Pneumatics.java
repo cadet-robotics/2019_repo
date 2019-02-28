@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import frc.robot.config.ConfigUtil;
 
 /**
  * Contains pneumatics objects and handles loading their config
@@ -15,9 +16,20 @@ public class Pneumatics {
 	
 	public DoubleSolenoid clawSolenoid;
 	
-	int[] clawSolenoidPorts = new int[2];
+	int[] clawSolenoidPorts;
 	
 	boolean debug = false;
+	
+	/**
+	 * Creates the pneumatics object
+	 * 
+	 * @param conf The config to parse
+	 */
+	public Pneumatics(JsonObject conf) {
+		clawSolenoidPorts = new int[2];
+		
+		init(conf);
+	}
 	
 	/**
 	 * Initialize objects, load config
@@ -41,9 +53,10 @@ public class Pneumatics {
 		JsonObject pcmJSON = configJSON.getAsJsonObject("pcm");
 		
 		for(String k : pcmJSON.keySet()) {
-			if(k.equals("desc") || k.contains("placeholder")) continue;
+			if(ConfigUtil.isFiltered(k)) continue;
+			
 			JsonElement item = pcmJSON.get(k);
-			int itemInt = item.getAsInt();
+			int itemInt = ConfigUtil.getAsInt(item, "PCM", k);
 			
 			switch(k) {
 				case "left claw solenoid":

@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
+import frc.robot.config.ConfigUtil;
 
 /**
  * The legibility-orient rewrite of the motors class
@@ -19,7 +20,7 @@ public class Motors {
 	JsonObject configJSON;
 	
 	//Configured motors record
-	ArrayList<String> configuredMotors = new ArrayList<>();
+	ArrayList<String> configuredMotors;
 	
 	//Motor Objects
 	public CANSparkMax frontLeftDrive,
@@ -35,6 +36,17 @@ public class Motors {
 			 
 	
 	boolean debug = true;
+	
+	/**
+	 * Creates the motors object
+	 * 
+	 * @param conf The config to parse
+	 */
+	public Motors(JsonObject conf) {
+		configuredMotors = new ArrayList<>();
+		
+		init(conf);
+	}
 	
 	/**
 	 * Gets the list of configured motors
@@ -65,10 +77,10 @@ public class Motors {
 		configuredMotors = new ArrayList<>();
 		
 		for(String k : pwmJSON.keySet()) {
-			if(k.equals("desc") || k.contains("placeholder")) continue;
+			if(ConfigUtil.isFiltered(k)) continue;
 			
 			JsonObject item = pwmJSON.getAsJsonObject(k);
-			int itemInt = item.get("id").getAsInt();
+			int itemInt = ConfigUtil.getAsInt(item.get("id"), "PWM", k);
 			configuredMotors.add(k);
 			
 			switch(k) {
