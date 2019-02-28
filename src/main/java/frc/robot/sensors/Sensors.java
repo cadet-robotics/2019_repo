@@ -27,9 +27,7 @@ public class Sensors {
 	public AnalogInput ballDistance;
 
     public Sensors(JsonObject configIn) {
-		ConfigUtil.loadAll(configIn, "dio", (k, v) -> {
-			Integer itemInt = ConfigUtil.getInt(v);
-			if (itemInt == null) return;
+		ConfigUtil.loadAllInts(configIn, "dio", (k, itemInt) -> {
 			switch(k) {
 				case "proximity sensor 1":
 					elevatorSensors[0] = new DigitalInput(itemInt);
@@ -67,9 +65,7 @@ public class Sensors {
 					System.err.println("Unrecognized DIO Sensor: " + k);
 			}
 		});
-		ConfigUtil.loadAll(configIn, "analog in", (k, v) -> {
-			Integer itemInt = ConfigUtil.getInt(v);
-			if (itemInt == null) return;
+		ConfigUtil.loadAllInts(configIn, "analog in", (k, itemInt) -> {
 			switch(k) {
 				case "ball distance sensor":
 					ballDistance = new AnalogInput(itemInt);

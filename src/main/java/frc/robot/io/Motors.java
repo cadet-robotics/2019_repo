@@ -1,10 +1,12 @@
 package frc.robot.io;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
+import frc.robot.config.ConfigItemLoadException;
 import frc.robot.config.ConfigUtil;
 
 import java.util.ArrayList;
@@ -45,10 +47,14 @@ public class Motors {
     public Motors(JsonObject configIn) {
         config = configIn;
 		ConfigUtil.loadAll(configIn, "pwm", (k, v) -> {
-			JsonObject obj = ConfigUtil.getObject(v);
-			if (obj == null) return;
-			Integer itemInt = ConfigUtil.getInt(obj.get("id"));
-			if (itemInt == null) return;
+		    // Gets the config for the individual motor
+			if (!(v instanceof JsonObject)) throw new ConfigItemLoadException("pwm", k, JsonObject.class, v);
+			JsonObject singleMotorConfig = (JsonObject) v;
+			// Gets the id of the motor
+            JsonElement idAsElement = singleMotorConfig.get("id");
+			Integer itemInt = ConfigUtil.getInt(idAsElement);
+			if (itemInt == null) throw new ConfigItemLoadException("pwm", k + ".id", int.class, idAsElement);
+			// Normal switch statement
 			switch(k) {
 				case "front left":
 					frontLeftDrive = new CANSparkMax(itemInt, MotorType.kBrushed);
