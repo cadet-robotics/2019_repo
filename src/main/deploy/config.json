@@ -54,8 +54,8 @@
   },
   "pcm": {
     "desc": "Pneumatics Control Module settings",
-    "right claw solenoid": 6,
-    "left claw solenoid": 7
+    "left claw solenoid": 7,
+    "right claw solenoid": 6
   },
   "controls": {
     "desc": "Controls settings",

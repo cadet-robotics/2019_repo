@@ -52,7 +52,7 @@ public class Robot extends TimedRobot implements Nexus {
 
 	public static final boolean GET_BALL_DIRECTION = false,
 								debug = true,
-								useCamera = false;
+								useCamera = true;
 
 	public JsonObject configJSON;
 	

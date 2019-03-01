@@ -10,7 +10,7 @@ import frc.robot.commands.subsystems.ElevatorSubsystem;
  * @author Alex Pickering
  */
 public class ElevatorCommand extends Command {
-	static final double SPEED = 0.45;
+	static final double SPEED = 0.4;
 	
 	int currentPosition,
 		toPosition,
@@ -68,7 +68,7 @@ public class ElevatorCommand extends Command {
 		}
 		
 		if(Math.abs(toPosition - currentPosition) == 1)
-			speed /= 1.75;
+			speed /= 1.5;
 		
 		nexus.getMotors().leftElevator.set(-speed);
 		nexus.getMotors().rightElevator.set(speed);

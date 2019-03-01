@@ -56,7 +56,7 @@ public class GetBallCommand extends Command {
 			System.out.println("MOVING DOWN");
 			
 			//Move elevator down
-			double speed = (Robot.ELEVATOR_MAINTENANCE_SPEED - ElevatorCommand.SPEED) / 4;
+			double speed = (Robot.ELEVATOR_MAINTENANCE_SPEED - ElevatorCommand.SPEED) / 6;
 			
 			nexus.getMotors().leftElevator.set(-speed);
 			nexus.getMotors().rightElevator.set(speed);
