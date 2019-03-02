@@ -38,7 +38,7 @@ public class Elevator {
     	System.out.println("Move to " + toPosition + " from " + location);
     	
     	//Make sure the position is correct
-    	if(toPosition < 0 || toPosition > 5 || location == toPosition) return false;
+    	if(toPosition < 0 || toPosition > 5) return false;
     	
 		ElevatorCommand movement = new ElevatorCommand(toPosition, location, nexus);
     	

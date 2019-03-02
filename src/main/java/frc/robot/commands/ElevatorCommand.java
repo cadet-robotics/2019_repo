@@ -10,7 +10,7 @@ import frc.robot.commands.subsystems.ElevatorSubsystem;
  * @author Alex Pickering
  */
 public class ElevatorCommand extends Command {
-	static final double SPEED = 0.4;
+	static final double SPEED = 0.45;
 	
 	int currentPosition,
 		toPosition,
@@ -46,9 +46,20 @@ public class ElevatorCommand extends Command {
 		System.out.print("ELEVATOR FROM " + startPosition + " TO " + toPosition + " AT " + currentPosition);
 		
 		//Find current position
-		for(int i = 0; i < nexus.getSensors().elevatorSensors.length; i++) {
-			if(nexus.getSensors().elevatorSensors[i].get()) {
-				currentPosition = i;
+		find: {
+			//Look through each proximity sensor
+			for(int i = 0; i < nexus.getSensors().elevatorSensors.length; i++) {
+				if(nexus.getSensors().elevatorSensors[i].get()) {
+					currentPosition = i;
+					
+					//Skip the 'not found' part without needing to check currentPosition
+					break find;
+				}
+			}
+			
+			//Not found, check bottom
+			if(nexus.getSensors().bottomLimitSwitch.get()) {
+				currentPosition = -1;
 			}
 		}
 		

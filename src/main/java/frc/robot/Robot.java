@@ -38,7 +38,7 @@ public class Robot extends TimedRobot implements Nexus {
 	private String m_autoSelected;
 	private final SendableChooser<String> m_chooser = new SendableChooser<>();
 	
-	public static final double DRIVE_MODIFIER = 0.8,					//Multiplier for teleop drive motors
+	public static final double DRIVE_MODIFIER = 0.85,					//Multiplier for teleop drive motors
 							   DRIVE_THRESHOLD = 0.1,					//Threshold for the teleop controls
 							   ELEVATOR_MANUAL_SPEED = 0.5,				//Manual control speed for the elevator
 							   ELEVATOR_MAINTENANCE_SPEED = 0.25,		//Speed to keep the elevator in place
@@ -119,7 +119,7 @@ public class Robot extends TimedRobot implements Nexus {
 		
 		if(useCamera) {
 			driverCamera = CameraServer.getInstance().startAutomaticCapture(0);
-			driverCamera.setFPS(15);
+			driverCamera.setBrightness(35);
 		}
 		/*
 		drive =
@@ -139,6 +139,7 @@ public class Robot extends TimedRobot implements Nexus {
 	 */
 	@Override
 	public void robotPeriodic() {
+		if(debug) runDebug();
 	}
 
 	/**
@@ -197,8 +198,6 @@ public class Robot extends TimedRobot implements Nexus {
 		drivePeriodic();
 		runElevator();
 		runClaw();
-		
-		if(debug) runDebug();
 	}
 	
 	/**
@@ -222,8 +221,10 @@ public class Robot extends TimedRobot implements Nexus {
 			   blv = Double.toString(motors.backLeftDrive.get()).substring(0, 3),
 			   brv = Double.toString(motors.backRightDrive.get()).substring(0, 3);
 		System.out.println(flv + "\t" + frv + "\n" + blv + "\t" + brv + "\n");*/
-		//System.out.println("BALL DISTANCE: " + sensors.ballDistance.getValue());
+		System.out.println("BALL DISTANCE: " + sensors.ballDistance.getValue());
 		//System.out.println(motors.leftClaw.get() + " " + motors.rightClaw.get());
+		
+		SmartDashboard.putBoolean("Bottom Limit", sensors.bottomLimitSwitch.get());
 	}
 	
 	/**
