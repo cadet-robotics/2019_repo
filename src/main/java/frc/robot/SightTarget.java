@@ -22,4 +22,20 @@ public class SightTarget {
         dist = in[index++];
         score = in[index];
     }
+
+    public double getHAngle() {
+        return hAngle;
+    }
+
+    public double getVAngle() {
+        return vAngle;
+    }
+
+    public double getDist() {
+        return dist;
+    }
+
+    public double getScore() {
+        return score;
+    }
 }

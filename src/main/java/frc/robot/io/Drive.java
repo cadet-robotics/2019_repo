@@ -1,6 +1,7 @@
 package frc.robot.io;
 
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import frc.robot.AutoLock;
 import frc.robot.Nexus;
 
 /**
@@ -11,6 +12,8 @@ import frc.robot.Nexus;
  */
 public class Drive {
     private MecanumDrive drive;
+    public boolean autoActive = false;
+    public double autoStrafe = 0;
     
     /**
      * Default constructor
@@ -38,12 +41,13 @@ public class Drive {
     /**
      * Runs the mecanum drive
      * <p>All values are the standard -1 to 1 range
+     *
      * 
      * @param y Y speed to use
      * @param x X speed to use
      * @param r Rotation speed to use
      */
     public void driveCartesian(double y, double x, double r) {
-        drive.driveCartesian(y, x, r);
+        drive.driveCartesian(autoActive ? (y + AutoLock.clampAbs(autoStrafe, 0.2, 0.5)) : y, x, r);
     }
 }

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AutoStrafeCommand;
 import frc.robot.commands.GetBallCommand;
 import frc.robot.config.ConfigLoader;
 import frc.robot.io.*;
@@ -153,14 +154,15 @@ public class Robot extends TimedRobot implements Nexus {
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 
-	private AutoLock autoCommand;
+	private AutoStrafeCommand autoCommand;
 	@Override
 	public void autonomousInit() {
 		m_autoSelected = m_chooser.getSelected();
 		// m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
 		System.out.println("Auto selected: " + m_autoSelected);
 		if (autoCommand != null) autoCommand.cancel();
-		(autoCommand = new AutoLock(this)).start();
+		(autoCommand = new AutoStrafeCommand(this)).start();
+		drive.autoActive = true;
 	}
 
 	/**
@@ -185,6 +187,7 @@ public class Robot extends TimedRobot implements Nexus {
 
 	@Override
 	public void teleopInit() {
+	    drive.autoActive = false;
 	}
 
 	/**

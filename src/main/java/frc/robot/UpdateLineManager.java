@@ -20,7 +20,13 @@ public class UpdateLineManager {
      */
     public static int startListener(NetworkTableInstance nt, SightData see) {
         NetworkTableEntry dataTable = nt.getTable("ShuffleBoard").getEntry("targets");
-        
-        return dataTable.addListener((e) -> see.setData(e.getEntry()), EntryListenerFlags.kUpdate + EntryListenerFlags.kNew);
+
+        return dataTable.addListener((e) -> {
+            see.setData(e.getEntry());
+            SightTarget t = see.getBest();
+            if (t != null) {
+                System.out.println("COORDS_BEST: " + t.getHAngle() + ", " + t.getVAngle());
+            }
+        }, EntryListenerFlags.kUpdate + EntryListenerFlags.kNew);
     }
 }
